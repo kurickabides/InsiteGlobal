@@ -1,0 +1,15 @@
+version: '2.4'
+
+services:
+  cryptorio-clientapp-prod:
+    #stdin_open: true
+    #tty: true
+    image: cryptorio
+    init: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_NAME=Crpto Rio Market
+    ports:
+      - "8080:80"

@@ -1,0 +1,41 @@
+
+services:
+  skylynx-app:
+    stdin_open: true
+    tty: true
+    image: skylynxnet-client-dev
+    init: true
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: skylynxnet_client
+    ports:
+      - "2211:3000"
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}
+      - CHOKIDAR_USEPOLLING=${CHOKIDAR_USEPOLLING}
+      - REACT_APP_URL=${REACT_APP_URL}
+      - REACT_APP_NAME=${REACT_APP_NAME}
+      - Skylynx_API_Server_URL=${Skylynx_API_Server_URL}
+      - Skylynx_Portal_APIKey=${Skylynx_Portal_APIKey}
+      - Skylynx_Portal_Name=${Skylynx_Portal_Name}
+      - SkylynxNet_TIMEOUT=${SkylynxNet_TIMEOUT}      
+      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
+      - PLAID_SECRET=${PLAID_SECRET}
+      - Stellar_IssuerAct=${Stellar_IssuerAct}
+      - Stellar_DistAct=${Stellar_DistAct}
+      - StellarAnchorClient_SKEY=${StellarAnchorClient_SKEY}
+      - JWT_SECRET=${SKYL}
+      - JWT_SECRET=${JWT_SECRET}
+
+    volumes:
+      - ./src:/app/src
+      - ./dist:/app/dist
+    networks:
+      - silverlining
+
+networks:
+  silverlining:
+    external: true

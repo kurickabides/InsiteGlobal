@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  web:
+    image: nginx
+    volumes:
+      - web_data:/var/www/html
+  web-test:
+    image: nginx
+    volumes:
+      - web_data:/var/www/html # Web and web test share the web_data volume
+  db:
+    image: mysql
+    volumes:
+      - db_data:/var/lib/mysql
+volumes:
+  web_data:
+  db_data:
+    driver: local # Define the driver and options under the volume name
+    driver_opts:
+      type: none
+      device: /data/db_data
+      o: bind
