@@ -1,5 +1,5 @@
 // ================================================
-// Component: Demo Route Data
+// File: Demo Route Data
 // Description: Stores route metadata used to drive demo navigation and pages.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

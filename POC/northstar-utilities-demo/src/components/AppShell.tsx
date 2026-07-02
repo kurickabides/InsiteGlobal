@@ -1,5 +1,5 @@
 // ================================================
-// Component: App Shell
+// File: App Shell
 // Description: Provides the responsive navigation drawer and page chrome.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

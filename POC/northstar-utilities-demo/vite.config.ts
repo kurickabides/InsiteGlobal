@@ -1,5 +1,5 @@
 // ================================================
-// Component: Vite Configuration
+// File: Vite Configuration
 // Description: Configures Vite plugins, dev server, and build behavior.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

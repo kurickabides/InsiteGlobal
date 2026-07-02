@@ -1,5 +1,5 @@
 // ================================================
-// Component: Main Application Entry Point
+// File: Main Application Entry Point
 // Description: Boots the React app with routing, theme, and baseline styles.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

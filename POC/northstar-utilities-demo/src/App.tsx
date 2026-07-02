@@ -1,5 +1,5 @@
 // ================================================
-// Component: App Route Host
+// File: App Route Host
 // Description: Defines the application route structure inside the shared shell.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

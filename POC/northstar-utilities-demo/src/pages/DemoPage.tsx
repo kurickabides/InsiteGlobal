@@ -1,5 +1,5 @@
 // ================================================
-// Component: Demo Page
+// File: Demo Page
 // Description: Renders each demo section with metrics, focus areas, and navigation.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

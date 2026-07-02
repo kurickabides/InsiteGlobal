@@ -1,5 +1,5 @@
 // ================================================
-// Component: Application Theme
+// File: Application Theme
 // Description: Defines the Material UI theme for the NorthStar Utilities demo.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin

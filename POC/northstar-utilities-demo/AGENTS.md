@@ -1,6 +1,6 @@
 <!--
 ================================================
-Component: Repository Agent Instructions
+File: Repository Agent Instructions
 Description: Defines project conventions and the required file header standard.
 Author: NimbusCore.OpenAI
 Architect: Chad Martin
@@ -14,11 +14,11 @@ Type: Markdown agent instruction file
 
 ## File Header Standard
 
-All new application source and supported configuration files must start with the NimbusCore/InsiteGlobal header format shown below. Update the `Component`, `Description`, `Filename`, and `Type` fields so they accurately describe the file being edited.
+All new application source and supported configuration files must start with the NimbusCore/InsiteGlobal header format shown below. Update the `File`, `Description`, `Filename`, and `Type` fields so they accurately describe the file being edited. Do not label every file as a component; use the file's real purpose, such as feature module, data module, service, page, layout, theme, or build configuration.
 
 ```ts
 // ================================================
-// Component: Descriptive File or Component Name
+// File: Descriptive File, Module, or Component Name
 // Description: One concise sentence describing the file purpose.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
