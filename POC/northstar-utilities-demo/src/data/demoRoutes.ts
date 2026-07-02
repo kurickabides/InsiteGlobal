@@ -1,3 +1,13 @@
+// ================================================
+// Component: Demo Route Data
+// Description: Stores route metadata used to drive demo navigation and pages.
+// Author: NimbusCore.OpenAI
+// Architect: Chad Martin
+// Company: InsiteGlobal
+// Filename: demoRoutes.ts
+// Type: TypeScript data module file
+// ================================================
+
 export interface DemoRoute {
   path: string;
   title: string;

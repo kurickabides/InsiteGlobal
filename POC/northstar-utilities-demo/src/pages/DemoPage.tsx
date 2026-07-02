@@ -1,3 +1,13 @@
+// ================================================
+// Component: Demo Page
+// Description: Renders each demo section with metrics, focus areas, and navigation.
+// Author: NimbusCore.OpenAI
+// Architect: Chad Martin
+// Company: InsiteGlobal
+// Filename: DemoPage.tsx
+// Type: React TypeScript page component file
+// ================================================
+
 import { Box, Button, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Link as RouterLink } from "react-router-dom";

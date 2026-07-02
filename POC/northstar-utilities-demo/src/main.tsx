@@ -1,10 +1,11 @@
 // ================================================
-// ✅ Component: Main Pagefor the ULIP Demo
-// Description: Adds support for @arcgis/core (ESM), excludes from optimizeDeps
+// Component: Main Application Entry Point
+// Description: Boots the React app with routing, theme, and baseline styles.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
 // Filename: main.tsx
+// Type: React TypeScript entry file
 // ================================================
 
 import React from "react";

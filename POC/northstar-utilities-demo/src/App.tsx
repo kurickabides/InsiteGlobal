@@ -1,3 +1,13 @@
+// ================================================
+// Component: App Route Host
+// Description: Defines the application route structure inside the shared shell.
+// Author: NimbusCore.OpenAI
+// Architect: Chad Martin
+// Company: InsiteGlobal
+// Filename: App.tsx
+// Type: React TypeScript component file
+// ================================================
+
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { DemoPage } from "./pages/DemoPage";

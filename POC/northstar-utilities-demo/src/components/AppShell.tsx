@@ -1,3 +1,13 @@
+// ================================================
+// Component: App Shell
+// Description: Provides the responsive navigation drawer and page chrome.
+// Author: NimbusCore.OpenAI
+// Architect: Chad Martin
+// Company: InsiteGlobal
+// Filename: AppShell.tsx
+// Type: React TypeScript layout component file
+// ================================================
+
 import { ReactNode, useMemo, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import {

@@ -1,3 +1,13 @@
+// ================================================
+// Component: Application Theme
+// Description: Defines the Material UI theme for the NorthStar Utilities demo.
+// Author: NimbusCore.OpenAI
+// Architect: Chad Martin
+// Company: InsiteGlobal
+// Filename: theme.ts
+// Type: TypeScript theme configuration file
+// ================================================
+
 import { createTheme } from "@mui/material/styles";
 
 export const theme = createTheme({

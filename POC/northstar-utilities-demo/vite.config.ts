@@ -1,10 +1,11 @@
 // ================================================
-// ✅ Vite Config for Esri ArcGIS JS API
-// Description: Adds support for @arcgis/core (ESM), excludes from optimizeDeps
+// Component: Vite Configuration
+// Description: Configures Vite plugins, dev server, and build behavior.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
 // Filename: vite.config.ts
+// Type: TypeScript build configuration file
 // ================================================
 
 import { defineConfig } from "vite";
