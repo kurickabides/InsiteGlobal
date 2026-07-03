@@ -1,88 +1,66 @@
 // ================================================
-// ✅ Component: AppBootstrap
-// Description: Loads portal tree + config before app renders
+// File: Application Bootstrap
+// Description: Prepares template configuration before rendering the guided presentation app.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
-// Company: CryoRio
-// Filename: AppBootstrap.tsx
+// Company: InsiteGlobal
+// Filename: appBootstrap.tsx
+// Type: React TypeScript bootstrap component file
 // ================================================
 
-import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
-import { loadSkylynxPortalTree } from "./components/core/skylynxPortalTreeSlice";
-import { loadProtosTargetTypes } from "./components/core/protosTargetTypeSlice";
-import SplashScreen from "./components/ui/splashScreen";
-import { hydrateRenderTree } from "./services/utils/hydrateRenderTree";
-import { hydrateEnv, getEnvVar } from "./config/envHydrator";
-import { RouteRegistry } from "./config/routeRegistry";
+import { ReactNode, useEffect, useState } from "react";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import { appConfig } from "./config/appConfig";
+import { presentationTree } from "./config/presentationTree";
+import { flattenPresentationTree } from "./services/presentation/presentationTreeService";
 
-interface Props {
-  children: React.ReactNode;
+interface AppBootstrapProps {
+  children: ReactNode;
 }
 
-const AppBootstrap: React.FC<Props> = ({ children }) => {
-  const dispatch = useAppDispatch();
-  const portalTree = useAppSelector((state) => state.skylynxPortalTree.tree);
-  const targetTypes = useAppSelector((state) => state.protosTargetType.types);
+export default function AppBootstrap({ children }: AppBootstrapProps) {
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const [timeoutReached, setTimeoutReached] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
-
-  const portalTreeLoaded = !!portalTree && Object.keys(portalTree).length > 0;
-  const targetTypesLoaded = targetTypes.length > 0;
-  const ready = portalTreeLoaded && targetTypesLoaded;
-
-  // 🌱 Step 1: Hydrate runtime config on mount
   useEffect(() => {
-    hydrateEnv();
+    const initializeTemplate = () => {
+      const nodes = flattenPresentationTree(presentationTree);
+
+      if (nodes.length === 0) {
+        setError("Presentation Tree must contain at least one node.");
+        return;
+      }
+
+      setReady(true);
+    };
+
+    initializeTemplate();
   }, []);
 
-  // 🌐 Step 2: Pull namespace from hydrated env (instead of URL)
-  const namespace = getEnvVar("SKYLYNX_HOST_PORTAL") || "SkyLynxNet";
-  const apiKey = getEnvVar("SKYLYNX_API_KEY");
+  if (error) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Typography color="error" variant="h2">
+          Template startup failed
+        </Typography>
+        <Typography color="text.secondary" sx={{ mt: 1 }}>
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
 
-  // 🔄 Step 3: Load metadata
-  useEffect(() => {
-    console.log("🌱 AppBootstrap initializing...");
-    console.log(`🧭 Using Portal Namespace: ${namespace}`);
-    dispatch(loadSkylynxPortalTree());
-    dispatch(loadProtosTargetTypes());
-  }, [dispatch, namespace]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setTimeoutReached(true), 10000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (ready && !hydrated) {
-      (async () => {
-        try {
-          console.log("🚀 Hydrating portal tree...");
-          const hydratedTree = await hydrateRenderTree(portalTree, namespace);
-          console.log("✅ Hydrated tree:", hydratedTree);
-
-          // 🧪 Confirm registered routes
-          const routes = RouteRegistry.keys();
-          console.log(`🧩 RouteRegistry Initialized: ${routes.length} routes`);
-          routes.forEach((r) => console.log(`→ ${r}`));
-
-          setHydrated(true);
-        } catch (err) {
-          console.error("❌ Hydration failed:", err);
-        }
-      })();
-    }
-  }, [ready, hydrated, portalTree, namespace]);
-
-  if (!ready || !hydrated) {
-    if (timeoutReached) {
-      return <div>❌ Failed to load portal. Please refresh or check logs.</div>;
-    }
-    return <SplashScreen />;
+  if (!ready) {
+    return (
+      <Box sx={{ minHeight: "100vh", display: "grid", placeItems: "center", bgcolor: "background.default" }}>
+        <Stack alignItems="center" spacing={2}>
+          <CircularProgress />
+          <Typography variant="h2">{appConfig.appName}</Typography>
+          <Typography color="text.secondary">{appConfig.splash.message}</Typography>
+        </Stack>
+      </Box>
+    );
   }
 
   return <>{children}</>;
-};
-
-export default AppBootstrap;
+}
