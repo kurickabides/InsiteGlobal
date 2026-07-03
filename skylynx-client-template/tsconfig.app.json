@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "src/main.tsx",
+    "src/App.tsx",
+    "src/appBootstrap.tsx",
+    "src/appStore/hooks.ts",
+    "src/appStore/presentationSlice.ts",
+    "src/appStore/store.ts",
+    "src/appStore/uiSlice.ts",
+    "src/components/layout/PresentationShell.tsx",
+    "src/components/presentation/PresentationControls.tsx",
+    "src/components/presentation/PresentationPage.tsx",
+    "src/components/presentation/PresentationProgress.tsx",
+    "src/config/appConfig.ts",
+    "src/config/presentationTree.ts",
+    "src/services/presentation/presentationTreeService.ts",
+    "src/theme/theme.ts",
+    "src/types/presentation.ts"
+  ]
+}
