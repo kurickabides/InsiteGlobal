@@ -1,0 +1,22 @@
+{
+  "mapTitle": "Sample Field Operations Map",
+  "center": [-95.7129, 37.0902],
+  "zoom": 4,
+  "basemap": "streets-vector",
+  "layers": [
+    {
+      "id": "service-territories",
+      "title": "Service Territories",
+      "type": "feature-layer",
+      "url": "https://example.com/arcgis/rest/services/service-territories/FeatureServer/0",
+      "visible": true
+    },
+    {
+      "id": "active-work",
+      "title": "Active Work Items",
+      "type": "feature-layer",
+      "url": "https://example.com/arcgis/rest/services/active-work/FeatureServer/0",
+      "visible": true
+    }
+  ]
+}
