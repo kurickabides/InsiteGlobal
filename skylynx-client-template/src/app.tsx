@@ -20,13 +20,13 @@ const firstNode = getFirstPresentationNode(presentationTree);
 export default function App() {
   return (
     <PresentationShell>
-              <Routes>
+      <Routes>
         <Route path="/" element={<Navigate replace to={firstNode?.path ?? "/welcome"} />} />
         {nodes.map((node) => (
           <Route element={<PresentationPage node={node} />} key={node.id} path={node.path} />
         ))}
         <Route path="*" element={<Navigate replace to={firstNode?.path ?? "/welcome"} />} />
-                      </Routes>
+      </Routes>
     </PresentationShell>
   );
 }
