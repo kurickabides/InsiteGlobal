@@ -1,0 +1,33 @@
+{
+  "demoName": "Skylynx Client Template Demo",
+  "scenario": "Guided presentation starter with mock operational data.",
+  "lastUpdated": "2026-07-03",
+  "metrics": [
+    {
+      "label": "Open Work Items",
+      "value": "24"
+    },
+    {
+      "label": "Available Crews",
+      "value": "8"
+    },
+    {
+      "label": "Projected Savings",
+      "value": "$18K"
+    }
+  ],
+  "workItems": [
+    {
+      "id": "WO-1001",
+      "title": "Emergency service assessment",
+      "priority": "High",
+      "status": "Ready for dispatch"
+    },
+    {
+      "id": "WO-1002",
+      "title": "Asset inspection route",
+      "priority": "Medium",
+      "status": "Pending review"
+    }
+  ]
+}
