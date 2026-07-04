@@ -1,29 +1,34 @@
+// ================================================
+// File: Main Application Entry Point
+// Description: Boots the React app with Redux, routing, theme, bootstrap, and baseline styles.
+// Author: NimbusCore.OpenAI
+// Architect: Chad Martin
+// Company: InsiteGlobal
+// Filename: main.tsx
+// Type: React TypeScript entry file
+// ================================================
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import App from "./app";
+import AppBootstrap from "./appBootstrap";
 import { store } from "./appStore/store";
-//import reportWebVitals from "./reportWebVitals";
-import * as serviceWorker from "./serviceWorker";
-import { xlmStateServer } from "./components/stellar/providers/xlmClientFactory";
+import { theme } from "./theme/theme";
 
-declare global {
-  interface Window {
-    rabet: any;
-    cryoRioAccountServer?: xlmStateServer;
-  }
-}
-
-const rootElement = document.getElementById("root");
-if (!rootElement) throw new Error("Root element #root not found");
-
-const root = ReactDOM.createRoot(rootElement);
-
-root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <AppBootstrap>
+            <App />
+          </AppBootstrap>
+        </BrowserRouter>
+      </ThemeProvider>
+    </Provider>
+  </React.StrictMode>
 );
-
-//reportWebVitals();
-serviceWorker.unregister();
