@@ -1,0 +1,16 @@
+{
+  "documents": [
+    {
+      "id": "sample-engineering-plan",
+      "title": "Sample Engineering Plan",
+      "path": "/documents/sample-engineering-plan.pdf",
+      "description": "Replace with a safe demo PDF committed under public/documents."
+    },
+    {
+      "id": "sample-field-report",
+      "title": "Sample Field Report",
+      "path": "/documents/sample-field-report.pdf",
+      "description": "Replace with a safe demo PDF committed under public/documents."
+    }
+  ]
+}

@@ -1,70 +1,63 @@
 // ================================================
-// ✅ Slice: esriMapSlice
-// Description: Redux slice for Esri map settings and tools
+// Slice: esriMapSlice
+// Description: Redux slice for reusable Esri map window settings and controls.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
-// Company: CryoRio
-// Filename: /modules/esriMapModule/esriMapSlice.ts
+// Company: InsiteGlobal
+// Filename: modules/esriMapModule/esriMapSlice.ts
+// Type: TypeScript Redux slice file
 // ================================================
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../appStore/store";
-import { ModuleRegistry } from "../../appStore/moduleStateRegistry";
-import { getCurrentNamespace } from "../../services/utils/resolvePortalNamespace";
-import { selectModuleState } from "../../appStore/moduleStateSelector";
+import { RootState } from "@/appStore/store";
+import { BasemapType, EsriMapLayerConfig, EsriMapViewpoint } from "@/components/esri/types";
+import { ESRIMapModuleSettings, ESRIMapModuleState } from "@/modules/esriMapModule/types";
 
-import { ESRIMapModuleSettings, ESRIMapModuleState } from "./types";
-import EsriMapModuleView from "../../components/esri/esriMapViewer";
-import { BasemapType } from "../../components/esri/types";
-
-// ✅ Initial state
-const initialState: ESRIMapModuleState = {
-  settings: {
-    title: "Esri Map Viewer",
-    showTitle: true,
-    zoom: 13,
-    center: [-122.67, 45.52], // Portland OR
-    height: 600, // Default height
-    basemap: BasemapType.Hybrid,
-    showScaleBar: true,
-    enableDraw: false,
-    showLegend: true,
-    showLayerList: true,
-    layerVisibility: {},
+export const defaultEsriMapSettings: ESRIMapModuleSettings = {
+  id: "default-esri-map",
+  title: "Reusable Esri Map Window",
+  showTitle: true,
+  zoom: 13,
+  center: [-122.67, 45.52],
+  height: 520,
+  basemap: BasemapType.OpenStreetMap,
+  controls: {
+    attribution: true,
+    compass: true,
+    popup: true,
+    zoom: true
   },
+  layers: []
 };
 
-// ✅ Slice logic
+const initialState: ESRIMapModuleState = {
+  settings: defaultEsriMapSettings
+};
+
 const esriMapSlice = createSlice({
-  name: "esrimapmodule",
+  name: "esriMap",
   initialState,
   reducers: {
-    updateEsriSettings: (
-      state,
-      action: PayloadAction<Partial<ESRIMapModuleSettings>>
-    ) => {
+    updateEsriSettings: (state, action: PayloadAction<Partial<ESRIMapModuleSettings>>) => {
       state.settings = { ...state.settings, ...action.payload };
     },
-  },
+    setEsriViewpoint: (state, action: PayloadAction<Partial<EsriMapViewpoint>>) => {
+      state.settings = { ...state.settings, ...action.payload };
+    },
+    setEsriBasemap: (state, action: PayloadAction<BasemapType>) => {
+      state.settings.basemap = action.payload;
+    },
+    setEsriLayers: (state, action: PayloadAction<EsriMapLayerConfig[]>) => {
+      state.settings.layers = action.payload;
+    },
+    resetEsriMap: (state) => {
+      state.settings = defaultEsriMapSettings;
+    }
+  }
 });
 
-// ✅ Register via ModuleRegistry
-ModuleRegistry.register({
-  namespace: getCurrentNamespace(),
-  reducer: esriMapSlice.reducer,
-  RouteRegistryEntry: {
-    name: "esrimapmodule",
-    component: EsriMapModuleView,
-    description: "Esri Map Integration Module",
-  },
-});
+export const selectEsriMapSettings = (state: RootState): ESRIMapModuleSettings => state.esriMap.settings;
 
-// ✅ Selector (matches scoped pattern)
-export const selectEsriMapSettings = (state: RootState): ESRIMapModuleSettings => {
-  const mod = selectModuleState<ESRIMapModuleState>(state, "esrimapmodule");
-  return mod?.settings ?? initialState.settings;
-};
-
-export const { updateEsriSettings } = esriMapSlice.actions;
+export const { resetEsriMap, setEsriBasemap, setEsriLayers, setEsriViewpoint, updateEsriSettings } = esriMapSlice.actions;
 
 export default esriMapSlice.reducer;

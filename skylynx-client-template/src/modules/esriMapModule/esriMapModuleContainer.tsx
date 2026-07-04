@@ -1,40 +1,40 @@
 // ================================================
-// ✅ Component: ESRIMapModuleContainer
-// Description: Redux-connected container for Esri map module
+// Component: ESRIMapModuleContainer
+// Description: Redux-connected container for the reusable Esri map module.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
-// Company: CryoRio
-// Filename: /modules/ESRIMapModule/esriMapModuleContainer.tsx
+// Company: InsiteGlobal
+// Filename: modules/esriMapModule/esriMapModuleContainer.tsx
+// Type: React TypeScript component file
 // ================================================
 
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectEsriMapSettings, updateEsriSettings } from "./esriMapSlice";
-import ESRIMapModuleView from "./esriMapModuleView";
-import { ESRIMapModuleProps } from "./types";
+import { useEffect, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "@/appStore/hooks";
+import { selectEsriMapSettings, setEsriViewpoint, updateEsriSettings } from "@/modules/esriMapModule/esriMapSlice";
+import ESRIMapModuleView from "@/modules/esriMapModule/esriMapModuleView";
+import { ESRIMapModuleProps } from "@/modules/esriMapModule/types";
 
-const ESRIMapModuleContainer: React.FC<ESRIMapModuleProps> = ({
-  settings,
-  onSettingsUpdate,
-}) => {
-  const dispatch = useDispatch();
-  const savedSettings = useSelector(selectEsriMapSettings);
+export default function ESRIMapModuleContainer({ settings, onSettingsUpdate, children }: ESRIMapModuleProps) {
+  const dispatch = useAppDispatch();
+  const savedSettings = useAppSelector(selectEsriMapSettings);
+  const mergedSettings = useMemo(() => ({ ...savedSettings, ...settings }), [savedSettings, settings]);
 
-  // ✅ Merge initial props with stored state
-  const mergedSettings = { ...savedSettings, ...settings };
+  useEffect(() => {
+    if (settings) {
+      dispatch(updateEsriSettings(settings));
+    }
+  }, [dispatch, settings]);
 
-  // ✅ Forward updates into Redux store and callback
-  const handleUpdate = (updated: Partial<typeof settings>) => {
-    dispatch(updateEsriSettings(updated));
-    onSettingsUpdate?.({ ...mergedSettings, ...updated });
-  };
+  useEffect(() => {
+    onSettingsUpdate?.(mergedSettings);
+  }, [mergedSettings, onSettingsUpdate]);
 
   return (
     <ESRIMapModuleView
+      onViewpointChange={(viewpoint) => dispatch(setEsriViewpoint(viewpoint))}
       settings={mergedSettings}
-      onSettingsUpdate={handleUpdate}
-    />
+    >
+      {children}
+    </ESRIMapModuleView>
   );
-};
-
-export default ESRIMapModuleContainer;
+}
