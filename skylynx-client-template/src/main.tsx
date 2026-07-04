@@ -13,7 +13,7 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import App from "./App";
+import App from "./app";
 import AppBootstrap from "./appBootstrap";
 import { store } from "./appStore/store";
 import { theme } from "./theme/theme";

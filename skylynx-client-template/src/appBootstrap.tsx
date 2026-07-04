@@ -9,10 +9,10 @@
 // ================================================
 
 import { ReactNode, useEffect, useState } from "react";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { appConfig } from "./config/appConfig";
+import { Box, Typography } from "@mui/material";
 import { presentationTree } from "./config/presentationTree";
 import { flattenPresentationTree } from "./services/presentation/presentationTreeService";
+import { SplashScreen } from "./components/splash/SplashScreen";
 
 interface AppBootstrapProps {
   children: ReactNode;
@@ -23,7 +23,7 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const initializeTemplate = () => {
+    const splashTimer = window.setTimeout(() => {
       const nodes = flattenPresentationTree(presentationTree);
 
       if (nodes.length === 0) {
@@ -32,9 +32,9 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
       }
 
       setReady(true);
-    };
+    }, 850);
 
-    initializeTemplate();
+    return () => window.clearTimeout(splashTimer);
   }, []);
 
   if (error) {
@@ -52,13 +52,7 @@ export default function AppBootstrap({ children }: AppBootstrapProps) {
 
   if (!ready) {
     return (
-      <Box sx={{ minHeight: "100vh", display: "grid", placeItems: "center", bgcolor: "background.default" }}>
-        <Stack alignItems="center" spacing={2}>
-          <CircularProgress />
-          <Typography variant="h2">{appConfig.appName}</Typography>
-          <Typography color="text.secondary">{appConfig.splash.message}</Typography>
-        </Stack>
-      </Box>
+      <SplashScreen />
     );
   }
 

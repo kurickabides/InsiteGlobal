@@ -19,7 +19,7 @@
   },
   "include": [
     "src/main.tsx",
-    "src/App.tsx",
+    "src/app.tsx",
     "src/appBootstrap.tsx",
     "src/appStore/hooks.ts",
     "src/appStore/presentationSlice.ts",
@@ -29,6 +29,7 @@
     "src/components/presentation/PresentationControls.tsx",
     "src/components/presentation/PresentationPage.tsx",
     "src/components/presentation/PresentationProgress.tsx",
+    "src/components/splash/SplashScreen.tsx",
     "src/config/appConfig.ts",
     "src/config/presentationTree.ts",
     "src/services/presentation/presentationTreeService.ts",
