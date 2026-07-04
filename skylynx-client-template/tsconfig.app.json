@@ -44,6 +44,15 @@
     "src/config/presentationTree.ts",
     "src/services/presentation/presentationTreeService.ts",
     "src/theme/theme.ts",
-    "src/types/presentation.ts"
+    "src/types/presentation.ts",
+    "src/components/esri/esriMapViewer.tsx",
+    "src/components/esri/styled/index.ts",
+    "src/components/esri/types/index.ts",
+    "src/components/presentation/PresentationComponentRegistry.tsx",
+    "src/modules/esriMapModule/esriMapModuleContainer.tsx",
+    "src/modules/esriMapModule/esriMapModuleView.tsx",
+    "src/modules/esriMapModule/esriMapSlice.ts",
+    "src/modules/esriMapModule/styled/index.ts",
+    "src/modules/esriMapModule/types/index.ts"
   ]
 }

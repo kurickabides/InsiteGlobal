@@ -9,6 +9,7 @@
 // ================================================
 
 import { Box, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
+import { getPresentationComponent } from "@/components/presentation/PresentationComponentRegistry";
 import { PresentationNode } from "@/types/presentation";
 
 interface PresentationPageProps {
@@ -16,6 +17,8 @@ interface PresentationPageProps {
 }
 
 export function PresentationPage({ node }: PresentationPageProps) {
+  const DemoSurface = getPresentationComponent(node.componentKey);
+
   return (
     <Stack spacing={4}>
       <Box>
@@ -67,9 +70,7 @@ export function PresentationPage({ node }: PresentationPageProps) {
                 textAlign: "center"
               }}
             >
-              <Typography color="text.secondary">
-                Placeholder workspace for {node.title.toLowerCase()} content.
-              </Typography>
+              <DemoSurface node={node} />
             </Box>
           </Paper>
         </Grid>

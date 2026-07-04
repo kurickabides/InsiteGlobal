@@ -9,17 +9,25 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@arcgis/core": "^5.1.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@reduxjs/toolkit": "^1.9.5",
+    "file-saver": "^2.0.5",
+    "konva": "^9.3.22",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.1.200",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-konva": "^18.2.10",
+    "react-pdf": "^10.4.1",
     "react-redux": "^8.1.2",
     "react-router-dom": "^6.17.0"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^24.0.1",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.7",

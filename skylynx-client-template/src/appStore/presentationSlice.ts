@@ -9,9 +9,9 @@
 // ================================================
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { presentationTree } from "../config/presentationTree";
-import { getAdjacentPresentationNodes, getFirstPresentationNode } from "../services/presentation/presentationTreeService";
-import { PresentationMode, PresentationState } from "../types/presentation";
+import { presentationTree } from "@/config/presentationTree";
+import { getAdjacentPresentationNodes, getFirstPresentationNode } from "@/services/presentation/presentationTreeService";
+import { PresentationMode, PresentationState } from "@/types/presentation";
 
 const firstNode = getFirstPresentationNode(presentationTree);
 

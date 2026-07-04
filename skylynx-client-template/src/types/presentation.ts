@@ -21,7 +21,7 @@ export interface PresentationNode {
   summary: string;
   focus: string[];
   metrics?: PresentationMetric[];
-  componentKey?: string;
+  componentKey?: "default" | "esriMap" | "pdfViewer" | string;
   children?: PresentationNode[];
 }
 

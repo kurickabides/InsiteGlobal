@@ -46,7 +46,8 @@ export const presentationTree: PresentationNode[] = [
     title: "Map and Documents",
     eyebrow: "Core POC capabilities",
     summary: "Reserve a standard place in the flow for Esri map views and PDF-driven evidence or engineering documents.",
-    focus: ["Esri map module", "PDF viewer module", "Mock data sources"]
+    focus: ["Esri map module", "PDF viewer module", "Mock data sources"],
+    componentKey: "esriMap"
   },
   {
     id: "value-summary",

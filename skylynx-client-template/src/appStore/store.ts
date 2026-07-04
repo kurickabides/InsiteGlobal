@@ -9,13 +9,15 @@
 // ================================================
 
 import { configureStore } from "@reduxjs/toolkit";
-import presentationReducer from "./presentationSlice";
-import uiReducer from "./uiSlice";
+import presentationReducer from "@/appStore/presentationSlice";
+import uiReducer from "@/appStore/uiSlice";
+import esriMapReducer from "../modules/esriMapModule/esriMapSlice";
 
 export const store = configureStore({
   reducer: {
     presentation: presentationReducer,
-    ui: uiReducer
+    ui: uiReducer,
+    esriMap: esriMapReducer
   }
 });
 
