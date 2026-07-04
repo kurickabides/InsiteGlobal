@@ -16,5 +16,11 @@ export const appConfig = {
   },
   presentation: {
     allowFreeNavigation: true
+  },
+  data: {
+    mockDataRoot: "/mock-data",
+    datasourceRoot: "/datasources",
+    documentsRoot: "/documents",
+    workersRoot: "/workers"
   }
 };
