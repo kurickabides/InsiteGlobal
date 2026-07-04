@@ -63,11 +63,9 @@ export function PresentationPage({ node }: PresentationPageProps) {
                 borderColor: "divider",
                 borderRadius: 1,
                 bgcolor: "background.default",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                px: 3,
-                textAlign: "center"
+                display: "block",
+                p: 2,
+                textAlign: "left"
               }}
             >
               <DemoSurface node={node} />

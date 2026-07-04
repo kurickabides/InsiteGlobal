@@ -20,7 +20,7 @@ interface ESRIMapModuleViewProps extends Pick<ESRIMapModuleProps, "children"> {
 
 export default function ESRIMapModuleView({ settings, children, onViewpointChange }: ESRIMapModuleViewProps) {
   return (
-    <Paper sx={{ p: 2, height: "100%" }} variant="outlined">
+    <Paper sx={{ p: 2, width: "100%", height: "100%" }} variant="outlined">
       <Stack spacing={2}>
         {settings.showTitle && (
           <Box>

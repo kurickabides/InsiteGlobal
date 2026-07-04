@@ -20,7 +20,7 @@ export const defaultEsriMapSettings: ESRIMapModuleSettings = {
   zoom: 13,
   center: [-122.67, 45.52],
   height: 520,
-  basemap: BasemapType.Hybrid,
+  basemap: BasemapType.OpenStreetMap,
   controls: {
     attribution: true,
     compass: true,

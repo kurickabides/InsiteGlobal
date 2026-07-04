@@ -42,7 +42,7 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
       title,
       center,
       zoom,
-      basemap = BasemapType.Hybrid,
+      basemap = BasemapType.OpenStreetMap,
       height = 600,
       layers = [],
       controls = { attribution: true, compass: true, popup: true, zoom: true },
@@ -81,7 +81,6 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
 
       let cancelled = false;
       let viewpointWatcher: { remove: () => void } | null = null;
-
       const loadMap = async () => {
         const [{ default: ArcGISMap }, { default: MapView }] = await Promise.all([
           import("@arcgis/core/Map"),
