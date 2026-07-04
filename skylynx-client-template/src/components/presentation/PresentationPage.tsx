@@ -9,7 +9,7 @@
 // ================================================
 
 import { Box, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
-import { PresentationNode } from "../../types/presentation";
+import { PresentationNode } from "@/types/presentation";
 
 interface PresentationPageProps {
   node: PresentationNode;

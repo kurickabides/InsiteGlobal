@@ -13,9 +13,9 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Button, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { goToNextNode, goToPreviousNode, resetPresentation } from "../../appStore/presentationSlice";
-import { useAppDispatch } from "../../appStore/hooks";
-import { PresentationNode } from "../../types/presentation";
+import { goToNextNode, goToPreviousNode, resetPresentation } from "@/appStore/presentationSlice";
+import { useAppDispatch } from "@/appStore/hooks";
+import { PresentationNode } from "@/types/presentation";
 
 interface PresentationControlsProps {
   previousNode?: PresentationNode;

@@ -10,9 +10,9 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import { presentationTree } from "./config/presentationTree";
-import { flattenPresentationTree } from "./services/presentation/presentationTreeService";
-import { SplashScreen } from "./components/splash/SplashScreen";
+import { presentationTree } from "@/config/presentationTree";
+import { flattenPresentationTree } from "@/services/presentation/presentationTreeService";
+import { SplashScreen } from "@/components/splash/SplashScreen";
 
 interface AppBootstrapProps {
   children: ReactNode;

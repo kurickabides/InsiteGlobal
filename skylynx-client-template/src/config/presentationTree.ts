@@ -8,7 +8,7 @@
 // Type: TypeScript configuration file
 // ================================================
 
-import { PresentationNode } from "../types/presentation";
+import { PresentationNode } from "@/types/presentation";
 
 export const presentationTree: PresentationNode[] = [
   {

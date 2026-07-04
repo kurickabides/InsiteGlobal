@@ -9,7 +9,7 @@
 // ================================================
 
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { appConfig } from "../../config/appConfig";
+import { appConfig } from "@/config/appConfig";
 
 export function SplashScreen() {
   return (

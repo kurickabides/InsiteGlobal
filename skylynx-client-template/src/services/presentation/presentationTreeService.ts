@@ -8,7 +8,7 @@
 // Type: TypeScript service file
 // ================================================
 
-import { PresentationNode } from "../../types/presentation";
+import { PresentationNode } from "@/types/presentation";
 
 export function flattenPresentationTree(nodes: PresentationNode[]): PresentationNode[] {
   return nodes.flatMap((node) => [

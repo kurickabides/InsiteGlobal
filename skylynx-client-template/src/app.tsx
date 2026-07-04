@@ -9,10 +9,10 @@
 // ================================================
 
 import { Navigate, Route, Routes } from "react-router-dom";
-import { PresentationShell } from "./components/layout/PresentationShell";
-import { PresentationPage } from "./components/presentation/PresentationPage";
-import { presentationTree } from "./config/presentationTree";
-import { flattenPresentationTree, getFirstPresentationNode } from "./services/presentation/presentationTreeService";
+import { PresentationShell } from "@/components/layout/PresentationShell";
+import { PresentationPage } from "@/components/presentation/PresentationPage";
+import { presentationTree } from "@/config/presentationTree";
+import { flattenPresentationTree, getFirstPresentationNode } from "@/services/presentation/presentationTreeService";
 
 const nodes = flattenPresentationTree(presentationTree);
 const firstNode = getFirstPresentationNode(presentationTree);
