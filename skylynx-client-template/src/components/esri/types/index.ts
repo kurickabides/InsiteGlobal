@@ -1,19 +1,14 @@
 // ================================================
-// ✅ Component: EsriMapViewer Types
-// Description: Props and settings interfaces for ESRI map viewer
+// Component: Esri Map Viewer Types
+// Description: Defines reusable map window configuration, layer definitions, controls, and imperative viewer API.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
-// Company: CryoRio
-// Filename: components/esriMapViewer/types.ts
+// Company: InsiteGlobal
+// Filename: components/esri/types/index.ts
+// Type: TypeScript type definition file
 // ================================================
 
-
-
-// ================================================
-// ✅ Enum: BasemapType
-// Description: Supported Esri JS API basemap identifiers
-// Source: https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap
-// ================================================
+import type MapView from "@arcgis/core/views/MapView";
 
 export enum BasemapType {
   Topo = "topo-vector",
@@ -30,9 +25,44 @@ export enum BasemapType {
   Navigation = "navigation-vector"
 }
 
+export type EsriMapLayerType = "feature" | "map-image" | "tile" | "vector-tile";
+
+export interface EsriMapViewpoint {
+  center: [number, number];
+  zoom: number;
+}
+
+export interface EsriMapLayerConfig {
+  id: string;
+  title: string;
+  url: string;
+  type: EsriMapLayerType;
+  visible?: boolean;
+  opacity?: number;
+}
+
+export interface EsriMapControlOptions {
+  zoom?: boolean;
+  compass?: boolean;
+  attribution?: boolean;
+  popup?: boolean;
+}
+
+export interface EsriMapViewerHandle {
+  getView: () => MapView | null;
+  goTo: (viewpoint: Partial<EsriMapViewpoint>) => Promise<void>;
+  setBasemap: (basemap: BasemapType) => void;
+}
+
 export interface EsriMapViewerProps {
+  id?: string;
+  title?: string;
   center: [number, number];
   zoom: number;
   basemap?: BasemapType;
-  height?: number; // ✅ now explicitly passed
+  height?: number;
+  layers?: EsriMapLayerConfig[];
+  controls?: EsriMapControlOptions;
+  onReady?: (view: MapView) => void;
+  onViewpointChange?: (viewpoint: EsriMapViewpoint) => void;
 }
