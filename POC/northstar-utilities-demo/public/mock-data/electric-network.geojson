@@ -1,0 +1,130 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -122.705,
+            45.522
+          ],
+          [
+            -122.695,
+            45.527
+          ],
+          [
+            -122.687,
+            45.533
+          ],
+          [
+            -122.675,
+            45.54
+          ]
+        ]
+      },
+      "properties": {
+        "assetId": "EL-FEEDER-12",
+        "assetType": "main-feeder",
+        "assetName": "Feeder 12 Main",
+        "utilityDomainId": 2,
+        "serviceAreaId": 102,
+        "status": "Energized",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -122.687,
+            45.533
+          ],
+          [
+            -122.684,
+            45.535
+          ],
+          [
+            -122.6815,
+            45.5364
+          ],
+          [
+            -122.678,
+            45.538
+          ]
+        ]
+      },
+      "properties": {
+        "assetId": "EL-BRANCH-12B",
+        "assetType": "affected-branch",
+        "assetName": "Branch 12B",
+        "utilityDomainId": 2,
+        "serviceAreaId": 102,
+        "status": "Outage",
+        "displayColor": "#dc2626",
+        "affectedCustomers": 27
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6815,
+          45.5364
+        ]
+      },
+      "properties": {
+        "assetId": "EL-OUTAGE-2001",
+        "assetType": "outage-point",
+        "assetName": "Tree limb on main feed branch",
+        "utilityDomainId": 2,
+        "serviceAreaId": 102,
+        "status": "Open",
+        "displayColor": "#dc2626",
+        "workOrderNumber": "WO-ELEC-2001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.684,
+          45.535
+        ]
+      },
+      "properties": {
+        "assetId": "XFMR-204",
+        "assetType": "transformer",
+        "assetName": "Transformer 204",
+        "utilityDomainId": 2,
+        "serviceAreaId": 102,
+        "status": "Deenergized",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6826,
+          45.5369
+        ]
+      },
+      "properties": {
+        "assetId": "VEG-77",
+        "assetType": "vegetation-hazard",
+        "assetName": "Fallen limb hazard",
+        "utilityDomainId": 2,
+        "serviceAreaId": 102,
+        "status": "Requires Clearance",
+        "displayColor": "#14532d"
+      }
+    }
+  ]
+}

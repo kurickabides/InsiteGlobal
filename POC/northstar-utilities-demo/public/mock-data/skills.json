@@ -1,0 +1,182 @@
+[
+  {
+    "skillId": 1,
+    "skillName": "Gas Leak Investigation",
+    "utilityDomainId": 1,
+    "skillCategory": "Emergency",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 2,
+    "skillName": "Gas Emergency Response",
+    "utilityDomainId": 1,
+    "skillCategory": "Emergency",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 3,
+    "skillName": "Gas Service Installation",
+    "utilityDomainId": 1,
+    "skillCategory": "Construction",
+    "requiresCertification": true,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 4,
+    "skillName": "Corrosion Inspection",
+    "utilityDomainId": 1,
+    "skillCategory": "Inspection",
+    "requiresCertification": true,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 5,
+    "skillName": "Regulator Maintenance",
+    "utilityDomainId": 1,
+    "skillCategory": "Maintenance",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 6,
+    "skillName": "Gas Pressure Testing",
+    "utilityDomainId": 1,
+    "skillCategory": "Inspection",
+    "requiresCertification": true,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 7,
+    "skillName": "Electric Trouble Response",
+    "utilityDomainId": 2,
+    "skillCategory": "Emergency",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 8,
+    "skillName": "Line Repair",
+    "utilityDomainId": 2,
+    "skillCategory": "Repair",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 9,
+    "skillName": "Transformer Repair",
+    "utilityDomainId": 2,
+    "skillCategory": "Repair",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 10,
+    "skillName": "Underground Cable Fault",
+    "utilityDomainId": 2,
+    "skillCategory": "Repair",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 11,
+    "skillName": "Vegetation Clearance",
+    "utilityDomainId": 2,
+    "skillCategory": "Vegetation",
+    "requiresCertification": false,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 12,
+    "skillName": "Switching and Isolation",
+    "utilityDomainId": 2,
+    "skillCategory": "Safety",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 13,
+    "skillName": "Utility Inspector",
+    "utilityDomainId": 3,
+    "skillCategory": "Inspection",
+    "requiresCertification": false,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 14,
+    "skillName": "Safety Observer",
+    "utilityDomainId": 3,
+    "skillCategory": "Safety",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  },
+  {
+    "skillId": 15,
+    "skillName": "QA/QC Inspector",
+    "utilityDomainId": 3,
+    "skillCategory": "QA",
+    "requiresCertification": false,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 16,
+    "skillName": "Traffic Control",
+    "utilityDomainId": 3,
+    "skillCategory": "Safety",
+    "requiresCertification": false,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 17,
+    "skillName": "Locate / Markout",
+    "utilityDomainId": 3,
+    "skillCategory": "Safety",
+    "requiresCertification": true,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 18,
+    "skillName": "Damage Assessment",
+    "utilityDomainId": 3,
+    "skillCategory": "Emergency",
+    "requiresCertification": false,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 19,
+    "skillName": "GIS Field Data Collection",
+    "utilityDomainId": 3,
+    "skillCategory": "Data",
+    "requiresCertification": false,
+    "isCriticalSkill": false,
+    "isActive": true
+  },
+  {
+    "skillId": 20,
+    "skillName": "Crew Supervisor / Foreman",
+    "utilityDomainId": 3,
+    "skillCategory": "Leadership",
+    "requiresCertification": true,
+    "isCriticalSkill": true,
+    "isActive": true
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "scenarioDate": "2026-07-05",
+  "activeWorkOrders": 20,
+  "availableCrews": 6,
+  "emergencyEvents": 4,
+  "affectedCustomers": 27,
+  "laborSavings": "$42K",
+  "overtimeAvoidedHours": 210,
+  "travelReductionPercent": 14,
+  "customerImpactScore": 88,
+  "slaRiskCount": 7,
+  "stories": [
+    {
+      "storyId": "gas-leak-emergency",
+      "headlineMetric": "18 min ETA",
+      "supportingMetric": "$672 lower adjusted cost than contractor option"
+    },
+    {
+      "storyId": "power-branch-outage",
+      "headlineMetric": "27 customers affected",
+      "supportingMetric": "24 min crew ETA with 116 min restoration target"
+    }
+  ]
+}

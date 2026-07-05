@@ -1,0 +1,194 @@
+[
+  {
+    "crewEquipmentId": 1,
+    "crewId": 1,
+    "equipmentId": 1,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 2,
+    "crewId": 1,
+    "equipmentId": 4,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 3,
+    "crewId": 1,
+    "equipmentId": 5,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 4,
+    "crewId": 1,
+    "equipmentId": 6,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 5,
+    "crewId": 1,
+    "equipmentId": 12,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 6,
+    "crewId": 1,
+    "equipmentId": 15,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 7,
+    "crewId": 2,
+    "equipmentId": 7,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 8,
+    "crewId": 2,
+    "equipmentId": 9,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 9,
+    "crewId": 2,
+    "equipmentId": 10,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 10,
+    "crewId": 2,
+    "equipmentId": 11,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 11,
+    "crewId": 2,
+    "equipmentId": 13,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 12,
+    "crewId": 2,
+    "equipmentId": 15,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 13,
+    "crewId": 3,
+    "equipmentId": 3,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 14,
+    "crewId": 3,
+    "equipmentId": 4,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 15,
+    "crewId": 3,
+    "equipmentId": 5,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 16,
+    "crewId": 3,
+    "equipmentId": 12,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 17,
+    "crewId": 4,
+    "equipmentId": 10,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 18,
+    "crewId": 4,
+    "equipmentId": 13,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 19,
+    "crewId": 4,
+    "equipmentId": 14,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 20,
+    "crewId": 4,
+    "equipmentId": 15,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 21,
+    "crewId": 5,
+    "equipmentId": 12,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 22,
+    "crewId": 5,
+    "equipmentId": 13,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 23,
+    "crewId": 5,
+    "equipmentId": 16,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 24,
+    "crewId": 6,
+    "equipmentId": 8,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 25,
+    "crewId": 6,
+    "equipmentId": 9,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 26,
+    "crewId": 6,
+    "equipmentId": 11,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 27,
+    "crewId": 7,
+    "equipmentId": 2,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 28,
+    "crewId": 7,
+    "equipmentId": 4,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 29,
+    "crewId": 7,
+    "equipmentId": 5,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 30,
+    "crewId": 7,
+    "equipmentId": 6,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 31,
+    "crewId": 8,
+    "equipmentId": 13,
+    "isActive": true
+  },
+  {
+    "crewEquipmentId": 32,
+    "crewId": 8,
+    "equipmentId": 15,
+    "isActive": true
+  }
+]

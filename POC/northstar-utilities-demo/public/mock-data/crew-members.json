@@ -1,0 +1,170 @@
+[
+  {
+    "crewMemberId": 1,
+    "crewId": 1,
+    "userId": 9,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 2,
+    "crewId": 1,
+    "userId": 10,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 3,
+    "crewId": 1,
+    "userId": 11,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 4,
+    "crewId": 1,
+    "userId": 18,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 5,
+    "crewId": 2,
+    "userId": 1,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 6,
+    "crewId": 2,
+    "userId": 2,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 7,
+    "crewId": 2,
+    "userId": 3,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 8,
+    "crewId": 2,
+    "userId": 18,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 9,
+    "crewId": 3,
+    "userId": 13,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 10,
+    "crewId": 3,
+    "userId": 20,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 11,
+    "crewId": 3,
+    "userId": 22,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 12,
+    "crewId": 4,
+    "userId": 8,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 13,
+    "crewId": 4,
+    "userId": 17,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 14,
+    "crewId": 4,
+    "userId": 23,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 15,
+    "crewId": 4,
+    "userId": 24,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 16,
+    "crewId": 5,
+    "userId": 14,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 17,
+    "crewId": 5,
+    "userId": 22,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 18,
+    "crewId": 6,
+    "userId": 5,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 19,
+    "crewId": 6,
+    "userId": 6,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 20,
+    "crewId": 7,
+    "userId": 12,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 21,
+    "crewId": 7,
+    "userId": 15,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 22,
+    "crewId": 7,
+    "userId": 16,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 23,
+    "crewId": 8,
+    "userId": 19,
+    "roleOnCrew": "Foreman",
+    "isActive": true
+  },
+  {
+    "crewMemberId": 24,
+    "crewId": 8,
+    "userId": 21,
+    "roleOnCrew": "Crew Member",
+    "isActive": true
+  }
+]
