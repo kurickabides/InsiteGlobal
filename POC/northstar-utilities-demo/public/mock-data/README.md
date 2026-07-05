@@ -34,6 +34,7 @@ The files are intentionally small, internally linked, and browser-fetchable from
 - `electric-network.geojson`
 - `gas-network.geojson`
 - `customers.geojson`
+- `crew-locations.geojson`
 
 ## Workforce reference files
 
@@ -51,3 +52,11 @@ The files are intentionally small, internally linked, and browser-fetchable from
 - `crew-members.json`
 - `crew-equipment.json`
 - `work-assignments.json`
+
+## Work order map links
+
+`work-orders.json` includes `relatedGeoJsonFiles` for story map layers. The power outage hero work order also includes `customerGeoJsonFile` and `customerGeoJsonFilter` so the app can load the affected customer points from `customers.geojson`.
+
+## Crew locations
+
+`crew-locations.geojson` stores current synthetic crew points for all demo crews, including the initial dispatch positions for Gas Emergency Crew B and Electric Trouble Crew A.
