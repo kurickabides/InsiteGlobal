@@ -8,6 +8,17 @@
 // Type: TypeScript data module file
 // ================================================
 
+export type DemoComponentKey =
+  | "default"
+  | "welcome"
+  | "overview"
+  | "dashboard"
+  | "fieldMap"
+  | "workOrders"
+  | "crewRecommendation"
+  | "architecture"
+  | "roi";
+
 export interface DemoRoute {
   path: string;
   title: string;
@@ -18,6 +29,7 @@ export interface DemoRoute {
     label: string;
     value: string;
   }>;
+  componentKey?: DemoComponentKey;
 }
 
 export const demoRoutes: DemoRoute[] = [
@@ -26,7 +38,8 @@ export const demoRoutes: DemoRoute[] = [
     title: "Welcome",
     eyebrow: "NorthStar Utilities",
     summary: "Executive demo workspace for AI-enabled utility labor intelligence.",
-    focus: ["Set the business context", "Introduce the operating model", "Frame the dispatch decision"]
+    focus: ["Set the business context", "Introduce the operating model", "Frame the dispatch decision"],
+    componentKey: "welcome"
   },
   {
     path: "/business-problem",
@@ -47,7 +60,8 @@ export const demoRoutes: DemoRoute[] = [
     title: "NorthStar Overview",
     eyebrow: "Fictional combined utility",
     summary: "NorthStar Utilities represents a portfolio-ready electric and gas operator with realistic field workflows.",
-    focus: ["Service areas", "Crew profiles", "Work orders", "Performance history"]
+    focus: ["Service areas", "Crew profiles", "Work orders", "Performance history"],
+    componentKey: "overview"
   },
   {
     path: "/executive-dashboard",
@@ -55,6 +69,7 @@ export const demoRoutes: DemoRoute[] = [
     eyebrow: "Operational snapshot",
     summary: "A KPI view for active work, available crews, emergencies, labor savings, and customer impact.",
     focus: ["Dispatch volume", "Resource capacity", "Cost avoidance"],
+    componentKey: "dashboard",
     metrics: [
       { label: "Active Work Orders", value: "128" },
       { label: "Available Crews", value: "34" },
@@ -66,14 +81,16 @@ export const demoRoutes: DemoRoute[] = [
     title: "Map",
     eyebrow: "Esri field view",
     summary: "Placeholder for service area polygons, work order points, crew locations, and route simulation.",
-    focus: ["Service territories", "Crew proximity", "Work order priority"]
+    focus: ["Service territories", "Crew proximity", "Work order priority"],
+    componentKey: "fieldMap"
   },
   {
     path: "/work-orders",
     title: "Work Orders",
     eyebrow: "Dispatch queue",
     summary: "A prioritized queue for gas leaks, electric outages, inspections, and maintenance work.",
-    focus: ["Priority filtering", "Assignment status", "Estimated duration"]
+    focus: ["Priority filtering", "Assignment status", "Estimated duration"],
+    componentKey: "workOrders"
   },
   {
     path: "/ai-crew-recommendation",
@@ -81,6 +98,7 @@ export const demoRoutes: DemoRoute[] = [
     eyebrow: "Decision support",
     summary: "Rank crews by qualification, service area fit, equipment, productivity, travel, and adjusted cost.",
     focus: ["Skill match", "Equipment match", "Performance-adjusted cost"],
+    componentKey: "crewRecommendation",
     metrics: [
       { label: "Top Match", value: "Crew B" },
       { label: "Skill Fit", value: "96%" },
@@ -99,7 +117,8 @@ export const demoRoutes: DemoRoute[] = [
     title: "Architecture",
     eyebrow: "Demo architecture",
     summary: "React, MUI, Esri JS, local API, workforce data model, and route simulation service.",
-    focus: ["Frontend shell", "REST endpoints", "SQL or PostGIS data layer"]
+    focus: ["Frontend shell", "REST endpoints", "SQL or PostGIS data layer"],
+    componentKey: "architecture"
   },
   {
     path: "/roi",
@@ -107,6 +126,7 @@ export const demoRoutes: DemoRoute[] = [
     eyebrow: "Business value",
     summary: "Summarize overtime avoided, travel reduction, productivity gains, and customer impact.",
     focus: ["Labor cost reduction", "Faster response", "More defensible dispatch decisions"],
+    componentKey: "roi",
     metrics: [
       { label: "Overtime Avoided", value: "210 hrs" },
       { label: "Travel Reduction", value: "14%" },

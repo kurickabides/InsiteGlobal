@@ -1,6 +1,6 @@
 // ================================================
 // File: Demo Page
-// Description: Renders each demo section with metrics, focus areas, and navigation.
+// Description: Renders each NorthStar presentation section with metrics, surfaces, focus areas, and guided navigation.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
@@ -8,9 +8,12 @@
 // Type: React TypeScript page component file
 // ================================================
 
-import { Box, Button, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Link as RouterLink } from "react-router-dom";
+import { getDemoSurface } from "../components/presentation/DemoSurfaceRegistry";
 import { DemoRoute, demoRoutes } from "../data/demoRoutes";
 
 interface DemoPageProps {
@@ -19,31 +22,38 @@ interface DemoPageProps {
 
 export function DemoPage({ route }: DemoPageProps) {
   const currentIndex = demoRoutes.findIndex((item) => item.path === route.path);
+  const previousRoute = demoRoutes[currentIndex - 1];
   const nextRoute = demoRoutes[currentIndex + 1];
+  const DemoSurface = getDemoSurface(route.componentKey);
+  const progress = ((currentIndex + 1) / demoRoutes.length) * 100;
 
   return (
     <Stack spacing={4}>
       <Box>
-        <Typography variant="overline" color="secondary" sx={{ fontWeight: 800 }}>
+        <Typography color="secondary" sx={{ fontWeight: 800 }} variant="overline">
           {route.eyebrow}
         </Typography>
-        <Typography variant="h1" sx={{ mt: 0.5, maxWidth: 840 }}>
+        <Typography sx={{ mt: 0.5, maxWidth: 900 }} variant="h1">
           {route.title}
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mt: 2, maxWidth: 760, fontSize: "1.05rem" }}>
+        <Typography color="text.secondary" sx={{ mt: 2, maxWidth: 820, fontSize: "1.05rem" }} variant="body1">
           {route.summary}
         </Typography>
+        <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mt: 2, maxWidth: 520 }}>
+          <Typography color="text.secondary" variant="body2">Step {currentIndex + 1} of {demoRoutes.length}</Typography>
+          <LinearProgress variant="determinate" value={progress} sx={{ flex: 1 }} />
+        </Stack>
       </Box>
 
       {route.metrics && (
         <Grid container spacing={2}>
           {route.metrics.map((metric) => (
-            <Grid item xs={12} sm={4} key={metric.label}>
-              <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
-                <Typography variant="body2" color="text.secondary">
+            <Grid item key={metric.label} sm={4} xs={12}>
+              <Paper sx={{ p: 2.5, height: "100%" }} variant="outlined">
+                <Typography color="text.secondary" variant="body2">
                   {metric.label}
                 </Typography>
-                <Typography variant="h2" sx={{ mt: 1 }}>
+                <Typography sx={{ mt: 1 }} variant="h2">
                   {metric.value}
                 </Typography>
               </Paper>
@@ -53,36 +63,19 @@ export function DemoPage({ route }: DemoPageProps) {
       )}
 
       <Grid container spacing={3}>
-        <Grid item xs={12} lg={7}>
-          <Paper variant="outlined" sx={{ p: 3, minHeight: 300 }}>
-            <Typography variant="h2" sx={{ mb: 2 }}>
+        <Grid item lg={8} xs={12}>
+          <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
+            <Typography sx={{ mb: 2 }} variant="h2">
               Demo Surface
             </Typography>
-            <Box
-              sx={{
-                minHeight: 220,
-                border: "1px dashed",
-                borderColor: "divider",
-                borderRadius: 1,
-                bgcolor: "background.default",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                px: 3,
-                textAlign: "center"
-              }}
-            >
-              <Typography color="text.secondary">
-                Placeholder workspace for {route.title.toLowerCase()} content.
-              </Typography>
-            </Box>
+            <DemoSurface route={route} />
           </Paper>
         </Grid>
 
-        <Grid item xs={12} lg={5}>
-          <Paper variant="outlined" sx={{ p: 3, minHeight: 300 }}>
-            <Typography variant="h2" sx={{ mb: 2 }}>
-              Focus Areas
+        <Grid item lg={4} xs={12}>
+          <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
+            <Typography sx={{ mb: 2 }} variant="h2">
+              Presenter Focus
             </Typography>
             <Stack direction="row" flexWrap="wrap" gap={1}>
               {route.focus.map((item) => (
@@ -93,13 +86,21 @@ export function DemoPage({ route }: DemoPageProps) {
         </Grid>
       </Grid>
 
-      {nextRoute && (
-        <Box>
-          <Button component={RouterLink} to={nextRoute.path} variant="contained" endIcon={<ArrowForwardIcon />}>
-            Continue
+      <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+        <Button component={RouterLink} disabled={!previousRoute} startIcon={<ArrowBackIcon />} to={previousRoute?.path ?? route.path} variant="outlined">
+          Previous
+        </Button>
+        <Stack direction="row" gap={1.5}>
+          <Button component={RouterLink} startIcon={<RestartAltIcon />} to="/welcome" variant="text">
+            Restart
           </Button>
-        </Box>
-      )}
+          {nextRoute && (
+            <Button component={RouterLink} endIcon={<ArrowForwardIcon />} to={nextRoute.path} variant="contained">
+              Continue
+            </Button>
+          )}
+        </Stack>
+      </Stack>
     </Stack>
   );
 }
