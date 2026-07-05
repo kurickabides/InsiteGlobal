@@ -3,4 +3,6 @@ dist
 .env
 .env.local
 npm-debug.log*
-package-lock*
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts

@@ -10,6 +10,7 @@
 
 import { Box, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { DemoRoute } from "../../data/demoRoutes";
+import { EsriMapModuleView } from "../../modules/esriMapModule/esriMapModuleView";
 
 interface DemoSurfaceProps {
   route: DemoRoute;
@@ -89,20 +90,11 @@ function DashboardSurface() {
 
 function FieldMapSurface() {
   return (
-    <Box sx={{ position: "relative", minHeight: 380, borderRadius: 2, overflow: "hidden", bgcolor: "#dbeafe", border: "1px solid", borderColor: "divider" }}>
-      <Box sx={{ position: "absolute", inset: 24, border: "2px solid rgba(20,83,45,.35)", borderRadius: "42% 58% 49% 51%", bgcolor: "rgba(255,255,255,.45)" }} />
-      {[
-        { label: "Crew B", x: "58%", y: "42%", color: "#14532d" },
-        { label: "Gas Leak", x: "64%", y: "48%", color: "#dc2626" },
-        { label: "Outage", x: "36%", y: "34%", color: "#f59e0b" }
-      ].map((pin) => (
-        <Chip key={pin.label} label={pin.label} sx={{ position: "absolute", left: pin.x, top: pin.y, bgcolor: pin.color, color: "white", fontWeight: 800 }} />
-      ))}
-      <Paper sx={{ position: "absolute", left: 16, bottom: 16, p: 2, maxWidth: 300 }}>
-        <Typography fontWeight={800}>Map presentation surface</Typography>
-        <Typography color="text.secondary" variant="body2">Ready for Esri layers: territories, jobs, crews, and routes.</Typography>
-      </Paper>
-    </Box>
+    <EsriMapModuleView>
+      <Typography color="text.secondary" variant="body2">
+        Next layer targets: service territories, live work order points, crew GPS, and route simulation.
+      </Typography>
+    </EsriMapModuleView>
   );
 }
 
