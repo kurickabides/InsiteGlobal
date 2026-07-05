@@ -1,0 +1,106 @@
+[
+  {
+    "equipmentTypeId": 1,
+    "equipmentTypeName": "Bucket Truck",
+    "utilityDomainId": 2,
+    "category": "Vehicle",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 2,
+    "equipmentTypeName": "Digger Derrick",
+    "utilityDomainId": 2,
+    "category": "Vehicle",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 3,
+    "equipmentTypeName": "Hot Sticks",
+    "utilityDomainId": 2,
+    "category": "Tool",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 4,
+    "equipmentTypeName": "Voltage Tester",
+    "utilityDomainId": 2,
+    "category": "Test Equipment",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 5,
+    "equipmentTypeName": "Arc Flash PPE",
+    "utilityDomainId": 2,
+    "category": "Safety",
+    "requiresCertification": false,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 6,
+    "equipmentTypeName": "Combustible Gas Indicator",
+    "utilityDomainId": 1,
+    "category": "Test Equipment",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 7,
+    "equipmentTypeName": "Gas Pressure Gauge",
+    "utilityDomainId": 1,
+    "category": "Test Equipment",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 8,
+    "equipmentTypeName": "Locator",
+    "utilityDomainId": 3,
+    "category": "Tool",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 9,
+    "equipmentTypeName": "Service Vehicle",
+    "utilityDomainId": 3,
+    "category": "Vehicle",
+    "requiresCertification": false,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 10,
+    "equipmentTypeName": "Tablet/GPS Kit",
+    "utilityDomainId": 3,
+    "category": "Data",
+    "requiresCertification": false,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 11,
+    "equipmentTypeName": "Drone Kit",
+    "utilityDomainId": 3,
+    "category": "Inspection",
+    "requiresCertification": true,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 12,
+    "equipmentTypeName": "Traffic Control Kit",
+    "utilityDomainId": 3,
+    "category": "Safety",
+    "requiresCertification": false,
+    "isActive": true
+  },
+  {
+    "equipmentTypeId": 13,
+    "equipmentTypeName": "Chainsaw and Limb Kit",
+    "utilityDomainId": 2,
+    "category": "Vegetation",
+    "requiresCertification": true,
+    "isActive": true
+  }
+]

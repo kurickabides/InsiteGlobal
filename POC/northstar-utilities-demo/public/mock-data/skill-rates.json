@@ -1,0 +1,317 @@
+[
+  {
+    "skillRateId": 1,
+    "rateCardId": 1,
+    "skillId": 1,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 92.0,
+    "overtimeRate": 138.0,
+    "calloutRate": 174.8
+  },
+  {
+    "skillRateId": 2,
+    "rateCardId": 1,
+    "skillId": 1,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 106.72,
+    "overtimeRate": 160.08,
+    "calloutRate": 202.77
+  },
+  {
+    "skillRateId": 3,
+    "rateCardId": 1,
+    "skillId": 1,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 121.44,
+    "overtimeRate": 182.16,
+    "calloutRate": 230.74
+  },
+  {
+    "skillRateId": 4,
+    "rateCardId": 1,
+    "skillId": 2,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 96.0,
+    "overtimeRate": 144.0,
+    "calloutRate": 182.4
+  },
+  {
+    "skillRateId": 5,
+    "rateCardId": 1,
+    "skillId": 2,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 111.36,
+    "overtimeRate": 167.04,
+    "calloutRate": 211.58
+  },
+  {
+    "skillRateId": 6,
+    "rateCardId": 1,
+    "skillId": 2,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 126.72,
+    "overtimeRate": 190.08,
+    "calloutRate": 240.77
+  },
+  {
+    "skillRateId": 7,
+    "rateCardId": 1,
+    "skillId": 7,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 88.0,
+    "overtimeRate": 132.0,
+    "calloutRate": 167.2
+  },
+  {
+    "skillRateId": 8,
+    "rateCardId": 1,
+    "skillId": 7,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 102.08,
+    "overtimeRate": 153.12,
+    "calloutRate": 193.95
+  },
+  {
+    "skillRateId": 9,
+    "rateCardId": 1,
+    "skillId": 7,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 116.16,
+    "overtimeRate": 174.24,
+    "calloutRate": 220.7
+  },
+  {
+    "skillRateId": 10,
+    "rateCardId": 1,
+    "skillId": 8,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 94.0,
+    "overtimeRate": 141.0,
+    "calloutRate": 178.6
+  },
+  {
+    "skillRateId": 11,
+    "rateCardId": 1,
+    "skillId": 8,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 109.04,
+    "overtimeRate": 163.56,
+    "calloutRate": 207.18
+  },
+  {
+    "skillRateId": 12,
+    "rateCardId": 1,
+    "skillId": 8,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 124.08,
+    "overtimeRate": 186.12,
+    "calloutRate": 235.75
+  },
+  {
+    "skillRateId": 13,
+    "rateCardId": 1,
+    "skillId": 9,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 98.0,
+    "overtimeRate": 147.0,
+    "calloutRate": 186.2
+  },
+  {
+    "skillRateId": 14,
+    "rateCardId": 1,
+    "skillId": 9,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 113.68,
+    "overtimeRate": 170.52,
+    "calloutRate": 215.99
+  },
+  {
+    "skillRateId": 15,
+    "rateCardId": 1,
+    "skillId": 9,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 129.36,
+    "overtimeRate": 194.04,
+    "calloutRate": 245.78
+  },
+  {
+    "skillRateId": 16,
+    "rateCardId": 1,
+    "skillId": 11,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 74.0,
+    "overtimeRate": 111.0,
+    "calloutRate": 140.6
+  },
+  {
+    "skillRateId": 17,
+    "rateCardId": 1,
+    "skillId": 11,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 85.84,
+    "overtimeRate": 128.76,
+    "calloutRate": 163.1
+  },
+  {
+    "skillRateId": 18,
+    "rateCardId": 1,
+    "skillId": 11,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 97.68,
+    "overtimeRate": 146.52,
+    "calloutRate": 185.59
+  },
+  {
+    "skillRateId": 19,
+    "rateCardId": 1,
+    "skillId": 12,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 102.0,
+    "overtimeRate": 153.0,
+    "calloutRate": 193.8
+  },
+  {
+    "skillRateId": 20,
+    "rateCardId": 1,
+    "skillId": 12,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 118.32,
+    "overtimeRate": 177.48,
+    "calloutRate": 224.81
+  },
+  {
+    "skillRateId": 21,
+    "rateCardId": 1,
+    "skillId": 12,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 134.64,
+    "overtimeRate": 201.96,
+    "calloutRate": 255.82
+  },
+  {
+    "skillRateId": 22,
+    "rateCardId": 1,
+    "skillId": 14,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 70.0,
+    "overtimeRate": 105.0,
+    "calloutRate": 133.0
+  },
+  {
+    "skillRateId": 23,
+    "rateCardId": 1,
+    "skillId": 14,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 81.2,
+    "overtimeRate": 121.8,
+    "calloutRate": 154.28
+  },
+  {
+    "skillRateId": 24,
+    "rateCardId": 1,
+    "skillId": 14,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 92.4,
+    "overtimeRate": 138.6,
+    "calloutRate": 175.56
+  },
+  {
+    "skillRateId": 25,
+    "rateCardId": 1,
+    "skillId": 17,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 68.0,
+    "overtimeRate": 102.0,
+    "calloutRate": 129.2
+  },
+  {
+    "skillRateId": 26,
+    "rateCardId": 1,
+    "skillId": 17,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 78.88,
+    "overtimeRate": 118.32,
+    "calloutRate": 149.87
+  },
+  {
+    "skillRateId": 27,
+    "rateCardId": 1,
+    "skillId": 17,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 89.76,
+    "overtimeRate": 134.64,
+    "calloutRate": 170.54
+  },
+  {
+    "skillRateId": 28,
+    "rateCardId": 1,
+    "skillId": 20,
+    "skillLevel": "Journeyman",
+    "standardHourlyRate": 110.0,
+    "overtimeRate": 165.0,
+    "calloutRate": 209.0
+  },
+  {
+    "skillRateId": 29,
+    "rateCardId": 1,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 127.6,
+    "overtimeRate": 191.4,
+    "calloutRate": 242.44
+  },
+  {
+    "skillRateId": 30,
+    "rateCardId": 1,
+    "skillId": 20,
+    "skillLevel": "Expert",
+    "standardHourlyRate": 145.2,
+    "overtimeRate": 217.8,
+    "calloutRate": 275.88
+  },
+  {
+    "skillRateId": 31,
+    "rateCardId": 2,
+    "skillId": 1,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 128,
+    "overtimeRate": 204.8,
+    "calloutRate": 268.8
+  },
+  {
+    "skillRateId": 32,
+    "rateCardId": 2,
+    "skillId": 2,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 138,
+    "overtimeRate": 220.8,
+    "calloutRate": 289.8
+  },
+  {
+    "skillRateId": 33,
+    "rateCardId": 2,
+    "skillId": 7,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 122,
+    "overtimeRate": 195.2,
+    "calloutRate": 256.2
+  },
+  {
+    "skillRateId": 34,
+    "rateCardId": 2,
+    "skillId": 8,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 130,
+    "overtimeRate": 208.0,
+    "calloutRate": 273.0
+  },
+  {
+    "skillRateId": 35,
+    "rateCardId": 2,
+    "skillId": 11,
+    "skillLevel": "Senior",
+    "standardHourlyRate": 96,
+    "overtimeRate": 153.6,
+    "calloutRate": 201.6
+  }
+]

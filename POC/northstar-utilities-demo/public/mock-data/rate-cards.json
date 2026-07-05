@@ -1,0 +1,26 @@
+[
+  {
+    "rateCardId": 1,
+    "rateCardName": "Internal 2026",
+    "vendorName": null,
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": "2026-12-31",
+    "isActive": true
+  },
+  {
+    "rateCardId": 2,
+    "rateCardName": "Contractor Emergency 2026",
+    "vendorName": "Cascade Mutual Aid Contractors",
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": "2026-12-31",
+    "isActive": true
+  },
+  {
+    "rateCardId": 3,
+    "rateCardName": "Mutual Aid 2026",
+    "vendorName": "Regional Utility Mutual Aid",
+    "effectiveStartDate": "2026-01-01",
+    "effectiveEndDate": "2026-12-31",
+    "isActive": true
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "routeId": "GAS-ROUTE-1001",
+    "assignmentId": 5001,
+    "storyId": "gas-leak-emergency",
+    "workOrderId": 1001,
+    "crewId": 2,
+    "status": "ReadyToDispatch",
+    "etaMinutes": 18,
+    "routePolyline": [
+      [
+        -122.681,
+        45.5168
+      ],
+      [
+        -122.6742,
+        45.5195
+      ],
+      [
+        -122.6684,
+        45.522
+      ],
+      [
+        -122.6602,
+        45.5238
+      ]
+    ],
+    "currentCrewPoint": {
+      "longitude": -122.681,
+      "latitude": 45.5168
+    },
+    "statusTimeline": [
+      {
+        "minute": 0,
+        "status": "Assigned"
+      },
+      {
+        "minute": 4,
+        "status": "En Route"
+      },
+      {
+        "minute": 18,
+        "status": "On Site"
+      },
+      {
+        "minute": 72,
+        "status": "Leak Secured"
+      }
+    ]
+  },
+  {
+    "routeId": "ELEC-ROUTE-2001",
+    "assignmentId": 5002,
+    "storyId": "power-branch-outage",
+    "workOrderId": 2001,
+    "crewId": 1,
+    "status": "ReadyToDispatch",
+    "etaMinutes": 24,
+    "routePolyline": [
+      [
+        -122.7025,
+        45.5205
+      ],
+      [
+        -122.696,
+        45.526
+      ],
+      [
+        -122.689,
+        45.531
+      ],
+      [
+        -122.6815,
+        45.5364
+      ]
+    ],
+    "currentCrewPoint": {
+      "longitude": -122.7025,
+      "latitude": 45.5205
+    },
+    "statusTimeline": [
+      {
+        "minute": 0,
+        "status": "Assigned"
+      },
+      {
+        "minute": 6,
+        "status": "En Route"
+      },
+      {
+        "minute": 24,
+        "status": "On Site"
+      },
+      {
+        "minute": 116,
+        "status": "Customers Restored"
+      }
+    ]
+  }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "equipmentId": 1,
+    "equipmentTypeId": 1,
+    "equipmentName": "Bucket Truck 12",
+    "status": "Available",
+    "homeServiceAreaId": 102,
+    "hourlyCost": 62,
+    "isActive": true
+  },
+  {
+    "equipmentId": 2,
+    "equipmentTypeId": 1,
+    "equipmentName": "Bucket Truck 27",
+    "status": "Assigned",
+    "homeServiceAreaId": 101,
+    "hourlyCost": 62,
+    "isActive": true
+  },
+  {
+    "equipmentId": 3,
+    "equipmentTypeId": 2,
+    "equipmentName": "Digger Derrick 4",
+    "status": "Available",
+    "homeServiceAreaId": 102,
+    "hourlyCost": 88,
+    "isActive": true
+  },
+  {
+    "equipmentId": 4,
+    "equipmentTypeId": 3,
+    "equipmentName": "Hot Stick Set A",
+    "status": "Available",
+    "homeServiceAreaId": 102,
+    "hourlyCost": 12,
+    "isActive": true
+  },
+  {
+    "equipmentId": 5,
+    "equipmentTypeId": 4,
+    "equipmentName": "Voltage Tester Kit 3",
+    "status": "Available",
+    "homeServiceAreaId": 102,
+    "hourlyCost": 9,
+    "isActive": true
+  },
+  {
+    "equipmentId": 6,
+    "equipmentTypeId": 5,
+    "equipmentName": "Arc Flash PPE Kit 8",
+    "status": "Available",
+    "homeServiceAreaId": 102,
+    "hourlyCost": 6,
+    "isActive": true
+  },
+  {
+    "equipmentId": 7,
+    "equipmentTypeId": 6,
+    "equipmentName": "Gas Detector G-14",
+    "status": "Available",
+    "homeServiceAreaId": 202,
+    "hourlyCost": 18,
+    "isActive": true
+  },
+  {
+    "equipmentId": 8,
+    "equipmentTypeId": 6,
+    "equipmentName": "Gas Detector G-21",
+    "status": "Assigned",
+    "homeServiceAreaId": 201,
+    "hourlyCost": 18,
+    "isActive": true
+  },
+  {
+    "equipmentId": 9,
+    "equipmentTypeId": 7,
+    "equipmentName": "Gas Pressure Gauge P-7",
+    "status": "Available",
+    "homeServiceAreaId": 202,
+    "hourlyCost": 10,
+    "isActive": true
+  },
+  {
+    "equipmentId": 10,
+    "equipmentTypeId": 8,
+    "equipmentName": "Locator L-5",
+    "status": "Available",
+    "homeServiceAreaId": 301,
+    "hourlyCost": 15,
+    "isActive": true
+  },
+  {
+    "equipmentId": 11,
+    "equipmentTypeId": 9,
+    "equipmentName": "Service Vehicle 31",
+    "status": "Available",
+    "homeServiceAreaId": 202,
+    "hourlyCost": 34,
+    "isActive": true
+  },
+  {
+    "equipmentId": 12,
+    "equipmentTypeId": 9,
+    "equipmentName": "Service Vehicle 44",
+    "status": "Available",
+    "homeServiceAreaId": 102,
+    "hourlyCost": 34,
+    "isActive": true
+  },
+  {
+    "equipmentId": 13,
+    "equipmentTypeId": 10,
+    "equipmentName": "Tablet GPS Kit 6",
+    "status": "Available",
+    "homeServiceAreaId": 301,
+    "hourlyCost": 5,
+    "isActive": true
+  },
+  {
+    "equipmentId": 14,
+    "equipmentTypeId": 11,
+    "equipmentName": "Drone Kit D-2",
+    "status": "Available",
+    "homeServiceAreaId": 301,
+    "hourlyCost": 22,
+    "isActive": true
+  },
+  {
+    "equipmentId": 15,
+    "equipmentTypeId": 12,
+    "equipmentName": "Traffic Control Kit T-9",
+    "status": "Available",
+    "homeServiceAreaId": 301,
+    "hourlyCost": 14,
+    "isActive": true
+  },
+  {
+    "equipmentId": 16,
+    "equipmentTypeId": 13,
+    "equipmentName": "Limb Removal Kit V-3",
+    "status": "Available",
+    "homeServiceAreaId": 103,
+    "hourlyCost": 20,
+    "isActive": true
+  }
+]

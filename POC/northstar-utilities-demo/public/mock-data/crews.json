@@ -1,0 +1,74 @@
+[
+  {
+    "crewId": 1,
+    "crewName": "Electric Trouble Crew A",
+    "crewType": "Electric",
+    "homeServiceAreaId": 102,
+    "supervisorUserId": 10,
+    "availabilityStatus": "Available",
+    "isActive": true
+  },
+  {
+    "crewId": 2,
+    "crewName": "Gas Emergency Crew B",
+    "crewType": "Gas",
+    "homeServiceAreaId": 202,
+    "supervisorUserId": 3,
+    "availabilityStatus": "Available",
+    "isActive": true
+  },
+  {
+    "crewId": 3,
+    "crewName": "Underground Electric Crew C",
+    "crewType": "Electric",
+    "homeServiceAreaId": 103,
+    "supervisorUserId": 13,
+    "availabilityStatus": "Available",
+    "isActive": true
+  },
+  {
+    "crewId": 4,
+    "crewName": "Shared Inspection Crew D",
+    "crewType": "Shared",
+    "homeServiceAreaId": 301,
+    "supervisorUserId": 21,
+    "availabilityStatus": "Available",
+    "isActive": true
+  },
+  {
+    "crewId": 5,
+    "crewName": "Vegetation Crew E",
+    "crewType": "Electric",
+    "homeServiceAreaId": 103,
+    "supervisorUserId": 14,
+    "availabilityStatus": "Available",
+    "isActive": true
+  },
+  {
+    "crewId": 6,
+    "crewName": "Contractor Gas Crew F",
+    "crewType": "Gas",
+    "homeServiceAreaId": 201,
+    "supervisorUserId": 5,
+    "availabilityStatus": "Available",
+    "isActive": true
+  },
+  {
+    "crewId": 7,
+    "crewName": "Transformer Crew G",
+    "crewType": "Electric",
+    "homeServiceAreaId": 101,
+    "supervisorUserId": 12,
+    "availabilityStatus": "Assigned",
+    "isActive": true
+  },
+  {
+    "crewId": 8,
+    "crewName": "Mutual Aid Crew H",
+    "crewType": "Shared",
+    "homeServiceAreaId": 301,
+    "supervisorUserId": 21,
+    "availabilityStatus": "Off",
+    "isActive": true
+  }
+]
