@@ -9,153 +9,49 @@
 // ================================================
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
+
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
+
 import type Map from "@arcgis/core/Map";
 import type MapView from "@arcgis/core/views/MapView";
-import { ContainerEsriMapViewer, MapDivEsriMapViewer, TitleEsriMapViewer } from "@/components/esri/styled";
-import { BasemapType, EsriMapLayerConfig, EsriMapViewerHandle, EsriMapViewerProps } from "@/components/esri/types";
+
+import {
+  ContainerEsriMapViewer,
+  MapDivEsriMapViewer,
+  TitleEsriMapViewer
+} from "@/components/esri/styled";
+
+import {
+  BasemapType,
+  EsriMapLayerConfig,
+  EsriMapViewerHandle,
+  EsriMapViewerProps
+} from "@/components/esri/types";
 
 async function createLayer(layer: EsriMapLayerConfig) {
-  if (layer.type === "feature") {
+  const { type, ...layerOptions } = layer;
+
+  if (type === "feature") {
     const { default: FeatureLayer } = await import("@arcgis/core/layers/FeatureLayer");
-    return new FeatureLayer(layer);
+    return new FeatureLayer(layerOptions as __esri.FeatureLayerProperties);
   }
 
-  if (layer.type === "map-image") {
+  if (type === "map-image") {
     const { default: MapImageLayer } = await import("@arcgis/core/layers/MapImageLayer");
-    return new MapImageLayer(layer);
+    return new MapImageLayer(layerOptions as __esri.MapImageLayerProperties);
   }
-
-  if (layer.type === "tile") {
-    const { default: TileLayer } = await import("@arcgis/core/layers/TileLayer");
-    return new TileLayer(layer);
-  }
-
-  const { default: VectorTileLayer } = await import("@arcgis/core/layers/VectorTileLayer");
-  return new VectorTileLayer(layer);
-}
-
-const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
-  (
-    {
-      id = "skylynx-esri-map",
-      title,
-      center,
-      zoom,
-      basemap = BasemapType.OpenStreetMap,
-      height = 600,
-      layers = [],
-      controls = { attribution: true, compass: true, popup: true, zoom: true },
-      onReady,
-      onViewpointChange
-    },
-    ref
-  ) => {
-    const mapRef = useRef<HTMLDivElement>(null);
-    const mapViewRef = useRef<MapView | null>(null);
-    const mapInstanceRef = useRef<Map | null>(null);
-
-    useImperativeHandle(ref, () => ({
-      getView: () => mapViewRef.current,
-      goTo: async (viewpoint) => {
-        if (!mapViewRef.current) {
-          return;
-        }
-
-        await mapViewRef.current.goTo({
-          ...(viewpoint.center ? { center: viewpoint.center } : {}),
-          ...(viewpoint.zoom ? { zoom: viewpoint.zoom } : {})
-        });
-      },
-      setBasemap: (nextBasemap) => {
-        if (mapInstanceRef.current) {
-          mapInstanceRef.current.basemap = nextBasemap;
-        }
-      }
-    }));
-
-    useEffect(() => {
-      if (!mapRef.current) {
-        return undefined;
-      }
-
-      let cancelled = false;
-      let viewpointWatcher: { remove: () => void } | null = null;
-      const loadMap = async () => {
-        const [{ default: ArcGISMap }, { default: MapView }] = await Promise.all([
-          import("@arcgis/core/Map"),
-          import("@arcgis/core/views/MapView")
-        ]);
-
-        if (cancelled || !mapRef.current) {
-          return;
-        }
-
-        const uiComponents = controls.zoom === false ? [] : ["zoom" as const];
-
-        const map = new ArcGISMap({ basemap });
-        const mapLayers = await Promise.all(layers.map((layer) => createLayer(layer)));
-        map.addMany(mapLayers);
-
-        const view = new MapView({
-          container: mapRef.current,
-          map,
-          center,
-          zoom,
-          ui: {
-            components: uiComponents
-          },
-          popupEnabled: controls.popup !== false
-        });
-
-        mapInstanceRef.current = map;
-        mapViewRef.current = view;
-
-        if (controls.compass !== false) {
-          const { default: Compass } = await import("@arcgis/core/widgets/Compass");
-          view.ui.add(new Compass({ view }), "top-left");
-        }
-
-        viewpointWatcher = view.watch(["center", "zoom"], () => {
-          onViewpointChange?.({
-            center: [view.center.longitude ?? center[0], view.center.latitude ?? center[1]],
-            zoom: view.zoom ?? zoom
-          });
-        });
-
-        await view.when();
-        onReady?.(view);
-      };
-
-      loadMap();
-
-      return () => {
-        cancelled = true;
-        viewpointWatcher?.remove();
-        mapViewRef.current?.destroy();
-        mapViewRef.current = null;
-        mapInstanceRef.current = null;
-      };
-    }, [basemap, center, controls.attribution, controls.compass, controls.popup, controls.zoom, layers, onReady, onViewpointChange, zoom]);
-
-    return (
-      <ContainerEsriMapViewer id={id}>
-        {title && <TitleEsriMapViewer variant="subtitle1">{title}</TitleEsriMapViewer>}
-        <MapDivEsriMapViewer ref={mapRef} height={height} />
-      </ContainerEsriMapViewer>
-    );
-  }
-);
-
-EsriMapViewer.displayName = "EsriMapViewer";
 
   if (type === "tile") {
     const { default: TileLayer } = await import("@arcgis/core/layers/TileLayer");
-    return new TileLayer(layerOptions);
+    return new TileLayer(layerOptions as __esri.TileLayerProperties);
   }
 
-  const { default: VectorTileLayer } = await import("@arcgis/core/layers/VectorTileLayer");
-  return new VectorTileLayer(layerOptions);
+  if (type === "vector-tile") {
+    const { default: VectorTileLayer } = await import("@arcgis/core/layers/VectorTileLayer");
+    return new VectorTileLayer(layerOptions as __esri.VectorTileLayerProperties);
+  }
+
+  throw new Error(`Unsupported Esri layer type: ${type}`);
 }
 
 const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
@@ -180,7 +76,6 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
     ref
   ) => {
     const mapRef = useRef<HTMLDivElement | null>(null);
-
     const mapViewRef = useRef<MapView | null>(null);
     const mapInstanceRef = useRef<Map | null>(null);
 
@@ -226,47 +121,48 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
       }
 
       let cancelled = false;
-      let viewpointWatcher: IHandle | null = null;
+      let viewpointWatcher: { remove: () => void } | null = null;
+      let readyFrameId: number | null = null;
 
       const loadMap = async () => {
-        const [{ default: ArcGISMap }, { default: MapView }] = await Promise.all([
-          import("@arcgis/core/Map"),
-          import("@arcgis/core/views/MapView")
-        ]);
-
-        if (cancelled || !mapRef.current) {
-          return;
-        }
-
-        const uiComponents: string[] = [];
-
-        if (controls.zoom !== false) {
-          uiComponents.push("zoom");
-        }
-
-        if (controls.attribution !== false) {
-          uiComponents.push("attribution");
-        }
-
-        const map = new ArcGISMap({
-          basemap
-        });
-
-        const view = new MapView({
-          container: mapRef.current,
-          map,
-          center,
-          zoom,
-          popupEnabled: controls.popup !== false,
-          ui: {
-            components: uiComponents
-          }
-        });
-
-        mapInstanceRef.current = map;
-        mapViewRef.current = view;
-
         try {
+          const [{ default: ArcGISMap }, { default: MapView }] = await Promise.all([
+            import("@arcgis/core/Map"),
+            import("@arcgis/core/views/MapView")
+          ]);
+
+          if (cancelled || !mapRef.current) {
+            return;
+          }
+
+          const uiComponents: string[] = [];
+
+          if (controls.zoom !== false) {
+            uiComponents.push("zoom");
+          }
+
+          if (controls.attribution !== false) {
+            uiComponents.push("attribution");
+          }
+
+          const map = new ArcGISMap({
+            basemap
+          });
+
+          const view = new MapView({
+            container: mapRef.current,
+            map,
+            center,
+            zoom,
+            popupEnabled: controls.popup !== false,
+            ui: {
+              components: uiComponents
+            }
+          });
+
+          mapInstanceRef.current = map;
+          mapViewRef.current = view;
+
           const mapLayers = await Promise.all(layers.map((layer) => createLayer(layer)));
 
           if (!cancelled && mapLayers.length > 0) {
@@ -279,17 +175,21 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
           }
 
           viewpointWatcher = view.watch(["center", "zoom"], () => {
+            const longitude = view.center?.longitude ?? center[0];
+            const latitude = view.center?.latitude ?? center[1];
+
             onViewpointChangeRef.current?.({
-              center: [view.center.longitude, view.center.latitude],
-              zoom: view.zoom
+              center: [longitude, latitude],
+              zoom: view.zoom ?? zoom
             });
           });
 
           await view.when();
 
           if (!cancelled) {
-            view.resizeAlign
-            onReadyRef.current?.(view);
+            readyFrameId = window.requestAnimationFrame(() => {
+              onReadyRef.current?.(view);
+            });
           }
         } catch (error) {
           console.error("Failed to load Esri map viewer.", error);
@@ -300,6 +200,10 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
 
       return () => {
         cancelled = true;
+
+        if (readyFrameId !== null) {
+          window.cancelAnimationFrame(readyFrameId);
+        }
 
         viewpointWatcher?.remove();
 
