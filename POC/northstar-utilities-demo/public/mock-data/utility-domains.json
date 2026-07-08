@@ -1,0 +1,20 @@
+[
+  {
+    "utilityDomainId": 1,
+    "domainName": "Gas",
+    "displayColor": "#dc2626",
+    "isActive": true
+  },
+  {
+    "utilityDomainId": 2,
+    "domainName": "Electric",
+    "displayColor": "#f59e0b",
+    "isActive": true
+  },
+  {
+    "utilityDomainId": 3,
+    "domainName": "Shared",
+    "displayColor": "#0f766e",
+    "isActive": true
+  }
+]

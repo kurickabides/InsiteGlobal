@@ -1,0 +1,491 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6865,
+          45.5328
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2001",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68545,
+          45.53295
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2002",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6844,
+          45.5331
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2003",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68335,
+          45.5328
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2004",
+        "customerType": "Small Business",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6823,
+          45.53295
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2005",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68125,
+          45.5331
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2006",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6802,
+          45.5328
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2007",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.67915,
+          45.53295
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2008",
+        "customerType": "Critical",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": true,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6781,
+          45.5331
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2009",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68625,
+          45.53435
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2010",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6852,
+          45.5345
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2011",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68415,
+          45.53465
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2012",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6831,
+          45.53435
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2013",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68205,
+          45.5345
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2014",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.681,
+          45.53465
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2015",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.67995,
+          45.53435
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2016",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6789,
+          45.5345
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2017",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.67785,
+          45.53465
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2018",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6865,
+          45.5359
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2019",
+        "customerType": "Small Business",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68545,
+          45.53605
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2020",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6844,
+          45.5362
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2021",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68335,
+          45.5359
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2022",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6823,
+          45.53605
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2023",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68125,
+          45.5362
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2024",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6802,
+          45.5359
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2025",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.67915,
+          45.53605
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2026",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6781,
+          45.5362
+        ]
+      },
+      "properties": {
+        "customerId": "CUST-2027",
+        "customerType": "Residential",
+        "affectedByWorkOrderNumber": "WO-ELEC-2001",
+        "criticalCustomerFlag": false,
+        "serviceAreaId": 102,
+        "outageStatus": "Outage"
+      }
+    }
+  ]
+}

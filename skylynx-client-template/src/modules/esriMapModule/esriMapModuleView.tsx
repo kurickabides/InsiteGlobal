@@ -1,36 +1,48 @@
 // ================================================
-// ✅ Component: ESRIMapModule
-// Description: Esri JS API-based map viewer module wrapper
+// Component: ESRIMapModuleView
+// Description: Presentation-ready Esri map module view with configurable map window settings.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
-// Company: CryoRio
-// Filename: /modules/ESRIMapModule/esriMapModule.tsx
+// Company: InsiteGlobal
+// Filename: modules/esriMapModule/esriMapModuleView.tsx
+// Type: React TypeScript component file
 // ================================================
 
-import React from "react";
-import ModuleFrame from "../../components/ui/module/moduleFrame";
-import { ESRIMapModuleProps } from "./types";
-import { MapWrapper } from "./styled";
-import EsriMapViewer from "../../components/esri/esriMapViewer";
+import { Box, Paper, Stack, Typography } from "@mui/material";
+import EsriMapViewer from "@/components/esri/esriMapViewer";
+import { EsriMapViewpoint } from "@/components/esri/types";
+import { ESRIMapModuleSettings, ESRIMapModuleProps } from "@/modules/esriMapModule/types";
 
-const ESRIMapModule: React.FC<ESRIMapModuleProps> = ({
-  settings,
-  onSettingsUpdate,
-  children,
-}) => {
+interface ESRIMapModuleViewProps extends Pick<ESRIMapModuleProps, "children"> {
+  settings: ESRIMapModuleSettings;
+  onViewpointChange?: (viewpoint: EsriMapViewpoint) => void;
+}
+
+export default function ESRIMapModuleView({ settings, children, onViewpointChange }: ESRIMapModuleViewProps) {
   return (
-    <ModuleFrame settings={settings} onSettingsUpdate={onSettingsUpdate}>
-      <MapWrapper>
+    <Paper sx={{ p: 2, width: "100%", height: "100%" }} variant="outlined">
+      <Stack spacing={2}>
+        {settings.showTitle && (
+          <Box>
+            <Typography variant="h2">{settings.title}</Typography>
+            <Typography color="text.secondary" variant="body2">
+              Center {settings.center[1].toFixed(3)}, {settings.center[0].toFixed(3)} · Zoom {settings.zoom}
+            </Typography>
+          </Box>
+        )}
         <EsriMapViewer
-          center={settings.center}
-          zoom={settings.zoom}
           basemap={settings.basemap}
+          center={settings.center}
+          controls={settings.controls}
           height={settings.height}
+          id={settings.id}
+          layers={settings.layers}
+          onViewpointChange={onViewpointChange}
+          title={settings.showTitle ? undefined : settings.title}
+          zoom={settings.zoom}
         />
-      </MapWrapper>
-      {children}
-    </ModuleFrame>
+        {children}
+      </Stack>
+    </Paper>
   );
-};
-
-export default ESRIMapModule;
+}

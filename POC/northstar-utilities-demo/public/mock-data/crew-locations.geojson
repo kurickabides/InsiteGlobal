@@ -1,0 +1,173 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7025,
+          45.5205
+        ]
+      },
+      "properties": {
+        "crewId": 1,
+        "crewName": "Electric Trouble Crew A",
+        "crewType": "Electric",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Ready to dispatch",
+        "linkedStoryId": "power-branch-outage",
+        "activeRouteId": "ELEC-ROUTE-2001",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.681,
+          45.5168
+        ]
+      },
+      "properties": {
+        "crewId": 2,
+        "crewName": "Gas Emergency Crew B",
+        "crewType": "Gas",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Ready to dispatch",
+        "linkedStoryId": "gas-leak-emergency",
+        "activeRouteId": "GAS-ROUTE-1001",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.764,
+          45.543
+        ]
+      },
+      "properties": {
+        "crewId": 3,
+        "crewName": "Underground Electric Crew C",
+        "crewType": "Electric",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available",
+        "linkedStoryId": "power-branch-outage",
+        "activeRouteId": null,
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.724,
+          45.533
+        ]
+      },
+      "properties": {
+        "crewId": 4,
+        "crewName": "Shared Inspection Crew D",
+        "crewType": "Shared",
+        "homeServiceAreaId": 301,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available",
+        "linkedStoryId": "shared-ops",
+        "activeRouteId": null,
+        "displayColor": "#0f766e"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.79,
+          45.514
+        ]
+      },
+      "properties": {
+        "crewId": 5,
+        "crewName": "Vegetation Crew E",
+        "crewType": "Electric",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available",
+        "linkedStoryId": "power-branch-outage",
+        "activeRouteId": null,
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.632,
+          45.579
+        ]
+      },
+      "properties": {
+        "crewId": 6,
+        "crewName": "Contractor Gas Crew F",
+        "crewType": "Gas",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available",
+        "linkedStoryId": "gas-leak-emergency",
+        "activeRouteId": null,
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6715,
+          45.5745
+        ]
+      },
+      "properties": {
+        "crewId": 7,
+        "crewName": "Transformer Crew G",
+        "crewType": "Electric",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Assigned",
+        "linkedStoryId": "power-branch-outage",
+        "activeRouteId": null,
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.735,
+          45.602
+        ]
+      },
+      "properties": {
+        "crewId": 8,
+        "crewName": "Mutual Aid Crew H",
+        "crewType": "Shared",
+        "homeServiceAreaId": 301,
+        "availabilityStatus": "Off",
+        "currentMapStatus": "Off duty",
+        "linkedStoryId": "shared-ops",
+        "activeRouteId": null,
+        "displayColor": "#0f766e"
+      }
+    }
+  ]
+}

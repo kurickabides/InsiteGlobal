@@ -1,0 +1,659 @@
+[
+  {
+    "userSkillId": 1,
+    "userId": 1,
+    "skillId": 1,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 2,
+    "userId": 1,
+    "skillId": 2,
+    "skillLevel": "Senior",
+    "proficiencyScore": 95,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 3,
+    "userId": 1,
+    "skillId": 6,
+    "skillLevel": "Senior",
+    "proficiencyScore": 98,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 4,
+    "userId": 1,
+    "skillId": 17,
+    "skillLevel": "Senior",
+    "proficiencyScore": 99,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 5,
+    "userId": 2,
+    "skillId": 1,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 88,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 6,
+    "userId": 2,
+    "skillId": 2,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 91,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 7,
+    "userId": 2,
+    "skillId": 17,
+    "skillLevel": "Senior",
+    "proficiencyScore": 94,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 8,
+    "userId": 3,
+    "skillId": 1,
+    "skillLevel": "Expert",
+    "proficiencyScore": 94,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 9,
+    "userId": 3,
+    "skillId": 2,
+    "skillLevel": "Expert",
+    "proficiencyScore": 97,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 10,
+    "userId": 3,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "proficiencyScore": 99,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 11,
+    "userId": 3,
+    "skillId": 14,
+    "skillLevel": "Senior",
+    "proficiencyScore": 99,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 12,
+    "userId": 4,
+    "skillId": 4,
+    "skillLevel": "Senior",
+    "proficiencyScore": 86,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 13,
+    "userId": 4,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 89,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 14,
+    "userId": 4,
+    "skillId": 15,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 15,
+    "userId": 5,
+    "skillId": 1,
+    "skillLevel": "Senior",
+    "proficiencyScore": 83,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 16,
+    "userId": 5,
+    "skillId": 2,
+    "skillLevel": "Senior",
+    "proficiencyScore": 86,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 17,
+    "userId": 5,
+    "skillId": 6,
+    "skillLevel": "Senior",
+    "proficiencyScore": 89,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 18,
+    "userId": 6,
+    "skillId": 4,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 84,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 19,
+    "userId": 6,
+    "skillId": 6,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 87,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 20,
+    "userId": 6,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 21,
+    "userId": 7,
+    "skillId": 5,
+    "skillLevel": "Senior",
+    "proficiencyScore": 87,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 22,
+    "userId": 7,
+    "skillId": 6,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 23,
+    "userId": 7,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "proficiencyScore": 93,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 24,
+    "userId": 8,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 25,
+    "userId": 8,
+    "skillId": 15,
+    "skillLevel": "Senior",
+    "proficiencyScore": 93,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 26,
+    "userId": 8,
+    "skillId": 14,
+    "skillLevel": "Senior",
+    "proficiencyScore": 96,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 27,
+    "userId": 9,
+    "skillId": 7,
+    "skillLevel": "Senior",
+    "proficiencyScore": 91,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 28,
+    "userId": 9,
+    "skillId": 8,
+    "skillLevel": "Senior",
+    "proficiencyScore": 94,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 29,
+    "userId": 9,
+    "skillId": 12,
+    "skillLevel": "Senior",
+    "proficiencyScore": 97,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 30,
+    "userId": 10,
+    "skillId": 7,
+    "skillLevel": "Expert",
+    "proficiencyScore": 95,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 31,
+    "userId": 10,
+    "skillId": 8,
+    "skillLevel": "Expert",
+    "proficiencyScore": 98,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 32,
+    "userId": 10,
+    "skillId": 12,
+    "skillLevel": "Senior",
+    "proficiencyScore": 99,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 33,
+    "userId": 10,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "proficiencyScore": 99,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 34,
+    "userId": 11,
+    "skillId": 7,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 35,
+    "userId": 11,
+    "skillId": 8,
+    "skillLevel": "Senior",
+    "proficiencyScore": 95,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 36,
+    "userId": 11,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "proficiencyScore": 98,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 37,
+    "userId": 11,
+    "skillId": 14,
+    "skillLevel": "Senior",
+    "proficiencyScore": 99,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 38,
+    "userId": 12,
+    "skillId": 9,
+    "skillLevel": "Senior",
+    "proficiencyScore": 87,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 39,
+    "userId": 12,
+    "skillId": 7,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 40,
+    "userId": 12,
+    "skillId": 12,
+    "skillLevel": "Senior",
+    "proficiencyScore": 93,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 41,
+    "userId": 13,
+    "skillId": 10,
+    "skillLevel": "Senior",
+    "proficiencyScore": 86,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 42,
+    "userId": 13,
+    "skillId": 8,
+    "skillLevel": "Senior",
+    "proficiencyScore": 89,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 43,
+    "userId": 13,
+    "skillId": 17,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 44,
+    "userId": 14,
+    "skillId": 11,
+    "skillLevel": "Senior",
+    "proficiencyScore": 82,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 45,
+    "userId": 14,
+    "skillId": 16,
+    "skillLevel": "Senior",
+    "proficiencyScore": 85,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 46,
+    "userId": 14,
+    "skillId": 14,
+    "skillLevel": "Senior",
+    "proficiencyScore": 88,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 47,
+    "userId": 15,
+    "skillId": 7,
+    "skillLevel": "Senior",
+    "proficiencyScore": 84,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 48,
+    "userId": 15,
+    "skillId": 8,
+    "skillLevel": "Senior",
+    "proficiencyScore": 87,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 49,
+    "userId": 15,
+    "skillId": 12,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 50,
+    "userId": 16,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 51,
+    "userId": 16,
+    "skillId": 15,
+    "skillLevel": "Senior",
+    "proficiencyScore": 93,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 52,
+    "userId": 16,
+    "skillId": 18,
+    "skillLevel": "Senior",
+    "proficiencyScore": 96,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 53,
+    "userId": 17,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 89,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 54,
+    "userId": 17,
+    "skillId": 18,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 55,
+    "userId": 17,
+    "skillId": 19,
+    "skillLevel": "Senior",
+    "proficiencyScore": 95,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 56,
+    "userId": 18,
+    "skillId": 14,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 57,
+    "userId": 18,
+    "skillId": 16,
+    "skillLevel": "Senior",
+    "proficiencyScore": 95,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 58,
+    "userId": 18,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "proficiencyScore": 98,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 59,
+    "userId": 19,
+    "skillId": 20,
+    "skillLevel": "Senior",
+    "proficiencyScore": 88,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 60,
+    "userId": 19,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 91,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 61,
+    "userId": 20,
+    "skillId": 19,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 85,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 62,
+    "userId": 20,
+    "skillId": 13,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 88,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 63,
+    "userId": 20,
+    "skillId": 17,
+    "skillLevel": "Senior",
+    "proficiencyScore": 91,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 64,
+    "userId": 21,
+    "skillId": 20,
+    "skillLevel": "Expert",
+    "proficiencyScore": 94,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 65,
+    "userId": 21,
+    "skillId": 14,
+    "skillLevel": "Expert",
+    "proficiencyScore": 97,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 66,
+    "userId": 22,
+    "skillId": 16,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 80,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 67,
+    "userId": 22,
+    "skillId": 14,
+    "skillLevel": "Journeyman",
+    "proficiencyScore": 83,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 68,
+    "userId": 23,
+    "skillId": 18,
+    "skillLevel": "Senior",
+    "proficiencyScore": 87,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 69,
+    "userId": 23,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 90,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 70,
+    "userId": 23,
+    "skillId": 19,
+    "skillLevel": "Senior",
+    "proficiencyScore": 93,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 71,
+    "userId": 24,
+    "skillId": 15,
+    "skillLevel": "Senior",
+    "proficiencyScore": 89,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 72,
+    "userId": 24,
+    "skillId": 13,
+    "skillLevel": "Senior",
+    "proficiencyScore": 92,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  },
+  {
+    "userSkillId": 73,
+    "userId": 24,
+    "skillId": 18,
+    "skillLevel": "Senior",
+    "proficiencyScore": 95,
+    "certifiedFlag": true,
+    "lastUsedDate": "2026-06-28"
+  }
+]

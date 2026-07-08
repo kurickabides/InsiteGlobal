@@ -1,0 +1,43 @@
+{
+  "demoName": "NorthStar Utilities Labor Intelligence Demo",
+  "scenarioDate": "2026-07-05",
+  "stories": [
+    {
+      "storyId": "gas-leak-emergency",
+      "title": "Gas Leak Emergency",
+      "heroWorkOrderNumber": "WO-GAS-1001",
+      "recommendedCrewName": "Gas Emergency Crew B",
+      "summary": "A suspected gas odor requires certified leak response with gas detector equipment, close service-area fit, and lower performance-adjusted cost.",
+      "mapFiles": [
+        "gas-network.geojson",
+        "crew-locations.geojson"
+      ]
+    },
+    {
+      "storyId": "power-branch-outage",
+      "title": "Tree Limb on Main Feed",
+      "heroWorkOrderNumber": "WO-ELEC-2001",
+      "recommendedCrewName": "Electric Trouble Crew A",
+      "affectedCustomers": 27,
+      "summary": "A limb falls onto a main feed branch, interrupting 27 customers and requiring line repair, switching, bucket truck access, and fast restoration.",
+      "mapFiles": [
+        "electric-network.geojson",
+        "customers.geojson",
+        "crew-locations.geojson"
+      ]
+    }
+  ],
+  "dataFiles": [
+    "utility-domains.json",
+    "service-areas.geojson",
+    "electric-network.geojson",
+    "gas-network.geojson",
+    "customers.geojson",
+    "crew-locations.geojson",
+    "work-orders.json",
+    "crew-recommendations.json",
+    "simulation-routes.json",
+    "dashboard-kpis.json",
+    "roi-summary.json"
+  ]
+}

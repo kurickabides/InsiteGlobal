@@ -1,0 +1,121 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -122.69,
+            45.518
+          ],
+          [
+            -122.678,
+            45.52
+          ],
+          [
+            -122.666,
+            45.522
+          ],
+          [
+            -122.65,
+            45.526
+          ]
+        ]
+      },
+      "properties": {
+        "assetId": "GAS-MAIN-42",
+        "assetType": "gas-main",
+        "assetName": "Central Gas Main 42",
+        "utilityDomainId": 1,
+        "serviceAreaId": 202,
+        "status": "Active",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -122.666,
+            45.522
+          ],
+          [
+            -122.6602,
+            45.5238
+          ]
+        ]
+      },
+      "properties": {
+        "assetId": "GAS-SVC-1001",
+        "assetType": "service-line",
+        "assetName": "Service Line near WO-GAS-1001",
+        "utilityDomainId": 1,
+        "serviceAreaId": 202,
+        "status": "Investigate",
+        "displayColor": "#f97316"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6602,
+          45.5238
+        ]
+      },
+      "properties": {
+        "assetId": "GAS-LEAK-1001",
+        "assetType": "leak-investigation-point",
+        "assetName": "Reported gas odor",
+        "utilityDomainId": 1,
+        "serviceAreaId": 202,
+        "status": "Open",
+        "displayColor": "#dc2626",
+        "workOrderNumber": "WO-GAS-1001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.666,
+          45.522
+        ]
+      },
+      "properties": {
+        "assetId": "GAS-VALVE-18",
+        "assetType": "valve",
+        "assetName": "Isolation Valve 18",
+        "utilityDomainId": 1,
+        "serviceAreaId": 202,
+        "status": "Available",
+        "displayColor": "#991b1b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.681,
+          45.5168
+        ]
+      },
+      "properties": {
+        "assetId": "GAS-YARD-CENTRAL",
+        "assetType": "crew-yard",
+        "assetName": "Central Gas Crew Yard",
+        "utilityDomainId": 1,
+        "serviceAreaId": 202,
+        "status": "Open",
+        "displayColor": "#0f766e"
+      }
+    }
+  ]
+}

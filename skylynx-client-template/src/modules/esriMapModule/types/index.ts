@@ -1,31 +1,32 @@
 // ================================================
-// ✅ Module Types: ESRIMapModule
-// Description: Props and settings interface for Esri map module
+// Module Types: ESRIMapModule
+// Description: Defines reusable Esri map module state, settings, and props for presentation-driven POCs.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
-// Company: CryoRio
-// Filename: /modules/ESRIMapModule/types.ts
+// Company: InsiteGlobal
+// Filename: modules/esriMapModule/types/index.ts
+// Type: TypeScript type definition file
 // ================================================
 
-import { SkylynxModuleSettings } from "../../../components/ui/types/uiWrappers";
-import { BasemapType } from "../../../components/esri/types";
+import { ReactNode } from "react";
+import { BasemapType, EsriMapControlOptions, EsriMapLayerConfig, EsriMapViewpoint } from "@/components/esri/types";
 
-export interface ESRIMapModuleSettings extends SkylynxModuleSettings {
-  center: [number, number];
-  zoom: number;
+export interface ESRIMapModuleSettings extends EsriMapViewpoint {
+  id: string;
+  title: string;
+  showTitle: boolean;
   basemap: BasemapType;
-  showScaleBar: boolean;
-  enableDraw: boolean;
-  showLegend: boolean;
-  showLayerList: boolean;
-  layerVisibility?: Record<string, boolean>; // layerID => visible
+  height: number;
+  controls: EsriMapControlOptions;
+  layers: EsriMapLayerConfig[];
 }
 
 export interface ESRIMapModuleProps {
-  settings: ESRIMapModuleSettings;
-  onSettingsUpdate: (settings: ESRIMapModuleSettings) => void;
-  children?: React.ReactNode;
+  settings?: Partial<ESRIMapModuleSettings>;
+  onSettingsUpdate?: (settings: ESRIMapModuleSettings) => void;
+  children?: ReactNode;
 }
+
 export interface ESRIMapModuleState {
   settings: ESRIMapModuleSettings;
 }

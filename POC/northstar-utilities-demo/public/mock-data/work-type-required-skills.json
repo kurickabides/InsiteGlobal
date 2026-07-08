@@ -1,0 +1,74 @@
+[
+  {
+    "workTypeSkillId": 1,
+    "workTypeId": 1,
+    "skillId": 1,
+    "minimumSkillLevel": "Senior",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  },
+  {
+    "workTypeSkillId": 2,
+    "workTypeId": 1,
+    "skillId": 2,
+    "minimumSkillLevel": "Journeyman",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  },
+  {
+    "workTypeSkillId": 3,
+    "workTypeId": 1,
+    "skillId": 17,
+    "minimumSkillLevel": "Journeyman",
+    "requiredQuantity": 1,
+    "mandatoryFlag": false
+  },
+  {
+    "workTypeSkillId": 4,
+    "workTypeId": 5,
+    "skillId": 7,
+    "minimumSkillLevel": "Journeyman",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  },
+  {
+    "workTypeSkillId": 5,
+    "workTypeId": 5,
+    "skillId": 8,
+    "minimumSkillLevel": "Journeyman",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  },
+  {
+    "workTypeSkillId": 6,
+    "workTypeId": 5,
+    "skillId": 12,
+    "minimumSkillLevel": "Senior",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  },
+  {
+    "workTypeSkillId": 7,
+    "workTypeId": 5,
+    "skillId": 14,
+    "minimumSkillLevel": "Journeyman",
+    "requiredQuantity": 1,
+    "mandatoryFlag": false
+  },
+  {
+    "workTypeSkillId": 8,
+    "workTypeId": 6,
+    "skillId": 9,
+    "minimumSkillLevel": "Senior",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  },
+  {
+    "workTypeSkillId": 9,
+    "workTypeId": 9,
+    "skillId": 11,
+    "minimumSkillLevel": "Journeyman",
+    "requiredQuantity": 1,
+    "mandatoryFlag": true
+  }
+]

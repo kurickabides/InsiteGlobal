@@ -1,0 +1,245 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.735,
+              45.555
+            ],
+            [
+              -122.635,
+              45.555
+            ],
+            [
+              -122.635,
+              45.615
+            ],
+            [
+              -122.735,
+              45.615
+            ],
+            [
+              -122.735,
+              45.555
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "serviceAreaId": 101,
+        "serviceAreaName": "North Electric District",
+        "utilityDomainId": 2,
+        "serviceAreaType": "District",
+        "fillColor": "#fef3c7",
+        "outlineColor": "#d97706",
+        "displayOrder": 1,
+        "isActive": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.735,
+              45.5
+            ],
+            [
+              -122.635,
+              45.5
+            ],
+            [
+              -122.635,
+              45.56
+            ],
+            [
+              -122.735,
+              45.56
+            ],
+            [
+              -122.735,
+              45.5
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "serviceAreaId": 102,
+        "serviceAreaName": "Central Electric District",
+        "utilityDomainId": 2,
+        "serviceAreaType": "District",
+        "fillColor": "#fde68a",
+        "outlineColor": "#b45309",
+        "displayOrder": 2,
+        "isActive": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.805,
+              45.5
+            ],
+            [
+              -122.72,
+              45.5
+            ],
+            [
+              -122.72,
+              45.595
+            ],
+            [
+              -122.805,
+              45.595
+            ],
+            [
+              -122.805,
+              45.5
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "serviceAreaId": 103,
+        "serviceAreaName": "West Electric District",
+        "utilityDomainId": 2,
+        "serviceAreaType": "District",
+        "fillColor": "#fcd34d",
+        "outlineColor": "#92400e",
+        "displayOrder": 3,
+        "isActive": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.69,
+              45.55
+            ],
+            [
+              -122.59,
+              45.55
+            ],
+            [
+              -122.59,
+              45.615
+            ],
+            [
+              -122.69,
+              45.615
+            ],
+            [
+              -122.69,
+              45.55
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "serviceAreaId": 201,
+        "serviceAreaName": "North Gas Zone",
+        "utilityDomainId": 1,
+        "serviceAreaType": "Zone",
+        "fillColor": "#fecaca",
+        "outlineColor": "#b91c1c",
+        "displayOrder": 4,
+        "isActive": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.705,
+              45.495
+            ],
+            [
+              -122.6,
+              45.495
+            ],
+            [
+              -122.6,
+              45.555
+            ],
+            [
+              -122.705,
+              45.555
+            ],
+            [
+              -122.705,
+              45.495
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "serviceAreaId": 202,
+        "serviceAreaName": "Central Gas Zone",
+        "utilityDomainId": 1,
+        "serviceAreaType": "Zone",
+        "fillColor": "#fee2e2",
+        "outlineColor": "#dc2626",
+        "displayOrder": 5,
+        "isActive": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -122.82,
+              45.485
+            ],
+            [
+              -122.58,
+              45.485
+            ],
+            [
+              -122.58,
+              45.625
+            ],
+            [
+              -122.82,
+              45.625
+            ],
+            [
+              -122.82,
+              45.485
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "serviceAreaId": 301,
+        "serviceAreaName": "Shared Emergency Response Region",
+        "utilityDomainId": 3,
+        "serviceAreaType": "Region",
+        "fillColor": "#ccfbf1",
+        "outlineColor": "#0f766e",
+        "displayOrder": 6,
+        "isActive": true
+      }
+    }
+  ]
+}

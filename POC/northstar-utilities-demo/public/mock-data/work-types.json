@@ -1,0 +1,101 @@
+[
+  {
+    "workTypeId": 1,
+    "workTypeName": "Gas Leak Investigation",
+    "utilityDomainId": 1,
+    "defaultEstimatedHours": 4.5,
+    "requiresCrew": true,
+    "defaultPriority": "Emergency",
+    "isActive": true
+  },
+  {
+    "workTypeId": 2,
+    "workTypeName": "Gas Service Installation",
+    "utilityDomainId": 1,
+    "defaultEstimatedHours": 6.0,
+    "requiresCrew": true,
+    "defaultPriority": "High",
+    "isActive": true
+  },
+  {
+    "workTypeId": 3,
+    "workTypeName": "Regulator Maintenance",
+    "utilityDomainId": 1,
+    "defaultEstimatedHours": 5.0,
+    "requiresCrew": true,
+    "defaultPriority": "High",
+    "isActive": true
+  },
+  {
+    "workTypeId": 4,
+    "workTypeName": "Corrosion Inspection",
+    "utilityDomainId": 1,
+    "defaultEstimatedHours": 3.0,
+    "requiresCrew": false,
+    "defaultPriority": "Normal",
+    "isActive": true
+  },
+  {
+    "workTypeId": 5,
+    "workTypeName": "Feeder Branch Outage",
+    "utilityDomainId": 2,
+    "defaultEstimatedHours": 5.0,
+    "requiresCrew": true,
+    "defaultPriority": "Emergency",
+    "isActive": true
+  },
+  {
+    "workTypeId": 6,
+    "workTypeName": "Transformer Outage",
+    "utilityDomainId": 2,
+    "defaultEstimatedHours": 6.5,
+    "requiresCrew": true,
+    "defaultPriority": "Emergency",
+    "isActive": true
+  },
+  {
+    "workTypeId": 7,
+    "workTypeName": "Electric Pole Replacement",
+    "utilityDomainId": 2,
+    "defaultEstimatedHours": 8.0,
+    "requiresCrew": true,
+    "defaultPriority": "High",
+    "isActive": true
+  },
+  {
+    "workTypeId": 8,
+    "workTypeName": "Underground Cable Fault",
+    "utilityDomainId": 2,
+    "defaultEstimatedHours": 7.5,
+    "requiresCrew": true,
+    "defaultPriority": "High",
+    "isActive": true
+  },
+  {
+    "workTypeId": 9,
+    "workTypeName": "Vegetation Clearance",
+    "utilityDomainId": 2,
+    "defaultEstimatedHours": 4.0,
+    "requiresCrew": true,
+    "defaultPriority": "Normal",
+    "isActive": true
+  },
+  {
+    "workTypeId": 10,
+    "workTypeName": "Field Inspection",
+    "utilityDomainId": 3,
+    "defaultEstimatedHours": 2.5,
+    "requiresCrew": false,
+    "defaultPriority": "Normal",
+    "isActive": true
+  },
+  {
+    "workTypeId": 11,
+    "workTypeName": "Damage Assessment",
+    "utilityDomainId": 3,
+    "defaultEstimatedHours": 3.5,
+    "requiresCrew": false,
+    "defaultPriority": "High",
+    "isActive": true
+  }
+]

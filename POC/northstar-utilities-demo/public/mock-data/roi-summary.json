@@ -1,0 +1,38 @@
+{
+  "annualized": {
+    "baselineLaborCost": 1380000,
+    "optimizedLaborCost": 1212000,
+    "laborSavings": 168000,
+    "overtimeAvoidedHours": 210,
+    "travelMilesReduced": 1840,
+    "travelReductionPercent": 14,
+    "firstTimeFixImprovementPercent": 8,
+    "customerMinutesSaved": 3240
+  },
+  "stories": [
+    {
+      "storyId": "gas-leak-emergency",
+      "baselineAdjustedCost": 2070,
+      "optimizedAdjustedCost": 1398,
+      "savings": 672,
+      "valueDrivers": [
+        "Avoided contractor callout premium",
+        "Higher productivity gas emergency crew",
+        "Better equipment readiness"
+      ]
+    },
+    {
+      "storyId": "power-branch-outage",
+      "baselineAdjustedCost": 2098,
+      "optimizedAdjustedCost": 1725,
+      "savings": 373,
+      "affectedCustomers": 27,
+      "customerMinutesSaved": 1350,
+      "valueDrivers": [
+        "Reduced restoration time",
+        "Closest qualified line crew",
+        "Lower switching and rework risk"
+      ]
+    }
+  ]
+}

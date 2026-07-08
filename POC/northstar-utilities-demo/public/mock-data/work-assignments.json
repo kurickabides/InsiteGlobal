@@ -1,0 +1,62 @@
+[
+  {
+    "assignmentId": 5001,
+    "workOrderId": 1001,
+    "crewId": 2,
+    "userId": null,
+    "assignmentStatus": "Recommended",
+    "estimatedLaborCost": 1480,
+    "estimatedEquipmentCost": 188,
+    "performanceAdjustedCost": 1398,
+    "assignedDate": null,
+    "completedDate": null
+  },
+  {
+    "assignmentId": 5002,
+    "workOrderId": 2001,
+    "crewId": 1,
+    "userId": null,
+    "assignmentStatus": "Recommended",
+    "estimatedLaborCost": 1710,
+    "estimatedEquipmentCost": 315,
+    "performanceAdjustedCost": 1725,
+    "assignedDate": null,
+    "completedDate": null
+  },
+  {
+    "assignmentId": 5003,
+    "workOrderId": 2002,
+    "crewId": 7,
+    "userId": null,
+    "assignmentStatus": "Assigned",
+    "estimatedLaborCost": 1900,
+    "estimatedEquipmentCost": 260,
+    "performanceAdjustedCost": 2070,
+    "assignedDate": "2026-07-05T09:45:00Z",
+    "completedDate": null
+  },
+  {
+    "assignmentId": 5004,
+    "workOrderId": 2006,
+    "crewId": 1,
+    "userId": null,
+    "assignmentStatus": "Complete",
+    "estimatedLaborCost": 1600,
+    "estimatedEquipmentCost": 250,
+    "performanceAdjustedCost": 1695,
+    "assignedDate": "2026-07-04T10:15:00Z",
+    "completedDate": "2026-07-04T14:05:00Z"
+  },
+  {
+    "assignmentId": 5005,
+    "workOrderId": 3004,
+    "crewId": 4,
+    "userId": null,
+    "assignmentStatus": "Assigned",
+    "estimatedLaborCost": 780,
+    "estimatedEquipmentCost": 85,
+    "performanceAdjustedCost": 790,
+    "assignedDate": "2026-07-05T08:40:00Z",
+    "completedDate": null
+  }
+]
