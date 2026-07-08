@@ -1,6 +1,6 @@
 // ================================================
 // File: Demo Page
-// Description: Renders each NorthStar presentation section with metrics, surfaces, focus areas, and guided navigation.
+// Description: Renders each NorthStar presentation section with metrics, surfaces, key takeaways, and guided navigation.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
@@ -75,7 +75,7 @@ export function DemoPage({ route }: DemoPageProps) {
         <Grid item lg={4} xs={12}>
           <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
             <Typography sx={{ mb: 2 }} variant="h2">
-              Presenter Focus
+              Key Takeaways
             </Typography>
             <Stack direction="row" flexWrap="wrap" gap={1}>
               {route.focus.map((item) => (
