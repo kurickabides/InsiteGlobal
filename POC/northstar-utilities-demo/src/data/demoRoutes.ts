@@ -11,6 +11,7 @@
 export type DemoComponentKey =
   | "default"
   | "welcome"
+  | "businessProblem"
   | "overview"
   | "dashboard"
   | "fieldMap"
@@ -37,16 +38,27 @@ export const demoRoutes: DemoRoute[] = [
     path: "/welcome",
     title: "Welcome",
     eyebrow: "NorthStar Utilities",
-    summary: "Executive demo workspace for AI-enabled utility labor intelligence.",
-    focus: ["Set the business context", "Introduce the operating model", "Frame the dispatch decision"],
+    summary: "AI-enabled labor intelligence for gas and electric field operations, showing how planners make faster, more defensible dispatch decisions.",
+    focus: ["Best qualified crew at lowest effective cost", "Guided executive workflow", "Realistic synthetic utility operations data"],
+    metrics: [
+      { label: "Active Work Orders", value: "128" },
+      { label: "Available Crews", value: "34" },
+      { label: "Monthly Savings Opportunity", value: "$150K" }
+    ],
     componentKey: "welcome"
   },
   {
     path: "/business-problem",
     title: "Business Problem",
     eyebrow: "Operations pressure",
-    summary: "Field leaders need qualified crews assigned faster while controlling overtime, travel, and risk.",
-    focus: ["Slow manual crew selection", "Disconnected labor and asset data", "Limited cost visibility"]
+    summary: "Dispatchers must choose qualified crews quickly while balancing cost, geography, availability, certifications, overtime, and service risk.",
+    focus: ["Manual selection tradeoffs", "Disconnected labor and asset data", "Transparent qualified assignment"],
+    metrics: [
+      { label: "Avoidable Spend", value: "$48K" },
+      { label: "Assignment Exceptions", value: "17" },
+      { label: "Travel Reduction Opportunity", value: "14%" }
+    ],
+    componentKey: "businessProblem"
   },
   {
     path: "/utility-challenges",

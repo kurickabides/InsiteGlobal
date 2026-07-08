@@ -40,21 +40,94 @@ function DefaultSurface({ route }: DemoSurfaceProps) {
 }
 
 function WelcomeSurface() {
+  const demoPath = ["Business problem", "Utility challenges", "Dashboard", "Map", "Work orders", "AI recommendation", "Explainability", "ROI"];
+  const cards = [
+    { title: "Plan Work", text: "Prioritize gas and electric work orders with service territory, emergency, and capacity context." },
+    { title: "Recommend Crews", text: "Compare qualified crews using skill fit, equipment, travel, productivity, and adjusted labor cost." },
+    { title: "Explain Savings", text: "Show why the selected crew is defensible and where overtime, travel, and exception costs are avoided." }
+  ];
+
   return (
-    <Stack spacing={2}>
-      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, #14532d, #0f766e)", color: "white" }}>
-        <Typography variant="h2">AI-assisted dispatch story</Typography>
-        <Typography sx={{ mt: 1, maxWidth: 680 }}>
-          NorthStar demonstrates how utility operators can combine work priority, certifications, crew capacity, geography, and cost into a defensible labor decision.
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3.5, background: "linear-gradient(135deg, #14532d, #0f766e)", color: "white" }}>
+        <Typography variant="h2">AI-enabled labor intelligence for field operations</Typography>
+        <Typography sx={{ mt: 1.5, maxWidth: 760, fontSize: "1.02rem" }}>
+          NorthStar Utilities combines work orders, crew qualifications, labor rates, service territories, travel, and performance history to make dispatch decisions faster and more defensible.
         </Typography>
+        <Chip label="Demo thesis: best qualified crew at the lowest effective cost" sx={{ mt: 2, bgcolor: "rgba(255,255,255,0.16)", color: "white", fontWeight: 800 }} />
       </Paper>
+
       <Grid container spacing={2}>
-        {["Dispatch", "Field Ops", "Executive ROI"].map((item) => (
-          <Grid item xs={12} md={4} key={item}>
-            <Paper variant="outlined" sx={{ p: 2 }}><Typography fontWeight={800}>{item}</Typography></Paper>
+        {cards.map((card) => (
+          <Grid item xs={12} md={4} key={card.title}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography fontWeight={900}>{card.title}</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>{card.text}</Typography>
+            </Paper>
           </Grid>
         ))}
       </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>Guided presentation path</Typography>
+        <Stack direction="row" flexWrap="wrap" gap={1}>
+          {demoPath.map((step) => <Chip key={step} label={step} variant="outlined" />)}
+        </Stack>
+      </Paper>
+    </Stack>
+  );
+}
+
+function BusinessProblemSurface() {
+  const currentState = ["Availability and habit drive assignments", "Labor, asset, and certification data live in separate places", "Hourly rate is visible, but effective cost is not"];
+  const northStarState = ["Rank only crews qualified for the work", "Include geography, equipment, overtime, and productivity", "Explain the recommendation for planner review"];
+  const rankedCrews = [
+    { name: "Crew B", hourly: "$148/hr", effective: "$1,860", note: "Closest qualified gas crew; no overtime risk" },
+    { name: "Crew C", hourly: "$132/hr", effective: "$2,140", note: "Lower rate, longer travel, likely overtime" },
+    { name: "Crew A", hourly: "$156/hr", effective: "$2,320", note: "Qualified, but missing optimal equipment" }
+  ];
+
+  return (
+    <Stack spacing={2.5}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Paper variant="outlined" sx={{ p: 2.5, height: "100%", borderColor: "warning.main" }}>
+            <Typography variant="h2">Today: manual dispatch tradeoffs</Typography>
+            <Stack component="ul" spacing={1} sx={{ pl: 2.5, mb: 0 }}>
+              {currentState.map((item) => <Typography component="li" color="text.secondary" key={item}>{item}</Typography>)}
+            </Stack>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper variant="outlined" sx={{ p: 2.5, height: "100%", borderColor: "primary.main" }}>
+            <Typography variant="h2">NorthStar: optimized qualified assignment</Typography>
+            <Stack component="ul" spacing={1} sx={{ pl: 2.5, mb: 0 }}>
+              {northStarState.map((item) => <Typography component="li" color="text.secondary" key={item}>{item}</Typography>)}
+            </Stack>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900}>Decision question</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1 }}>
+          Which qualified crew should get this job when labor cost, travel time, skill fit, service territory, equipment, and overtime risk are all considered?
+        </Typography>
+      </Paper>
+
+      <Stack spacing={1.25}>
+        {rankedCrews.map((crew, index) => (
+          <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
+            <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+              <Box>
+                <Typography fontWeight={900}>{index + 1}. {crew.name}</Typography>
+                <Typography color="text.secondary">{crew.note}</Typography>
+              </Box>
+              <Chip label={`${crew.hourly} rate · ${crew.effective} effective cost`} color={index === 0 ? "success" : "default"} />
+            </Stack>
+          </Paper>
+        ))}
+      </Stack>
     </Stack>
   );
 }
@@ -246,6 +319,7 @@ function RoiSurface() {
 const registry = {
   default: DefaultSurface,
   welcome: WelcomeSurface,
+  businessProblem: BusinessProblemSurface,
   overview: OverviewSurface,
   dashboard: DashboardSurface,
   fieldMap: FieldMapSurface,
