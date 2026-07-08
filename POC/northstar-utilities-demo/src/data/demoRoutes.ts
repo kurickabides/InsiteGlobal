@@ -12,6 +12,7 @@ export type DemoComponentKey =
   | "default"
   | "welcome"
   | "businessProblem"
+  | "utilityChallenges"
   | "overview"
   | "dashboard"
   | "fieldMap"
@@ -64,8 +65,14 @@ export const demoRoutes: DemoRoute[] = [
     path: "/utility-challenges",
     title: "Utility Challenges",
     eyebrow: "Gas and electric complexity",
-    summary: "The demo combines electric and gas work with shared crews, equipment, districts, and priority rules.",
-    focus: ["Emergency response", "Skill and certification matching", "Service territory constraints"]
+    summary: "Utility dispatch teams must coordinate gas and electric emergencies, planned work, crew qualifications, equipment, mutual aid, and customer commitments across a changing service territory.",
+    focus: ["Protect life and service reliability", "Balance shared crews across gas and electric work", "Prove every assignment is qualified, timely, and cost-aware"],
+    metrics: [
+      { label: "Emergency Mix", value: "31%" },
+      { label: "Cross-domain Crews", value: "18" },
+      { label: "Constraint Checks", value: "7" }
+    ],
+    componentKey: "utilityChallenges"
   },
   {
     path: "/northstar-overview",

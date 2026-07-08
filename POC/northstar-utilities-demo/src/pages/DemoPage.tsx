@@ -1,6 +1,6 @@
 // ================================================
 // File: Demo Page
-// Description: Renders each NorthStar presentation section with metrics, surfaces, key takeaways, and guided navigation.
+// Description: Renders each NorthStar presentation section with metrics, surfaces, insight summaries, and guided navigation.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
@@ -16,6 +16,19 @@ import { Link as RouterLink } from "react-router-dom";
 import { getDemoSurface } from "../components/presentation/DemoSurfaceRegistry";
 import { DemoRoute, demoRoutes } from "../data/demoRoutes";
 
+const insightTitles = [
+  "Key Insights",
+  "Decision Points",
+  "Executive Insights",
+  "Strategic Highlights",
+  "Summary Insights",
+  "Main Points",
+  "Core Findings",
+  "Critical Takeaways",
+  "What Matters Most",
+  "Bottom Line"
+];
+
 interface DemoPageProps {
   route: DemoRoute;
 }
@@ -26,6 +39,7 @@ export function DemoPage({ route }: DemoPageProps) {
   const nextRoute = demoRoutes[currentIndex + 1];
   const DemoSurface = getDemoSurface(route.componentKey);
   const progress = ((currentIndex + 1) / demoRoutes.length) * 100;
+  const insightTitle = insightTitles[currentIndex % insightTitles.length];
 
   return (
     <Stack spacing={4}>
@@ -75,7 +89,7 @@ export function DemoPage({ route }: DemoPageProps) {
         <Grid item lg={4} xs={12}>
           <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
             <Typography sx={{ mb: 2 }} variant="h2">
-              Key Takeaways
+              {insightTitle}
             </Typography>
             <Stack direction="row" flexWrap="wrap" gap={1}>
               {route.focus.map((item) => (

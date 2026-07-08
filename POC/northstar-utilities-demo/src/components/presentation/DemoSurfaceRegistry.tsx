@@ -132,6 +132,71 @@ function BusinessProblemSurface() {
   );
 }
 
+function UtilityChallengesSurface() {
+  const challengeCards = [
+    {
+      title: "Dual-domain emergencies",
+      impact: "Gas leaks and electric outages compete for the same supervisors, trucks, and field capacity.",
+      response: "Classify priority, required certifications, equipment, and crew proximity before cost is considered."
+    },
+    {
+      title: "Qualification risk",
+      impact: "A crew can be available and nearby but still fail the work due to missing gas, switching, or confined-space credentials.",
+      response: "Gate recommendations with skill, certification, and equipment checks so planners only compare valid options."
+    },
+    {
+      title: "Territory complexity",
+      impact: "District boundaries, mutual aid, traffic, and restoration commitments change the real cost of assignment.",
+      response: "Blend service area fit, route time, SLA exposure, overtime risk, and productivity into one defensible ranking."
+    }
+  ];
+
+  const constraints = [
+    { label: "Safety priority", value: "Emergency work escalates first" },
+    { label: "Crew eligibility", value: "Skills, certs, and equipment must match" },
+    { label: "Operational cost", value: "Travel, overtime, and productivity adjust rate" },
+    { label: "Customer impact", value: "SLA risk and outage footprint guide tradeoffs" }
+  ];
+
+  return (
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(30, 64, 175, 0.12), rgba(20, 83, 45, 0.12))" }}>
+        <Typography variant="h2">Why utility labor decisions are hard</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1.25, maxWidth: 760 }}>
+          NorthStar planners are not simply picking the closest or lowest-rate crew. They are resolving a live operations puzzle where public safety, reliability, crew eligibility, customer commitments, and effective labor cost all interact.
+        </Typography>
+      </Paper>
+
+      <Grid container spacing={2}>
+        {challengeCards.map((card) => (
+          <Grid item xs={12} md={4} key={card.title}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography fontWeight={900}>{card.title}</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>{card.impact}</Typography>
+              <Divider sx={{ my: 1.5 }} />
+              <Typography color="primary" fontWeight={800}>{card.response}</Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>Decision constraints the demo makes visible</Typography>
+        <Grid container spacing={1.5}>
+          {constraints.map((constraint) => (
+            <Grid item xs={12} sm={6} key={constraint.label}>
+              <Stack direction="row" spacing={1} alignItems="flex-start">
+                <Chip label={constraint.label} color="primary" size="small" />
+                <Typography color="text.secondary">{constraint.value}</Typography>
+              </Stack>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+    </Stack>
+  );
+}
+
 function OverviewSurface() {
   return (
     <Grid container spacing={2}>
@@ -320,6 +385,7 @@ const registry = {
   default: DefaultSurface,
   welcome: WelcomeSurface,
   businessProblem: BusinessProblemSurface,
+  utilityChallenges: UtilityChallengesSurface,
   overview: OverviewSurface,
   dashboard: DashboardSurface,
   fieldMap: FieldMapSurface,
