@@ -149,6 +149,81 @@ const EsriMapViewer = forwardRef<EsriMapViewerHandle, EsriMapViewerProps>(
 
 EsriMapViewer.displayName = "EsriMapViewer";
 
+    useEffect(() => {
+      if (!mapRef.current) {
+        return undefined;
+      }
+
+      let cancelled = false;
+      let viewpointWatcher: { remove: () => void } | null = null;
+      const loadMap = async () => {
+        const [{ default: ArcGISMap }, { default: MapView }] = await Promise.all([
+          import("@arcgis/core/Map"),
+          import("@arcgis/core/views/MapView")
+        ]);
+
+        if (cancelled || !mapRef.current) {
+          return;
+        }
+
+        const uiComponents = controls.zoom === false ? [] : ["zoom" as const];
+
+        const map = new ArcGISMap({ basemap });
+        const mapLayers = await Promise.all(layers.map((layer) => createLayer(layer)));
+        map.addMany(mapLayers);
+
+        const view = new MapView({
+          container: mapRef.current,
+          map,
+          center,
+          zoom,
+          ui: {
+            components: uiComponents
+          },
+          popupEnabled: controls.popup !== false
+        });
+
+        mapInstanceRef.current = map;
+        mapViewRef.current = view;
+
+        if (controls.compass !== false) {
+          const { default: Compass } = await import("@arcgis/core/widgets/Compass");
+          view.ui.add(new Compass({ view }), "top-left");
+        }
+
+        viewpointWatcher = view.watch(["center", "zoom"], () => {
+          onViewpointChange?.({
+            center: [view.center.longitude ?? center[0], view.center.latitude ?? center[1]],
+            zoom: view.zoom ?? zoom
+          });
+        });
+
+        await view.when();
+        onReady?.(view);
+      };
+
+      loadMap();
+
+      return () => {
+        cancelled = true;
+        viewpointWatcher?.remove();
+        mapViewRef.current?.destroy();
+        mapViewRef.current = null;
+        mapInstanceRef.current = null;
+      };
+    }, [basemap, center, controls.attribution, controls.compass, controls.popup, controls.zoom, layers, onReady, onViewpointChange, zoom]);
+
+    return (
+      <ContainerEsriMapViewer id={id}>
+        {title && <TitleEsriMapViewer variant="subtitle1">{title}</TitleEsriMapViewer>}
+        <MapDivEsriMapViewer ref={mapRef} height={height} />
+      </ContainerEsriMapViewer>
+    );
+  }
+);
+
+EsriMapViewer.displayName = "EsriMapViewer";
+
   if (type === "tile") {
     const { default: TileLayer } = await import("@arcgis/core/layers/TileLayer");
     return new TileLayer(layerOptions as __esri.TileLayerProperties);

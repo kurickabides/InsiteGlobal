@@ -20,7 +20,7 @@ export type EsriBasemap =
   | "navigation-vector"
   | "osm";
 
-export type EsriLayerType = "feature" | "map-image" | "tile" | "vector-tile";
+export type EsriLayerType = "feature" | "geojson" | "map-image" | "tile" | "vector-tile";
 
 export interface EsriViewpoint {
   center: [number, number];

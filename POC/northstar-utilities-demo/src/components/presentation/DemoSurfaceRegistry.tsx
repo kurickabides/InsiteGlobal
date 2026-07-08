@@ -8,9 +8,11 @@
 // Type: React TypeScript component registry file
 // ================================================
 
-import { Box, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { DemoRoute } from "../../data/demoRoutes";
 import { EsriMapModuleView } from "../../modules/esriMapModule/esriMapModuleView";
+import { ResolvedStoryMap, resolveStoryMap } from "../../services/demoDataService";
 
 interface DemoSurfaceProps {
   route: DemoRoute;
@@ -89,12 +91,102 @@ function DashboardSurface() {
 }
 
 function FieldMapSurface() {
+  const [activeStoryId, setActiveStoryId] = useState("power-branch-outage");
+  const [resolvedMap, setResolvedMap] = useState<ResolvedStoryMap | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    let cleanup: (() => void) | undefined;
+
+    async function loadStoryMap() {
+      try {
+        setStatus("loading");
+        setErrorMessage(null);
+        const nextResolvedMap = await resolveStoryMap(activeStoryId);
+
+        if (cancelled) {
+          nextResolvedMap.cleanup();
+        } else {
+          cleanup = nextResolvedMap.cleanup;
+          setResolvedMap(nextResolvedMap);
+          setStatus("ready");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setStatus("error");
+          setErrorMessage(error instanceof Error ? error.message : "Unable to load NorthStar map mock data.");
+        }
+      }
+    }
+
+    loadStoryMap();
+
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
+  }, [activeStoryId]);
+
+  const mapSettings = resolvedMap
+    ? {
+      id: `northstar-${resolvedMap.story.storyId}-map`,
+      title: `${resolvedMap.story.title} Map`,
+      center: [resolvedMap.workOrder.longitude, resolvedMap.workOrder.latitude] as [number, number],
+      zoom: resolvedMap.story.storyId.includes("power") ? 14 : 13,
+      layers: resolvedMap.layers,
+      markers: resolvedMap.markers
+    }
+    : undefined;
+
   return (
-    <EsriMapModuleView>
-      <Typography color="text.secondary" variant="body2">
-        Next layer targets: service territories, live work order points, crew GPS, and route simulation.
-      </Typography>
-    </EsriMapModuleView>
+    <Stack spacing={2}>
+      <Paper variant="outlined" sx={{ p: 2 }}>
+        <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+          <Typography fontWeight={900}>Active story</Typography>
+          <Button
+            size="small"
+            variant={activeStoryId === "power-branch-outage" ? "contained" : "outlined"}
+            onClick={() => setActiveStoryId("power-branch-outage")}
+          >
+            Power branch outage
+          </Button>
+          <Button
+            size="small"
+            variant={activeStoryId === "gas-leak-emergency" ? "contained" : "outlined"}
+            onClick={() => setActiveStoryId("gas-leak-emergency")}
+          >
+            Gas leak emergency
+          </Button>
+          {resolvedMap && (
+            <Chip
+              color={resolvedMap.workOrder.priority === "Emergency" ? "error" : "primary"}
+              label={`${resolvedMap.workOrder.workOrderNumber} · ${resolvedMap.workOrder.status}`}
+            />
+          )}
+        </Stack>
+      </Paper>
+      {status === "error" && <Alert severity="error">{errorMessage}</Alert>}
+      {status === "loading" && <LinearProgress />}
+      <EsriMapModuleView settings={mapSettings}>
+        {resolvedMap ? (
+          <Stack spacing={1}>
+            <Typography color="text.secondary" variant="body2">
+              Loaded {resolvedMap.layers.length} GeoJSON map layer(s) from the active work order. Customer layer count:{" "}
+              {resolvedMap.customerCount ?? "not applicable"}.
+            </Typography>
+            <Typography color="text.secondary" variant="body2">
+              {resolvedMap.story.summary}
+            </Typography>
+          </Stack>
+        ) : (
+          <Typography color="text.secondary" variant="body2">
+            Loading the NorthStar manifest, active work order, and related GeoJSON layers.
+          </Typography>
+        )}
+      </EsriMapModuleView>
+    </Stack>
   );
 }
 

@@ -16,6 +16,11 @@ import type MapView from "@arcgis/core/views/MapView";
 import { EsriLayerConfig, EsriMapViewerProps } from "./types";
 
 async function createLayer(layer: EsriLayerConfig) {
+  if (layer.type === "geojson") {
+    const { default: GeoJSONLayer } = await import("@arcgis/core/layers/GeoJSONLayer");
+    return new GeoJSONLayer(layer);
+  }
+
   if (layer.type === "feature") {
     const { default: FeatureLayer } = await import("@arcgis/core/layers/FeatureLayer");
     return new FeatureLayer(layer);
