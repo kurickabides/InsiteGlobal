@@ -8,7 +8,8 @@
 // Type: React TypeScript page component file
 // ================================================
 
-import { Box, Button, Chip, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { Button, Chip, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
@@ -33,6 +34,60 @@ interface DemoPageProps {
   route: DemoRoute;
 }
 
+function PresenterMetricCards({ metrics }: { metrics: NonNullable<DemoRoute["metrics"]> }) {
+  const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
+  const selectedMetric = metrics[selectedMetricIndex];
+
+  useEffect(() => {
+    setSelectedMetricIndex(0);
+  }, [metrics]);
+
+  return (
+    <Paper sx={{ p: 2.5 }} variant="outlined">
+      <Typography sx={{ mb: 1.5 }} variant="h2">
+        Presenter metrics
+      </Typography>
+      <Stack direction={{ xs: "column", sm: "row", lg: "column", xl: "row" }} spacing={1.25}>
+        {metrics.map((metric, index) => {
+          const selected = index === selectedMetricIndex;
+
+          return (
+            <Paper
+              aria-pressed={selected}
+              component="button"
+              key={metric.label}
+              onClick={() => setSelectedMetricIndex(index)}
+              sx={{
+                p: 2,
+                flex: 1,
+                minWidth: 0,
+                borderColor: selected ? "primary.main" : "divider",
+                bgcolor: selected ? "rgba(46, 125, 50, 0.08)" : "background.paper",
+                cursor: "pointer",
+                textAlign: "left"
+              }}
+              variant="outlined"
+            >
+              <Typography color="text.secondary" variant="body2">
+                {metric.label}
+              </Typography>
+              <Typography sx={{ mt: 0.5 }} variant="h2">
+                {metric.value}
+              </Typography>
+            </Paper>
+          );
+        })}
+      </Stack>
+      <Paper sx={{ mt: 1.5, p: 2, bgcolor: "background.default" }} variant="outlined">
+        <Typography fontWeight={900}>{selectedMetric.label}</Typography>
+        <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">
+          {selectedMetric.description}
+        </Typography>
+      </Paper>
+    </Paper>
+  );
+}
+
 export function DemoPage({ route }: DemoPageProps) {
   const currentIndex = demoRoutes.findIndex((item) => item.path === route.path);
   const previousRoute = demoRoutes[currentIndex - 1];
@@ -43,7 +98,7 @@ export function DemoPage({ route }: DemoPageProps) {
 
   return (
     <Stack spacing={4}>
-      <Box>
+      <div>
         <Typography color="secondary" sx={{ fontWeight: 800 }} variant="overline">
           {route.eyebrow}
         </Typography>
@@ -57,46 +112,32 @@ export function DemoPage({ route }: DemoPageProps) {
           <Typography color="text.secondary" variant="body2">Step {currentIndex + 1} of {demoRoutes.length}</Typography>
           <LinearProgress variant="determinate" value={progress} sx={{ flex: 1 }} />
         </Stack>
-      </Box>
-
-      {route.metrics && (
-        <Grid container spacing={2}>
-          {route.metrics.map((metric) => (
-            <Grid item key={metric.label} sm={4} xs={12}>
-              <Paper sx={{ p: 2.5, height: "100%" }} variant="outlined">
-                <Typography color="text.secondary" variant="body2">
-                  {metric.label}
-                </Typography>
-                <Typography sx={{ mt: 1 }} variant="h2">
-                  {metric.value}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+      </div>
 
       <Grid container spacing={3}>
         <Grid item lg={8} xs={12}>
           <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
             <Typography sx={{ mb: 2 }} variant="h2">
-              Demo Surface
+              {route.surfaceTitle}
             </Typography>
             <DemoSurface route={route} />
           </Paper>
         </Grid>
 
         <Grid item lg={4} xs={12}>
-          <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
-            <Typography sx={{ mb: 2 }} variant="h2">
-              {insightTitle}
-            </Typography>
-            <Stack direction="row" flexWrap="wrap" gap={1}>
-              {route.focus.map((item) => (
-                <Chip key={item} label={item} variant="outlined" />
-              ))}
-            </Stack>
-          </Paper>
+          <Stack spacing={3}>
+            <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
+              <Typography sx={{ mb: 2 }} variant="h2">
+                {insightTitle}
+              </Typography>
+              <Stack direction="row" flexWrap="wrap" gap={1}>
+                {route.focus.map((item) => (
+                  <Chip key={item} label={item} variant="outlined" />
+                ))}
+              </Stack>
+            </Paper>
+            {route.metrics && <PresenterMetricCards metrics={route.metrics} />}
+          </Stack>
         </Grid>
       </Grid>
 

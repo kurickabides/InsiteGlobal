@@ -12,7 +12,6 @@ import { ReactNode, useMemo, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import {
   AppBar,
-  Box,
   Divider,
   Drawer,
   IconButton,
@@ -49,16 +48,16 @@ export function AppShell({ children }: AppShellProps) {
   }, [activeIndex]);
   const progress = activeIndex >= 0 ? ((activeIndex + 1) / demoRoutes.length) * 100 : 0;
 
-  const drawer = (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Box sx={{ px: 3, py: 2.5 }}>
+  const drawer: ReactNode = (
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ padding: "20px 24px" }}>
         <Typography sx={{ fontSize: "1.15rem" }} variant="h2">
           {appConfig.appName}
         </Typography>
         <Typography color="text.secondary" variant="body2">
           {appConfig.subtitle}
         </Typography>
-      </Box>
+      </div>
       <Divider />
       <List sx={{ px: 1.5, py: 1 }}>
         {demoRoutes.map((route, index) => {
@@ -87,11 +86,11 @@ export function AppShell({ children }: AppShellProps) {
           );
         })}
       </List>
-    </Box>
+    </div>
   );
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex" }}>
+    <div style={{ minHeight: "100vh", display: "flex" }}>
       <AppBar
         color="inherit"
         elevation={0}
@@ -118,14 +117,14 @@ export function AppShell({ children }: AppShellProps) {
               {activeTitle}
             </Typography>
           </Stack>
-          <Box sx={{ minWidth: 180, display: { xs: "none", sm: "block" } }}>
+          <div style={{ minWidth: 180 }}>
             <Typography color="text.secondary" variant="body2">{activeIndex + 1} / {demoRoutes.length}</Typography>
             <LinearProgress variant="determinate" value={progress} />
-          </Box>
+          </div>
         </Toolbar>
       </AppBar>
 
-      <Box component="nav" sx={{ width: { md: desktopOpen ? drawerWidth : 0 }, flexShrink: { md: 0 }, transition: theme.transitions.create("width") }}>
+      <nav style={{ flexShrink: 0, transition: theme.transitions.create("width"), width: isDesktop && desktopOpen ? drawerWidth : 0 }}>
         <Drawer
           ModalProps={{ keepMounted: true }}
           onClose={() => setMobileOpen(false)}
@@ -150,11 +149,11 @@ export function AppShell({ children }: AppShellProps) {
         >
           {drawer}
         </Drawer>
-      </Box>
+      </nav>
 
-      <Box component="main" sx={{ flexGrow: 1, minWidth: 0, pt: 10, px: { xs: 2, sm: 3, lg: 5 }, pb: 5 }}>
+      <main style={{ flexGrow: 1, minWidth: 0, padding: isDesktop ? "80px 40px 40px" : "80px 16px 40px" }}>
         {children}
-      </Box>
-    </Box>
+      </main>
+    </div>
   );
 }
