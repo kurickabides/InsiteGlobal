@@ -18,6 +18,7 @@ export type DemoComponentKey =
   | "fieldMap"
   | "workOrders"
   | "crewRecommendation"
+  | "explainability"
   | "architecture"
   | "roi";
 
@@ -129,7 +130,13 @@ export const demoRoutes: DemoRoute[] = [
     title: "Explainability",
     eyebrow: "Transparent recommendations",
     summary: "Show why the recommended crew wins even when its hourly rate is not the lowest.",
-    focus: ["Qualification checks", "Cost drivers", "Risk penalties"]
+    focus: ["Qualification gates", "Effective cost drivers", "Risk and SLA penalties"],
+    componentKey: "explainability",
+    metrics: [
+      { label: "Qualification Gates", value: "5 / 5" },
+      { label: "Risk Reduction", value: "31%" },
+      { label: "Audit Confidence", value: "High" }
+    ]
   },
   {
     path: "/architecture",
