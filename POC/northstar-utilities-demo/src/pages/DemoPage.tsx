@@ -80,7 +80,7 @@ export function DemoPage({ route }: DemoPageProps) {
         <Grid item lg={8} xs={12}>
           <Paper sx={{ p: 3, minHeight: 360 }} variant="outlined">
             <Typography sx={{ mb: 2 }} variant="h2">
-              Demo Surface
+              {route.surfaceTitle}
             </Typography>
             <DemoSurface route={route} />
           </Paper>

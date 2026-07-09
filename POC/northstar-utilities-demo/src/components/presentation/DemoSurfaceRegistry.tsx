@@ -8,8 +8,8 @@
 // Type: React TypeScript component registry file
 // ================================================
 
-import { Alert, Box, Button, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Alert, Button, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { DemoRoute } from "../../data/demoRoutes";
 import { EsriMapModuleView } from "../../modules/esriMapModule/esriMapModuleView";
 import { ResolvedStoryMap, resolveStoryMap } from "../../services/demoDataService";
@@ -19,18 +19,72 @@ interface DemoSurfaceProps {
 }
 
 const workOrders = [
-  { id: "WO-1842", type: "Gas leak", priority: "Emergency", district: "Central", eta: "18 min" },
-  { id: "WO-1907", type: "Transformer outage", priority: "Critical", district: "North", eta: "31 min" },
-  { id: "WO-2011", type: "Meter inspection", priority: "Routine", district: "West", eta: "2 hrs" }
+  {
+    id: "WO-1842",
+    type: "Gas leak",
+    priority: "Emergency",
+    district: "Central",
+    eta: "18 min",
+    customerImpact: "1,240 customers near downtown hospital corridor",
+    required: ["Gas leak response", "Atmospheric testing", "Vacuum excavation truck"],
+    status: "Needs assignment"
+  },
+  {
+    id: "WO-1907",
+    type: "Transformer outage",
+    priority: "Critical",
+    district: "North",
+    eta: "31 min",
+    customerImpact: "412 customers, feeder lockout investigation",
+    required: ["Medium-voltage switching", "Bucket truck", "Outage restoration"],
+    status: "Queued"
+  },
+  {
+    id: "WO-2011",
+    type: "Meter inspection",
+    priority: "Routine",
+    district: "West",
+    eta: "2 hrs",
+    customerImpact: "Single commercial account follow-up",
+    required: ["Meter inspection", "Customer appointment", "Photo documentation"],
+    status: "Scheduled"
+  }
 ];
 
 const crews = [
-  { name: "Crew B", fit: 96, cost: "-18%", reason: "Gas cert + closest qualified crew" },
-  { name: "Crew D", fit: 88, cost: "-9%", reason: "Strong productivity, longer travel" },
-  { name: "Crew A", fit: 74, cost: "+6%", reason: "Available but missing specialty equipment" }
+  {
+    name: "Crew B",
+    fit: 96,
+    hourly: "$148/hr",
+    effectiveCost: "$1,860",
+    cost: "-18%",
+    travel: "18 min",
+    reason: "Gas cert + closest qualified crew",
+    strengths: ["Gas emergency certified", "Vacuum excavation truck assigned", "No overtime exposure"]
+  },
+  {
+    name: "Crew D",
+    fit: 88,
+    hourly: "$142/hr",
+    effectiveCost: "$2,070",
+    cost: "-9%",
+    travel: "34 min",
+    reason: "Strong productivity, longer travel",
+    strengths: ["Qualified gas crew", "High first-time fix rate", "Cross-district travel penalty"]
+  },
+  {
+    name: "Crew A",
+    fit: 74,
+    hourly: "$132/hr",
+    effectiveCost: "$2,320",
+    cost: "+6%",
+    travel: "41 min",
+    reason: "Lowest rate, but missing specialty equipment",
+    strengths: ["Available now", "Lowest hourly rate", "Requires equipment transfer"]
+  }
 ];
 
-function DefaultSurface({ route }: DemoSurfaceProps) {
+function DefaultSurface({ route }: DemoSurfaceProps): ReactElement {
   return (
     <Paper variant="outlined" sx={{ p: 3, height: "100%" }}>
       <Typography variant="h2" sx={{ mb: 1 }}>{route.title}</Typography>
@@ -39,7 +93,7 @@ function DefaultSurface({ route }: DemoSurfaceProps) {
   );
 }
 
-function WelcomeSurface() {
+function WelcomeSurface(): ReactElement {
   const demoPath = ["Business problem", "Utility challenges", "Dashboard", "Map", "Work orders", "AI recommendation", "Explainability", "ROI"];
   const cards = [
     { title: "Plan Work", text: "Prioritize gas and electric work orders with service territory, emergency, and capacity context." },
@@ -78,7 +132,7 @@ function WelcomeSurface() {
   );
 }
 
-function BusinessProblemSurface() {
+function BusinessProblemSurface(): ReactElement {
   const currentState = ["Availability and habit drive assignments", "Labor, asset, and certification data live in separate places", "Hourly rate is visible, but effective cost is not"];
   const northStarState = ["Rank only crews qualified for the work", "Include geography, equipment, overtime, and productivity", "Explain the recommendation for planner review"];
   const rankedCrews = [
@@ -119,10 +173,10 @@ function BusinessProblemSurface() {
         {rankedCrews.map((crew, index) => (
           <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
             <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-              <Box>
+              <div>
                 <Typography fontWeight={900}>{index + 1}. {crew.name}</Typography>
                 <Typography color="text.secondary">{crew.note}</Typography>
-              </Box>
+              </div>
               <Chip label={`${crew.hourly} rate · ${crew.effective} effective cost`} color={index === 0 ? "success" : "default"} />
             </Stack>
           </Paper>
@@ -132,7 +186,7 @@ function BusinessProblemSurface() {
   );
 }
 
-function UtilityChallengesSurface() {
+function UtilityChallengesSurface(): ReactElement {
   const challengeCards = [
     {
       title: "Dual-domain emergencies",
@@ -197,38 +251,106 @@ function UtilityChallengesSurface() {
   );
 }
 
-function OverviewSurface() {
+function OverviewSurface(): ReactElement {
+  const learningGoals = [
+    {
+      title: "Understand the decision",
+      text: "See how dispatchers weigh emergency priority, service geography, labor cost, crew eligibility, and customer commitments at the same time."
+    },
+    {
+      title: "Trust the recommendation",
+      text: "Learn why NorthStar gates out unqualified crews first, then ranks valid options by effective cost, SLA exposure, travel, and productivity."
+    },
+    {
+      title: "Connect operations to ROI",
+      text: "Follow one emergency assignment from queue to explanation to value so executives can see how better dispatch decisions scale."
+    }
+  ];
+  const utilityProfile = [
+    { label: "Combined utility", value: "Gas + electric service territory" },
+    { label: "Crew network", value: "34 available crews across 3 districts" },
+    { label: "Operating pressure", value: "128 active jobs with 31% emergency mix" },
+    { label: "Demo outcome", value: "Defensible, cost-aware crew assignment" }
+  ];
+
   return (
-    <Grid container spacing={2}>
-      {["North District", "Central District", "West District"].map((district, index) => (
-        <Grid item xs={12} md={4} key={district}>
-          <Paper variant="outlined" sx={{ p: 2.5 }}>
-            <Typography variant="h2">{district}</Typography>
-            <Typography color="text.secondary" sx={{ mt: 1 }}>{18 + index * 7} active jobs · {8 + index * 3} available crews</Typography>
-          </Paper>
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(30, 64, 175, 0.10), rgba(20, 83, 45, 0.12))" }}>
+        <Typography variant="h2">By the end of this demo</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 820 }}>
+          The audience should understand how NorthStar turns a complex utility dispatch choice into a transparent, repeatable recommendation that planners can explain and leaders can measure.
+        </Typography>
+      </Paper>
+
+      <Grid container spacing={2}>
+        {learningGoals.map((goal) => (
+          <Grid item xs={12} md={4} key={goal.title}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography fontWeight={900}>{goal.title}</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>{goal.text}</Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>NorthStar operating profile</Typography>
+        <Grid container spacing={1.5}>
+          {utilityProfile.map((item) => (
+            <Grid item xs={12} sm={6} key={item.label}>
+              <Stack direction="row" spacing={1} alignItems="flex-start">
+                <Chip label={item.label} color="primary" size="small" />
+                <Typography color="text.secondary">{item.value}</Typography>
+              </Stack>
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Grid>
+      </Paper>
+    </Stack>
   );
 }
 
-function DashboardSurface() {
+function DashboardSurface(): ReactElement {
+  const operatingMetrics = [
+    { label: "Emergency Jobs", value: "14", progress: 68, note: "Gas and electric events needing same-shift response" },
+    { label: "Crew Utilization", value: "82%", progress: 82, note: "Available capacity is tightening in Central district" },
+    { label: "SLA Risk", value: "23", progress: 57, note: "Jobs at risk if assignments are delayed another 30 minutes" }
+  ];
+
   return (
-    <Grid container spacing={2}>
-      {[{ label: "Emergency Jobs", value: 14 }, { label: "Crew Utilization", value: 82 }, { label: "SLA Risk", value: 23 }].map((metric) => (
-        <Grid item xs={12} md={4} key={metric.label}>
-          <Paper variant="outlined" sx={{ p: 2.5 }}>
-            <Typography color="text.secondary">{metric.label}</Typography>
-            <Typography variant="h2" sx={{ mt: 1 }}>{metric.value}{metric.label === "Crew Utilization" ? "%" : ""}</Typography>
-            <LinearProgress variant="determinate" value={Math.min(metric.value, 100)} sx={{ mt: 2 }} />
-          </Paper>
-        </Grid>
-      ))}
-    </Grid>
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(20, 83, 45, 0.12))" }}>
+        <Typography variant="h2">Operational snapshot before dispatch</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 760 }}>
+          The planner starts with a mixed gas and electric queue, constrained field capacity, and a visible savings opportunity if the next emergency is assigned to the right qualified crew.
+        </Typography>
+      </Paper>
+      <Grid container spacing={2}>
+        {operatingMetrics.map((metric) => (
+          <Grid item xs={12} md={4} key={metric.label}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography color="text.secondary">{metric.label}</Typography>
+              <Typography variant="h2" sx={{ mt: 1 }}>{metric.value}</Typography>
+              <LinearProgress variant="determinate" value={metric.progress} sx={{ my: 2 }} />
+              <Typography color="text.secondary" variant="body2">{metric.note}</Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+      <Paper variant="outlined" sx={{ p: 2.5, borderColor: "warning.main" }}>
+        <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography fontWeight={900}>Decision to make now</Typography>
+            <Typography color="text.secondary">Assign WO-1842 before the emergency SLA window pushes the response into overtime.</Typography>
+          </div>
+          <Chip color="warning" label="48 min SLA remaining" />
+        </Stack>
+      </Paper>
+    </Stack>
   );
 }
 
-function FieldMapSurface() {
+function FieldMapSurface(): ReactElement {
   const [activeStoryId, setActiveStoryId] = useState("power-branch-outage");
   const [resolvedMap, setResolvedMap] = useState<ResolvedStoryMap | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -328,56 +450,226 @@ function FieldMapSurface() {
   );
 }
 
-function WorkOrdersSurface() {
+function WorkOrdersSurface(): ReactElement {
+  const selectedOrder = workOrders[0];
+
   return (
-    <Stack spacing={1.5}>
-      {workOrders.map((order) => (
-        <Paper key={order.id} variant="outlined" sx={{ p: 2 }}>
-          <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-            <Box><Typography fontWeight={800}>{order.id} · {order.type}</Typography><Typography color="text.secondary">{order.district} district</Typography></Box>
-            <Chip label={`${order.priority} · ${order.eta}`} color={order.priority === "Emergency" ? "error" : "primary"} />
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, borderColor: "error.main" }}>
+        <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography color="error" fontWeight={900} variant="overline">Selected emergency work order</Typography>
+            <Typography variant="h2">{selectedOrder.id} · {selectedOrder.type}</Typography>
+            <Typography color="text.secondary" sx={{ mt: 1 }}>{selectedOrder.customerImpact}</Typography>
+          </div>
+          <Stack alignItems="flex-end" spacing={1}>
+            <Chip color="error" label={selectedOrder.priority} />
+            <Chip label={`${selectedOrder.eta} target response`} variant="outlined" />
           </Stack>
-        </Paper>
-      ))}
-    </Stack>
-  );
-}
+        </Stack>
+      </Paper>
 
-function CrewRecommendationSurface() {
-  return (
-    <Stack spacing={1.5}>
-      {crews.map((crew, index) => (
-        <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "primary.main" : "divider" }}>
-          <Stack spacing={1}>
-            <Stack direction="row" justifyContent="space-between"><Typography fontWeight={900}>{index + 1}. {crew.name}</Typography><Typography>{crew.fit}% fit · {crew.cost}</Typography></Stack>
-            <LinearProgress variant="determinate" value={crew.fit} />
-            <Typography color="text.secondary">{crew.reason}</Typography>
-          </Stack>
-        </Paper>
-      ))}
-    </Stack>
-  );
-}
-
-function ArchitectureSurface() {
-  return (
-    <Stack spacing={1.5} divider={<Divider flexItem />}>
-      {["React + MUI presentation shell", "Workforce recommendation service", "SQL/PostGIS workforce model", "Esri map and route services"].map((item) => (
-        <Typography key={item} fontWeight={800}>{item}</Typography>
-      ))}
-    </Stack>
-  );
-}
-
-function RoiSurface() {
-  return (
-    <Grid container spacing={2}>
-      {["$1.8M annualized savings", "22% faster response", "14% less windshield time"].map((value) => (
-        <Grid item xs={12} md={4} key={value}>
-          <Paper variant="outlined" sx={{ p: 2.5, textAlign: "center" }}><Typography variant="h2">{value}</Typography></Paper>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={7}>
+          <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+            <Typography fontWeight={900} sx={{ mb: 1.5 }}>Required before a crew can be recommended</Typography>
+            <Stack direction="row" flexWrap="wrap" gap={1}>
+              {selectedOrder.required.map((requirement) => <Chip key={requirement} label={requirement} color="primary" variant="outlined" />)}
+            </Stack>
+            <Typography color="text.secondary" sx={{ mt: 2 }}>
+              NorthStar should exclude crews that lack the required gas response credentials or equipment before comparing labor cost.
+            </Typography>
+          </Paper>
         </Grid>
-      ))}
-    </Grid>
+        <Grid item xs={12} md={5}>
+          <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+            <Typography fontWeight={900}>Dispatch queue context</Typography>
+            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+              {workOrders.map((order) => (
+                <Stack key={order.id} direction="row" justifyContent="space-between" gap={1}>
+                  <Typography color={order.id === selectedOrder.id ? "error" : "text.secondary"} fontWeight={order.id === selectedOrder.id ? 900 : 500}>
+                    {order.id} · {order.type}
+                  </Typography>
+                  <Typography color="text.secondary" variant="body2">{order.status}</Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Stack>
+  );
+}
+
+function CrewRecommendationSurface(): ReactElement {
+  const selectedCrew = crews[0];
+
+  return (
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, borderColor: "success.main", background: "rgba(22, 163, 74, 0.08)" }}>
+        <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography color="success.main" fontWeight={900} variant="overline">Recommended assignment</Typography>
+            <Typography variant="h2">{selectedCrew.name} for WO-1842</Typography>
+            <Typography color="text.secondary" sx={{ mt: 1 }}>
+              Best qualified crew at the lowest effective cost after travel, equipment, productivity, and overtime risk are considered.
+            </Typography>
+          </div>
+          <Chip color="success" label={`${selectedCrew.fit}% fit · ${selectedCrew.cost} cost delta`} />
+        </Stack>
+      </Paper>
+
+      <Stack spacing={1.5}>
+        {crews.map((crew, index) => (
+          <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
+            <Stack spacing={1.25}>
+              <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+                <div>
+                  <Typography fontWeight={900}>{index + 1}. {crew.name}</Typography>
+                  <Typography color="text.secondary">{crew.reason}</Typography>
+                </div>
+                <Typography fontWeight={800}>{crew.hourly} · {crew.effectiveCost} effective · {crew.travel}</Typography>
+              </Stack>
+              <LinearProgress color={index === 0 ? "success" : "primary"} variant="determinate" value={crew.fit} />
+              <Stack direction="row" flexWrap="wrap" gap={1}>
+                {crew.strengths.map((strength) => <Chip key={strength} label={strength} size="small" variant="outlined" />)}
+              </Stack>
+            </Stack>
+          </Paper>
+        ))}
+      </Stack>
+    </Stack>
+  );
+}
+
+function ExplainabilitySurface(): ReactElement {
+  const checks = [
+    { label: "Gas emergency certification", result: "Pass", detail: "Crew B and Crew D qualify; Crew A requires equipment support." },
+    { label: "Equipment readiness", result: "Pass", detail: "Crew B already has the excavation truck and atmospheric testing kit." },
+    { label: "Travel and SLA exposure", result: "Best", detail: "18-minute travel keeps the work inside the emergency response window." },
+    { label: "Effective cost", result: "Lowest", detail: "Crew B is not the cheapest hourly rate, but avoids transfer time and overtime." }
+  ];
+
+  return (
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(22, 163, 74, 0.12), rgba(15, 118, 110, 0.12))" }}>
+        <Typography variant="h2">Why Crew B wins</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 780 }}>
+          NorthStar separates hard qualification gates from cost optimization so the planner can defend the recommendation without treating the AI as a black box.
+        </Typography>
+      </Paper>
+
+      <Grid container spacing={2}>
+        {checks.map((check) => (
+          <Grid item xs={12} md={6} key={check.label}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Stack direction="row" justifyContent="space-between" gap={1} sx={{ mb: 1 }}>
+                <Typography fontWeight={900}>{check.label}</Typography>
+                <Chip color={check.result === "Pass" ? "success" : "primary"} label={check.result} size="small" />
+              </Stack>
+              <Typography color="text.secondary">{check.detail}</Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5, borderColor: "success.main" }}>
+        <Typography fontWeight={900}>Planner explanation</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1 }}>
+          Recommend Crew B because it is fully qualified for gas emergency response, already carries the required equipment, reaches the site inside the SLA window, and produces the lowest effective cost despite not having the lowest hourly rate.
+        </Typography>
+      </Paper>
+    </Stack>
+  );
+}
+
+function ArchitectureSurface(): ReactElement {
+  const architectureLayers = [
+    { layer: "Presentation", detail: "React, MUI, guided route shell, and executive story surfaces" },
+    { layer: "Decision services", detail: "Crew eligibility gates, effective-cost ranking, and explanation payloads" },
+    { layer: "Spatial services", detail: "Esri field map, service territories, crew locations, and work-order layers" },
+    { layer: "Data foundation", detail: "Workforce, work order, certification, equipment, route, and performance history tables" }
+  ];
+
+  return (
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "rgba(2, 132, 199, 0.08)" }}>
+        <Typography variant="h2">How the demo pieces fit together</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 780 }}>
+          The architecture is intentionally modular so the presentation can start with local synthetic data and later connect to real APIs, SQL/PostGIS, and Esri services without changing the executive story.
+        </Typography>
+      </Paper>
+      <Stack spacing={1.5} divider={<Divider flexItem />}>
+        {architectureLayers.map((item, index) => (
+          <Stack key={item.layer} direction="row" spacing={2} alignItems="flex-start">
+            <Chip color={index === 0 ? "primary" : "default"} label={`${index + 1}`} />
+            <div>
+              <Typography fontWeight={900}>{item.layer}</Typography>
+              <Typography color="text.secondary">{item.detail}</Typography>
+            </div>
+          </Stack>
+        ))}
+      </Stack>
+    </Stack>
+  );
+}
+
+function RoiSurface(): ReactElement {
+  const valueDrivers = [
+    { value: "$1.8M", label: "annualized savings", detail: "Scaled from avoided overtime, reduced travel, and fewer exception assignments." },
+    { value: "22%", label: "faster response", detail: "Emergency work reaches qualified crews sooner because eligibility is pre-filtered." },
+    { value: "14%", label: "less windshield time", detail: "Routing and district fit reduce non-productive travel between jobs." }
+  ];
+  const roiInputs = [
+    { label: "Avoided overtime", value: "210 hrs", formula: "210 hrs × blended premium labor rate" },
+    { label: "Travel reduction", value: "14%", formula: "Fewer cross-district trips and equipment transfers" },
+    { label: "Exception reduction", value: "17 fewer", formula: "Less rework from missing certs, tools, or territory fit" }
+  ];
+  const walkthroughAssets = ["Executive talk track", "Architecture diagram", "ROI calculator", "Tested page screenshots"];
+
+  return (
+    <Stack spacing={2.5}>
+      <Grid container spacing={2}>
+        {valueDrivers.map((driver) => (
+          <Grid item xs={12} md={4} key={driver.label}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%", textAlign: "center" }}>
+              <Typography variant="h2">{driver.value}</Typography>
+              <Typography fontWeight={900}>{driver.label}</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>{driver.detail}</Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>ROI calculation inputs</Typography>
+        <Grid container spacing={1.5}>
+          {roiInputs.map((input) => (
+            <Grid item xs={12} md={4} key={input.label}>
+              <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+                <Typography fontWeight={900}>{input.label}</Typography>
+                <Typography variant="h2" sx={{ mt: 0.75 }}>{input.value}</Typography>
+                <Typography color="text.secondary" variant="body2">{input.formula}</Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+
+      <Paper variant="outlined" sx={{ p: 2.5, borderColor: "primary.main" }}>
+        <Typography fontWeight={900}>Executive close</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1 }}>
+          The demo proves a repeatable dispatch pattern: identify the highest-risk work, compare only qualified crews, explain the recommendation, and convert better assignments into measurable labor savings.
+        </Typography>
+      </Paper>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>Presentation assets included in this pass</Typography>
+        <Stack direction="row" flexWrap="wrap" gap={1}>
+          {walkthroughAssets.map((item) => <Chip key={item} label={item} variant="outlined" />)}
+        </Stack>
+      </Paper>
+    </Stack>
   );
 }
 
@@ -391,6 +683,7 @@ const registry = {
   fieldMap: FieldMapSurface,
   workOrders: WorkOrdersSurface,
   crewRecommendation: CrewRecommendationSurface,
+  explainability: ExplainabilitySurface,
   architecture: ArchitectureSurface,
   roi: RoiSurface
 };
