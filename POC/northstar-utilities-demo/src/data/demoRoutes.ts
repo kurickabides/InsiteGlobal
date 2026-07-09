@@ -32,6 +32,7 @@ export interface DemoRoute {
   metrics?: Array<{
     label: string;
     value: string;
+    description: string;
   }>;
   componentKey?: DemoComponentKey;
 }
@@ -45,9 +46,9 @@ export const demoRoutes: DemoRoute[] = [
     surfaceTitle: "What the demo will prove",
     focus: ["Best qualified crew at lowest effective cost", "Guided executive workflow", "Realistic synthetic utility operations data"],
     metrics: [
-      { label: "Active Work Orders", value: "128" },
-      { label: "Available Crews", value: "34" },
-      { label: "Monthly Savings Opportunity", value: "$150K" }
+      { label: "Active Work Orders", value: "128", description: "Shows the queue pressure competing for the same qualified crews across gas and electric operations." },
+      { label: "Available Crews", value: "34", description: "Represents the current labor capacity NorthStar can evaluate before filtering for skills, equipment, and territory fit." },
+      { label: "Monthly Savings Opportunity", value: "$150K", description: "Estimated from avoidable overtime, travel reduction, and exception costs across similar monthly dispatch volume." }
     ],
     componentKey: "welcome"
   },
@@ -59,9 +60,9 @@ export const demoRoutes: DemoRoute[] = [
     surfaceTitle: "The dispatch decision gap",
     focus: ["Manual selection tradeoffs", "Disconnected labor and asset data", "Transparent qualified assignment"],
     metrics: [
-      { label: "Avoidable Spend", value: "$48K" },
-      { label: "Assignment Exceptions", value: "17" },
-      { label: "Travel Reduction Opportunity", value: "14%" }
+      { label: "Avoidable Spend", value: "$48K", description: "Compares likely manual assignment cost against the lowest qualified effective-cost option for current emergency work." },
+      { label: "Assignment Exceptions", value: "17", description: "Counts assignments likely to need rework because of missing certifications, equipment, service territory, or availability constraints." },
+      { label: "Travel Reduction Opportunity", value: "14%", description: "Calculated from reducing cross-district travel and avoidable equipment transfers in the active queue." }
     ],
     componentKey: "businessProblem"
   },
@@ -73,9 +74,9 @@ export const demoRoutes: DemoRoute[] = [
     surfaceTitle: "Operational constraints that shape every assignment",
     focus: ["Protect life and service reliability", "Balance shared crews across gas and electric work", "Prove every assignment is qualified, timely, and cost-aware"],
     metrics: [
-      { label: "Emergency Mix", value: "31%" },
-      { label: "Cross-domain Crews", value: "18" },
-      { label: "Constraint Checks", value: "7" }
+      { label: "Emergency Mix", value: "31%", description: "Shows how much of the current workload must be escalated before routine planning decisions." },
+      { label: "Cross-domain Crews", value: "18", description: "Identifies crews eligible to support both gas and electric work when shared capacity becomes constrained." },
+      { label: "Constraint Checks", value: "7", description: "Represents the safety, qualification, equipment, geography, SLA, overtime, and productivity checks behind each recommendation." }
     ],
     componentKey: "utilityChallenges"
   },
@@ -97,9 +98,9 @@ export const demoRoutes: DemoRoute[] = [
     focus: ["Dispatch volume", "Resource capacity", "Cost avoidance"],
     componentKey: "dashboard",
     metrics: [
-      { label: "Active Work Orders", value: "128" },
-      { label: "Available Crews", value: "34" },
-      { label: "Labor Savings", value: "$42K" }
+      { label: "Active Work Orders", value: "128", description: "Shows the queue pressure competing for the same qualified crews across gas and electric operations." },
+      { label: "Available Crews", value: "34", description: "Represents the current labor capacity NorthStar can evaluate before filtering for skills, equipment, and territory fit." },
+      { label: "Labor Savings", value: "$42K", description: "Current-month savings estimate from avoided overtime and better fit between work location, crew readiness, and equipment." }
     ]
   },
   {
@@ -129,9 +130,9 @@ export const demoRoutes: DemoRoute[] = [
     focus: ["Skill match", "Equipment match", "Performance-adjusted cost"],
     componentKey: "crewRecommendation",
     metrics: [
-      { label: "Top Match", value: "Crew B" },
-      { label: "Skill Fit", value: "96%" },
-      { label: "Cost Delta", value: "-18%" }
+      { label: "Top Match", value: "Crew B", description: "Crew B clears the qualification gates and produces the best effective cost after travel, equipment, and overtime risk." },
+      { label: "Skill Fit", value: "96%", description: "Score combines required gas emergency certification, equipment readiness, response history, and service-area fit." },
+      { label: "Cost Delta", value: "-18%", description: "Compares Crew B against the baseline assignment after adding travel time, overtime exposure, and equipment transfer cost." }
     ]
   },
   {
@@ -143,9 +144,9 @@ export const demoRoutes: DemoRoute[] = [
     focus: ["Qualification gates", "Effective cost drivers", "Risk and SLA penalties"],
     componentKey: "explainability",
     metrics: [
-      { label: "Qualification Gates", value: "5 / 5" },
-      { label: "Risk Reduction", value: "31%" },
-      { label: "Audit Confidence", value: "High" }
+      { label: "Qualification Gates", value: "5 / 5", description: "Counts the required checks Crew B passes before cost ranking is considered." },
+      { label: "Risk Reduction", value: "31%", description: "Estimated reduction in SLA and rework exposure from choosing a fully equipped, certified, nearby crew." },
+      { label: "Audit Confidence", value: "High", description: "The recommendation is traceable because each gate, penalty, and cost driver can be shown to the planner." }
     ]
   },
   {
@@ -166,9 +167,9 @@ export const demoRoutes: DemoRoute[] = [
     focus: ["Labor cost reduction", "Faster response", "More defensible dispatch decisions"],
     componentKey: "roi",
     metrics: [
-      { label: "Overtime Avoided", value: "210 hrs" },
-      { label: "Travel Reduction", value: "14%" },
-      { label: "Response Improvement", value: "22%" }
+      { label: "Overtime Avoided", value: "210 hrs", description: "Annualized from emergency assignments that stay inside shift windows instead of spilling into premium labor." },
+      { label: "Travel Reduction", value: "14%", description: "Derived from assigning crews with better district fit and fewer cross-territory equipment moves." },
+      { label: "Response Improvement", value: "22%", description: "Estimated from faster eligibility filtering and shorter travel time for emergency work orders." }
     ]
   }
 ];
