@@ -451,52 +451,204 @@ function FieldMapSurface(): ReactElement {
 }
 
 function WorkOrdersSurface(): ReactElement {
-  const selectedOrder = workOrders[0];
+  const [activeStory, setActiveStory] = useState("gas");
+  const gasOrder = workOrders[0];
+  const powerOrder = workOrders[1];
+  const combinedOrders = [
+    {
+      ...gasOrder,
+      domain: "Gas",
+      crewType: "Gas emergency crew",
+      productivityFactor: "1.18",
+      historicalBaseline: "4.2 hr avg leak response",
+      decisionUse: "Raises Crew B because similar leak responses close faster with its current equipment package."
+    },
+    {
+      ...powerOrder,
+      domain: "Power",
+      crewType: "Electric trouble crew",
+      productivityFactor: "1.07",
+      historicalBaseline: "5.1 hr avg transformer outage",
+      decisionUse: "Prioritizes switching credentials, feeder familiarity, bucket truck availability, and outage footprint."
+    },
+    {
+      id: "WO-2144",
+      type: "Pole damage patrol",
+      priority: "High",
+      district: "South",
+      eta: "46 min",
+      customerImpact: "Feeder inspection after vehicle strike near industrial park",
+      required: ["Line patrol", "Damage assessment", "Traffic control"],
+      status: "Ready to bundle",
+      domain: "Power",
+      crewType: "Line inspection crew",
+      productivityFactor: "0.94",
+      historicalBaseline: "2.8 hr avg patrol closure",
+      decisionUse: "Can be bundled after WO-1907 if crew route and shift window stay inside SLA."
+    },
+    {
+      id: "WO-2198",
+      type: "Regulator station inspection",
+      priority: "Routine",
+      district: "Central",
+      eta: "3 hrs",
+      customerImpact: "Preventive compliance inspection near commercial corridor",
+      required: ["Gas station inspection", "Pressure regulation", "Compliance photos"],
+      status: "Schedule after emergency",
+      domain: "Gas",
+      crewType: "Gas maintenance crew",
+      productivityFactor: "1.02",
+      historicalBaseline: "1.6 hr avg inspection",
+      decisionUse: "Moves behind emergency work but can reuse nearby gas crew capacity once the leak is stabilized."
+    }
+  ];
+  const decisionFields = [
+    { label: "Priority", detail: "Emergency and critical work is ranked before routine work so safety and reliability commitments stay visible." },
+    { label: "Required skills", detail: "Certifications, switching authority, equipment, and domain credentials gate the eligible crew list before cost is compared." },
+    { label: "Productivity factor", detail: "A multiplier from historical performance adjusts expected duration and effective cost for each crew/work type pairing." },
+    { label: "Travel and territory", detail: "District fit, route time, and crew proximity shape response time and overtime exposure." },
+    { label: "Customer impact", detail: "Outage footprint, hospital corridors, and compliance commitments influence escalation and bundling decisions." }
+  ];
+  const modelRefreshSteps = [
+    "Seed starting productivity values from historical work-order close times, crew assignments, outage duration, and inspection records.",
+    "Use AI/ML to compare predicted duration against actual field completion and update productivity factors by crew, job type, territory, and equipment package.",
+    "Flag drift when storm season, training, new equipment, or staffing changes make old baselines less reliable.",
+    "Send revised values back into the recommendation service so the next dispatch decision reflects current field performance."
+  ];
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3, borderColor: "error.main" }}>
-        <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
-            <Typography color="error" fontWeight={900} variant="overline">Selected emergency work order</Typography>
-            <Typography variant="h2">{selectedOrder.id} · {selectedOrder.type}</Typography>
-            <Typography color="text.secondary" sx={{ mt: 1 }}>{selectedOrder.customerImpact}</Typography>
-          </div>
-          <Stack alignItems="flex-end" spacing={1}>
-            <Chip color="error" label={selectedOrder.priority} />
-            <Chip label={`${selectedOrder.eta} target response`} variant="outlined" />
-          </Stack>
-        </Stack>
-      </Paper>
+      <Stack direction="row" flexWrap="wrap" gap={1}>
+        {[
+          { key: "gas", label: "Gas story" },
+          { key: "power", label: "Power story" },
+          { key: "combined", label: "Combined queue" },
+          { key: "calibration", label: "AI/ML data refresh" }
+        ].map((tab) => (
+          <Button
+            key={tab.key}
+            onClick={() => setActiveStory(tab.key)}
+            size="small"
+            variant={activeStory === tab.key ? "contained" : "outlined"}
+          >
+            {tab.label}
+          </Button>
+        ))}
+      </Stack>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={7}>
-          <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
-            <Typography fontWeight={900} sx={{ mb: 1.5 }}>Required before a crew can be recommended</Typography>
+      {activeStory === "gas" && (
+        <Stack spacing={2.5}>
+          <Paper variant="outlined" sx={{ p: 3, borderColor: "error.main" }}>
+            <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+              <div>
+                <Typography color="error" fontWeight={900} variant="overline">Gas emergency story</Typography>
+                <Typography variant="h2">{gasOrder.id} · {gasOrder.type}</Typography>
+                <Typography color="text.secondary" sx={{ mt: 1 }}>{gasOrder.customerImpact}</Typography>
+              </div>
+              <Stack alignItems="flex-end" spacing={1}>
+                <Chip color="error" label={gasOrder.priority} />
+                <Chip label={`${gasOrder.eta} target response`} variant="outlined" />
+              </Stack>
+            </Stack>
+          </Paper>
+          <Paper variant="outlined" sx={{ p: 2.5 }}>
+            <Typography fontWeight={900} sx={{ mb: 1.5 }}>Gas decision gates</Typography>
             <Stack direction="row" flexWrap="wrap" gap={1}>
-              {selectedOrder.required.map((requirement) => <Chip key={requirement} label={requirement} color="primary" variant="outlined" />)}
+              {gasOrder.required.map((requirement) => <Chip key={requirement} label={requirement} color="primary" variant="outlined" />)}
+              <Chip label="Productivity factor 1.18" color="success" variant="outlined" />
+              <Chip label="Historical baseline: 4.2 hr" variant="outlined" />
             </Stack>
             <Typography color="text.secondary" sx={{ mt: 2 }}>
-              NorthStar should exclude crews that lack the required gas response credentials or equipment before comparing labor cost.
+              The gas story shows why the recommendation starts with safety credentials and equipment readiness before cost ranking.
             </Typography>
           </Paper>
-        </Grid>
-        <Grid item xs={12} md={5}>
-          <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
-            <Typography fontWeight={900}>Dispatch queue context</Typography>
-            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
-              {workOrders.map((order) => (
-                <Stack key={order.id} direction="row" justifyContent="space-between" gap={1}>
-                  <Typography color={order.id === selectedOrder.id ? "error" : "text.secondary"} fontWeight={order.id === selectedOrder.id ? 900 : 500}>
-                    {order.id} · {order.type}
-                  </Typography>
-                  <Typography color="text.secondary" variant="body2">{order.status}</Typography>
-                </Stack>
-              ))}
+        </Stack>
+      )}
+
+      {activeStory === "power" && (
+        <Stack spacing={2.5}>
+          <Paper variant="outlined" sx={{ p: 3, borderColor: "warning.main" }}>
+            <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+              <div>
+                <Typography color="warning.main" fontWeight={900} variant="overline">Power restoration story</Typography>
+                <Typography variant="h2">{powerOrder.id} · {powerOrder.type}</Typography>
+                <Typography color="text.secondary" sx={{ mt: 1 }}>{powerOrder.customerImpact}</Typography>
+              </div>
+              <Stack alignItems="flex-end" spacing={1}>
+                <Chip color="warning" label={powerOrder.priority} />
+                <Chip label={`${powerOrder.eta} target response`} variant="outlined" />
+              </Stack>
             </Stack>
           </Paper>
+          <Grid container spacing={2}>
+            {[
+              { title: "Switching authority", text: "Only crews with medium-voltage switching clearance stay in the candidate pool." },
+              { title: "Outage footprint", text: "Customer count and feeder impact raise priority compared with routine work." },
+              { title: "Productivity factor", text: "Historical transformer restoration performance adjusts expected duration and cost." }
+            ].map((card) => (
+              <Grid item xs={12} md={4} key={card.title}>
+                <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+                  <Typography fontWeight={900}>{card.title}</Typography>
+                  <Typography color="text.secondary" sx={{ mt: 1 }}>{card.text}</Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Stack>
+      )}
+
+      {activeStory === "combined" && (
+        <Stack spacing={1.5}>
+          {combinedOrders.map((order) => (
+            <Paper key={order.id} variant="outlined" sx={{ p: 2, borderColor: order.id === gasOrder.id ? "error.main" : "divider" }}>
+              <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+                <div>
+                  <Typography fontWeight={900}>{order.id} · {order.type}</Typography>
+                  <Typography color="text.secondary">{order.domain} · {order.district} district · {order.customerImpact}</Typography>
+                </div>
+                <Stack alignItems="flex-end" spacing={0.75}>
+                  <Chip label={`${order.priority} · ${order.status}`} color={order.priority === "Emergency" ? "error" : "primary"} size="small" />
+                  <Typography color="text.secondary" variant="body2">Productivity factor {order.productivityFactor}</Typography>
+                </Stack>
+              </Stack>
+              <Divider sx={{ my: 1.5 }} />
+              <Grid container spacing={1.5}>
+                <Grid item xs={12} md={4}><Typography fontWeight={800}>Crew type</Typography><Typography color="text.secondary">{order.crewType}</Typography></Grid>
+                <Grid item xs={12} md={4}><Typography fontWeight={800}>Starting value</Typography><Typography color="text.secondary">{order.historicalBaseline}</Typography></Grid>
+                <Grid item xs={12} md={4}><Typography fontWeight={800}>Decision use</Typography><Typography color="text.secondary">{order.decisionUse}</Typography></Grid>
+              </Grid>
+            </Paper>
+          ))}
+        </Stack>
+      )}
+
+      {activeStory === "calibration" && (
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={5}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography variant="h2">Fields used by the decision model</Typography>
+              <Stack spacing={1.5} sx={{ mt: 2 }}>
+                {decisionFields.map((field) => (
+                  <div key={field.label}>
+                    <Typography fontWeight={900}>{field.label}</Typography>
+                    <Typography color="text.secondary">{field.detail}</Typography>
+                  </div>
+                ))}
+              </Stack>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={7}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography variant="h2">How AI/ML keeps values current</Typography>
+              <Stack component="ol" spacing={1.25} sx={{ pl: 2.5, mb: 0, mt: 2 }}>
+                {modelRefreshSteps.map((step) => (
+                  <Typography color="text.secondary" component="li" key={step}>{step}</Typography>
+                ))}
+              </Stack>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Stack>
   );
 }

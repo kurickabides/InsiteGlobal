@@ -116,9 +116,9 @@ export const demoRoutes: DemoRoute[] = [
     path: "/work-orders",
     title: "Work Orders",
     eyebrow: "Dispatch queue",
-    summary: "A prioritized queue for gas leaks, electric outages, inspections, and maintenance work.",
-    surfaceTitle: "Selected emergency work order",
-    focus: ["Priority filtering", "Assignment status", "Estimated duration"],
+    summary: "A prioritized queue for gas leaks, electric outages, inspections, and maintenance work across gas and power operations.",
+    surfaceTitle: "Gas, power, and combined work queue",
+    focus: ["Priority filtering", "Productivity factor", "AI/ML refresh from historical data"],
     componentKey: "workOrders"
   },
   {
