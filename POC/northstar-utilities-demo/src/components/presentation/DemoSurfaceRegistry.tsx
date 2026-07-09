@@ -8,8 +8,8 @@
 // Type: React TypeScript component registry file
 // ================================================
 
-import { Alert, Box, Button, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Alert, Button, Chip, Divider, Grid, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { DemoRoute } from "../../data/demoRoutes";
 import { EsriMapModuleView } from "../../modules/esriMapModule/esriMapModuleView";
 import { ResolvedStoryMap, resolveStoryMap } from "../../services/demoDataService";
@@ -84,7 +84,7 @@ const crews = [
   }
 ];
 
-function DefaultSurface({ route }: DemoSurfaceProps) {
+function DefaultSurface({ route }: DemoSurfaceProps): ReactElement {
   return (
     <Paper variant="outlined" sx={{ p: 3, height: "100%" }}>
       <Typography variant="h2" sx={{ mb: 1 }}>{route.title}</Typography>
@@ -93,7 +93,7 @@ function DefaultSurface({ route }: DemoSurfaceProps) {
   );
 }
 
-function WelcomeSurface() {
+function WelcomeSurface(): ReactElement {
   const demoPath = ["Business problem", "Utility challenges", "Dashboard", "Map", "Work orders", "AI recommendation", "Explainability", "ROI"];
   const cards = [
     { title: "Plan Work", text: "Prioritize gas and electric work orders with service territory, emergency, and capacity context." },
@@ -132,7 +132,7 @@ function WelcomeSurface() {
   );
 }
 
-function BusinessProblemSurface() {
+function BusinessProblemSurface(): ReactElement {
   const currentState = ["Availability and habit drive assignments", "Labor, asset, and certification data live in separate places", "Hourly rate is visible, but effective cost is not"];
   const northStarState = ["Rank only crews qualified for the work", "Include geography, equipment, overtime, and productivity", "Explain the recommendation for planner review"];
   const rankedCrews = [
@@ -173,10 +173,10 @@ function BusinessProblemSurface() {
         {rankedCrews.map((crew, index) => (
           <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
             <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-              <Box>
+              <div>
                 <Typography fontWeight={900}>{index + 1}. {crew.name}</Typography>
                 <Typography color="text.secondary">{crew.note}</Typography>
-              </Box>
+              </div>
               <Chip label={`${crew.hourly} rate · ${crew.effective} effective cost`} color={index === 0 ? "success" : "default"} />
             </Stack>
           </Paper>
@@ -186,7 +186,7 @@ function BusinessProblemSurface() {
   );
 }
 
-function UtilityChallengesSurface() {
+function UtilityChallengesSurface(): ReactElement {
   const challengeCards = [
     {
       title: "Dual-domain emergencies",
@@ -251,22 +251,66 @@ function UtilityChallengesSurface() {
   );
 }
 
-function OverviewSurface() {
+function OverviewSurface(): ReactElement {
+  const learningGoals = [
+    {
+      title: "Understand the decision",
+      text: "See how dispatchers weigh emergency priority, service geography, labor cost, crew eligibility, and customer commitments at the same time."
+    },
+    {
+      title: "Trust the recommendation",
+      text: "Learn why NorthStar gates out unqualified crews first, then ranks valid options by effective cost, SLA exposure, travel, and productivity."
+    },
+    {
+      title: "Connect operations to ROI",
+      text: "Follow one emergency assignment from queue to explanation to value so executives can see how better dispatch decisions scale."
+    }
+  ];
+  const utilityProfile = [
+    { label: "Combined utility", value: "Gas + electric service territory" },
+    { label: "Crew network", value: "34 available crews across 3 districts" },
+    { label: "Operating pressure", value: "128 active jobs with 31% emergency mix" },
+    { label: "Demo outcome", value: "Defensible, cost-aware crew assignment" }
+  ];
+
   return (
-    <Grid container spacing={2}>
-      {["North District", "Central District", "West District"].map((district, index) => (
-        <Grid item xs={12} md={4} key={district}>
-          <Paper variant="outlined" sx={{ p: 2.5 }}>
-            <Typography variant="h2">{district}</Typography>
-            <Typography color="text.secondary" sx={{ mt: 1 }}>{18 + index * 7} active jobs · {8 + index * 3} available crews</Typography>
-          </Paper>
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(30, 64, 175, 0.10), rgba(20, 83, 45, 0.12))" }}>
+        <Typography variant="h2">By the end of this demo</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 820 }}>
+          The audience should understand how NorthStar turns a complex utility dispatch choice into a transparent, repeatable recommendation that planners can explain and leaders can measure.
+        </Typography>
+      </Paper>
+
+      <Grid container spacing={2}>
+        {learningGoals.map((goal) => (
+          <Grid item xs={12} md={4} key={goal.title}>
+            <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
+              <Typography fontWeight={900}>{goal.title}</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }}>{goal.text}</Typography>
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>NorthStar operating profile</Typography>
+        <Grid container spacing={1.5}>
+          {utilityProfile.map((item) => (
+            <Grid item xs={12} sm={6} key={item.label}>
+              <Stack direction="row" spacing={1} alignItems="flex-start">
+                <Chip label={item.label} color="primary" size="small" />
+                <Typography color="text.secondary">{item.value}</Typography>
+              </Stack>
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Grid>
+      </Paper>
+    </Stack>
   );
 }
 
-function DashboardSurface() {
+function DashboardSurface(): ReactElement {
   const operatingMetrics = [
     { label: "Emergency Jobs", value: "14", progress: 68, note: "Gas and electric events needing same-shift response" },
     { label: "Crew Utilization", value: "82%", progress: 82, note: "Available capacity is tightening in Central district" },
@@ -295,10 +339,10 @@ function DashboardSurface() {
       </Grid>
       <Paper variant="outlined" sx={{ p: 2.5, borderColor: "warning.main" }}>
         <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <Box>
+          <div>
             <Typography fontWeight={900}>Decision to make now</Typography>
             <Typography color="text.secondary">Assign WO-1842 before the emergency SLA window pushes the response into overtime.</Typography>
-          </Box>
+          </div>
           <Chip color="warning" label="48 min SLA remaining" />
         </Stack>
       </Paper>
@@ -306,7 +350,7 @@ function DashboardSurface() {
   );
 }
 
-function FieldMapSurface() {
+function FieldMapSurface(): ReactElement {
   const [activeStoryId, setActiveStoryId] = useState("power-branch-outage");
   const [resolvedMap, setResolvedMap] = useState<ResolvedStoryMap | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -406,18 +450,18 @@ function FieldMapSurface() {
   );
 }
 
-function WorkOrdersSurface() {
+function WorkOrdersSurface(): ReactElement {
   const selectedOrder = workOrders[0];
 
   return (
     <Stack spacing={2.5}>
       <Paper variant="outlined" sx={{ p: 3, borderColor: "error.main" }}>
         <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <Box>
+          <div>
             <Typography color="error" fontWeight={900} variant="overline">Selected emergency work order</Typography>
             <Typography variant="h2">{selectedOrder.id} · {selectedOrder.type}</Typography>
             <Typography color="text.secondary" sx={{ mt: 1 }}>{selectedOrder.customerImpact}</Typography>
-          </Box>
+          </div>
           <Stack alignItems="flex-end" spacing={1}>
             <Chip color="error" label={selectedOrder.priority} />
             <Chip label={`${selectedOrder.eta} target response`} variant="outlined" />
@@ -457,20 +501,20 @@ function WorkOrdersSurface() {
   );
 }
 
-function CrewRecommendationSurface() {
+function CrewRecommendationSurface(): ReactElement {
   const selectedCrew = crews[0];
 
   return (
     <Stack spacing={2.5}>
       <Paper variant="outlined" sx={{ p: 3, borderColor: "success.main", background: "rgba(22, 163, 74, 0.08)" }}>
         <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <Box>
+          <div>
             <Typography color="success.main" fontWeight={900} variant="overline">Recommended assignment</Typography>
             <Typography variant="h2">{selectedCrew.name} for WO-1842</Typography>
             <Typography color="text.secondary" sx={{ mt: 1 }}>
               Best qualified crew at the lowest effective cost after travel, equipment, productivity, and overtime risk are considered.
             </Typography>
-          </Box>
+          </div>
           <Chip color="success" label={`${selectedCrew.fit}% fit · ${selectedCrew.cost} cost delta`} />
         </Stack>
       </Paper>
@@ -480,10 +524,10 @@ function CrewRecommendationSurface() {
           <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
             <Stack spacing={1.25}>
               <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-                <Box>
+                <div>
                   <Typography fontWeight={900}>{index + 1}. {crew.name}</Typography>
                   <Typography color="text.secondary">{crew.reason}</Typography>
-                </Box>
+                </div>
                 <Typography fontWeight={800}>{crew.hourly} · {crew.effectiveCost} effective · {crew.travel}</Typography>
               </Stack>
               <LinearProgress color={index === 0 ? "success" : "primary"} variant="determinate" value={crew.fit} />
@@ -498,7 +542,7 @@ function CrewRecommendationSurface() {
   );
 }
 
-function ExplainabilitySurface() {
+function ExplainabilitySurface(): ReactElement {
   const checks = [
     { label: "Gas emergency certification", result: "Pass", detail: "Crew B and Crew D qualify; Crew A requires equipment support." },
     { label: "Equipment readiness", result: "Pass", detail: "Crew B already has the excavation truck and atmospheric testing kit." },
@@ -539,23 +583,49 @@ function ExplainabilitySurface() {
   );
 }
 
-function ArchitectureSurface() {
+function ArchitectureSurface(): ReactElement {
+  const architectureLayers = [
+    { layer: "Presentation", detail: "React, MUI, guided route shell, and executive story surfaces" },
+    { layer: "Decision services", detail: "Crew eligibility gates, effective-cost ranking, and explanation payloads" },
+    { layer: "Spatial services", detail: "Esri field map, service territories, crew locations, and work-order layers" },
+    { layer: "Data foundation", detail: "Workforce, work order, certification, equipment, route, and performance history tables" }
+  ];
+
   return (
-    <Stack spacing={1.5} divider={<Divider flexItem />}>
-      {["React + MUI presentation shell", "Workforce recommendation service", "SQL/PostGIS workforce model", "Esri map and route services"].map((item) => (
-        <Typography key={item} fontWeight={800}>{item}</Typography>
-      ))}
+    <Stack spacing={2.5}>
+      <Paper variant="outlined" sx={{ p: 3, background: "rgba(2, 132, 199, 0.08)" }}>
+        <Typography variant="h2">How the demo pieces fit together</Typography>
+        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 780 }}>
+          The architecture is intentionally modular so the presentation can start with local synthetic data and later connect to real APIs, SQL/PostGIS, and Esri services without changing the executive story.
+        </Typography>
+      </Paper>
+      <Stack spacing={1.5} divider={<Divider flexItem />}>
+        {architectureLayers.map((item, index) => (
+          <Stack key={item.layer} direction="row" spacing={2} alignItems="flex-start">
+            <Chip color={index === 0 ? "primary" : "default"} label={`${index + 1}`} />
+            <div>
+              <Typography fontWeight={900}>{item.layer}</Typography>
+              <Typography color="text.secondary">{item.detail}</Typography>
+            </div>
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   );
 }
 
-function RoiSurface() {
+function RoiSurface(): ReactElement {
   const valueDrivers = [
     { value: "$1.8M", label: "annualized savings", detail: "Scaled from avoided overtime, reduced travel, and fewer exception assignments." },
     { value: "22%", label: "faster response", detail: "Emergency work reaches qualified crews sooner because eligibility is pre-filtered." },
     { value: "14%", label: "less windshield time", detail: "Routing and district fit reduce non-productive travel between jobs." }
   ];
-  const nextRoundDesign = ["Visual architecture diagram", "Detailed NorthStar utility profile", "ROI calculator drill-down", "Recorded executive walkthrough assets"];
+  const roiInputs = [
+    { label: "Avoided overtime", value: "210 hrs", formula: "210 hrs × blended premium labor rate" },
+    { label: "Travel reduction", value: "14%", formula: "Fewer cross-district trips and equipment transfers" },
+    { label: "Exception reduction", value: "17 fewer", formula: "Less rework from missing certs, tools, or territory fit" }
+  ];
+  const walkthroughAssets = ["Executive talk track", "Architecture diagram", "ROI calculator", "Tested page screenshots"];
 
   return (
     <Stack spacing={2.5}>
@@ -571,6 +641,21 @@ function RoiSurface() {
         ))}
       </Grid>
 
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>ROI calculation inputs</Typography>
+        <Grid container spacing={1.5}>
+          {roiInputs.map((input) => (
+            <Grid item xs={12} md={4} key={input.label}>
+              <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+                <Typography fontWeight={900}>{input.label}</Typography>
+                <Typography variant="h2" sx={{ mt: 0.75 }}>{input.value}</Typography>
+                <Typography color="text.secondary" variant="body2">{input.formula}</Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+      </Paper>
+
       <Paper variant="outlined" sx={{ p: 2.5, borderColor: "primary.main" }}>
         <Typography fontWeight={900}>Executive close</Typography>
         <Typography color="text.secondary" sx={{ mt: 1 }}>
@@ -579,9 +664,9 @@ function RoiSurface() {
       </Paper>
 
       <Paper variant="outlined" sx={{ p: 2.5 }}>
-        <Typography fontWeight={900} sx={{ mb: 1.5 }}>Designed for next implementation round</Typography>
+        <Typography fontWeight={900} sx={{ mb: 1.5 }}>Presentation assets included in this pass</Typography>
         <Stack direction="row" flexWrap="wrap" gap={1}>
-          {nextRoundDesign.map((item) => <Chip key={item} label={item} variant="outlined" />)}
+          {walkthroughAssets.map((item) => <Chip key={item} label={item} variant="outlined" />)}
         </Stack>
       </Paper>
     </Stack>
