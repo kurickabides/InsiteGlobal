@@ -11,6 +11,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { DemoPage } from "./pages/DemoPage";
+import { OperationsConsolePage } from "./pages/OperationsConsolePage";
 import { demoRoutes } from "./data/demoRoutes";
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
     <AppShell>
       <Routes>
         <Route path="/" element={<Navigate to="/welcome" replace />} />
+        <Route path="/operations-console" element={<OperationsConsolePage />} />
         {demoRoutes.map((route) => (
           <Route
             key={route.path}
