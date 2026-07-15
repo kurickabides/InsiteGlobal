@@ -9,7 +9,7 @@
 // ================================================
 
 import "@arcgis/core/assets/esri/themes/light/main.css";
-import { Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
+import { CircularProgress, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type ArcGISMap from "@arcgis/core/Map";
 import type MapView from "@arcgis/core/views/MapView";
@@ -185,8 +185,8 @@ export function EsriMapViewer({
           </Typography>
         </Stack>
       )}
-      <Box sx={{ position: "relative", minHeight: height, background: "linear-gradient(135deg, #dbeafe, #f8fafc)" }}>
-        <Box id={id} ref={containerRef} sx={{ position: "absolute", inset: 0 }} />
+      <div style={{ position: "relative", minHeight: height, background: "linear-gradient(135deg, #dbeafe, #f8fafc)" }}>
+        <div id={id} ref={containerRef} style={{ position: "absolute", inset: 0 }} />
         {status === "loading" && (
           <Stack alignItems="center" justifyContent="center" sx={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
             <CircularProgress size={28} />
@@ -199,7 +199,7 @@ export function EsriMapViewer({
             <Typography color="text.secondary" variant="body2">{errorMessage}</Typography>
           </Stack>
         )}
-      </Box>
+      </div>
     </Paper>
   );
 }

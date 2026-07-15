@@ -43,10 +43,15 @@ export function AppShell({ children }: AppShellProps) {
   const [desktopOpen, setDesktopOpen] = useState(false);
 
   const activeIndex = demoRoutes.findIndex((route) => route.path === location.pathname);
+  const isOperationsConsole = location.pathname === "/operations-console";
   const activeTitle = useMemo(() => {
+    if (isOperationsConsole) {
+      return "NorthStar Operations Console";
+    }
+
     return demoRoutes[activeIndex]?.title ?? appConfig.appName;
-  }, [activeIndex]);
-  const progress = activeIndex >= 0 ? ((activeIndex + 1) / demoRoutes.length) * 100 : 0;
+  }, [activeIndex, isOperationsConsole]);
+  const progress = activeIndex >= 0 ? ((activeIndex + 1) / demoRoutes.length) * 100 : isOperationsConsole ? 100 : 0;
 
   const drawer: ReactNode = (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -60,6 +65,24 @@ export function AppShell({ children }: AppShellProps) {
       </div>
       <Divider />
       <List sx={{ px: 1.5, py: 1 }}>
+        <ListItemButton
+          component={RouterLink}
+          onClick={() => {
+            setMobileOpen(false);
+            if (isDesktop) {
+              setDesktopOpen(false);
+            }
+          }}
+          selected={isOperationsConsole}
+          sx={{ borderRadius: 1, mb: 0.5, minHeight: 42 }}
+          to="/operations-console"
+        >
+          <ListItemText
+            primary="NorthStar Operations Console"
+            primaryTypographyProps={{ fontSize: 14, fontWeight: isOperationsConsole ? 700 : 500 }}
+            secondary="Interactive demo"
+          />
+        </ListItemButton>
         {demoRoutes.map((route, index) => {
           const selected = location.pathname === route.path;
 
@@ -118,7 +141,7 @@ export function AppShell({ children }: AppShellProps) {
             </Typography>
           </Stack>
           <div style={{ minWidth: 180 }}>
-            <Typography color="text.secondary" variant="body2">{activeIndex + 1} / {demoRoutes.length}</Typography>
+            <Typography color="text.secondary" variant="body2">{isOperationsConsole ? "Console" : `${activeIndex + 1} / ${demoRoutes.length}`}</Typography>
             <LinearProgress variant="determinate" value={progress} />
           </div>
         </Toolbar>

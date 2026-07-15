@@ -12,6 +12,7 @@ import { Button, Chip, Grid, LinearProgress, Paper, Stack, Typography } from "@m
 import { useEffect, useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Link as RouterLink } from "react-router-dom";
 import { getDemoSurface } from "../components/presentation/DemoSurfaceRegistry";
@@ -95,6 +96,8 @@ export function DemoPage({ route }: DemoPageProps) {
   const DemoSurface = getDemoSurface(route.componentKey);
   const progress = ((currentIndex + 1) / demoRoutes.length) * 100;
   const insightTitle = insightTitles[currentIndex % insightTitles.length];
+  const showLaunchInteractiveDemo = route.componentKey === "crewRecommendation" || route.componentKey === "roi";
+  const continueLabel = route.componentKey === "crewRecommendation" ? "Continue Presentation" : "Continue";
 
   return (
     <Stack spacing={4}>
@@ -149,9 +152,14 @@ export function DemoPage({ route }: DemoPageProps) {
           <Button component={RouterLink} startIcon={<RestartAltIcon />} to="/welcome" variant="text">
             Restart
           </Button>
+          {showLaunchInteractiveDemo && (
+            <Button component={RouterLink} endIcon={<PlayArrowIcon />} to="/operations-console" variant="contained">
+              Launch Interactive Demo
+            </Button>
+          )}
           {nextRoute && (
-            <Button component={RouterLink} endIcon={<ArrowForwardIcon />} to={nextRoute.path} variant="contained">
-              Continue
+            <Button component={RouterLink} endIcon={<ArrowForwardIcon />} to={nextRoute.path} variant={showLaunchInteractiveDemo ? "outlined" : "contained"}>
+              {continueLabel}
             </Button>
           )}
         </Stack>

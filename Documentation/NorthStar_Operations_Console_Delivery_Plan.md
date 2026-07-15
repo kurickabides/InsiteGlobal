@@ -56,8 +56,8 @@ This directly addresses the team feedback that the demo should be presented as a
 - [ ] Map
 - [ ] Work Orders
 - [ ] AI Crew Recommendation
-- [ ] Launch Interactive Demo
-- [ ] NorthStar Operations Console
+- [x] Launch Interactive Demo
+- [x] NorthStar Operations Console
 - [ ] Explainability
 - [ ] Architecture
 - [ ] ROI
@@ -82,21 +82,21 @@ Allow the audience to jump from the guided presentation into the interactive con
 
 ### Tasks
 
-- [ ] Add a new `/operations-console` route.
-- [ ] Create `OperationsConsolePage.tsx`.
-- [ ] Display the page title **NorthStar Operations Console**.
-- [ ] Display a subtitle such as **Interactive dispatch workflow for gas and electric field operations**.
-- [ ] Add a **Launch Interactive Demo** button to the AI Crew Recommendation section.
-- [ ] Keep a **Continue Presentation** option on the AI Crew Recommendation section.
-- [ ] Add a **Launch Interactive Demo** button to the final ROI section beside Restart.
-- [ ] Ensure the launch button navigates to `/operations-console`.
+- [x] Add a new `/operations-console` route.
+- [x] Create `OperationsConsolePage.tsx`.
+- [x] Display the page title **NorthStar Operations Console**.
+- [x] Display a subtitle such as **Interactive dispatch workflow for gas and electric field operations**.
+- [x] Add a **Launch Interactive Demo** button to the AI Crew Recommendation section.
+- [x] Keep a **Continue Presentation** option on the AI Crew Recommendation section.
+- [x] Add a **Launch Interactive Demo** button to the final ROI section beside Restart.
+- [x] Ensure the launch button navigates to `/operations-console`.
 
 ### Acceptance Criteria
 
-- [ ] The user can launch the console from AI Crew Recommendation.
-- [ ] The user can launch the console from the ROI/final section.
-- [ ] The AI Crew Recommendation page clearly offers both the product demo path and the continue-presentation path.
-- [ ] The final section supports replaying the demo during Q&A.
+- [x] The user can launch the console from AI Crew Recommendation.
+- [x] The user can launch the console from the ROI/final section.
+- [x] The AI Crew Recommendation page clearly offers both the product demo path and the continue-presentation path.
+- [x] The final section supports replaying the demo during Q&A.
 
 ## Phase 2: Build NorthStar Operations Console Shell
 
@@ -106,26 +106,26 @@ Create the app-like container for the interactive demo experience.
 
 ### Tasks
 
-- [ ] Build the main console layout.
-- [ ] Add a scenario banner for the active emergency.
-- [ ] Add a guided workflow stepper.
-- [ ] Add a main content area for the current workflow step.
-- [ ] Add a decision summary panel.
-- [ ] Add a **Demo Controls** menu.
-- [ ] Add **Return to Presentation** to the controls menu.
-- [ ] Add **Jump to Explainability** to the controls menu.
-- [ ] Add **Jump to Architecture** to the controls menu.
-- [ ] Add **Jump to ROI** to the controls menu.
-- [ ] Add **Restart Demo** to the controls menu.
+- [x] Build the main console layout.
+- [x] Add a scenario banner for the active emergency.
+- [x] Add a guided workflow stepper.
+- [x] Add a main content area for the current workflow step.
+- [x] Add a decision summary panel.
+- [x] Add a **Demo Controls** menu.
+- [x] Add **Return to Presentation** to the controls menu.
+- [x] Add **Jump to Explainability** to the controls menu.
+- [x] Add **Jump to Architecture** to the controls menu.
+- [x] Add **Jump to ROI** to the controls menu.
+- [x] Add **Restart Demo** to the controls menu.
 - [ ] Add **Exit Presentation Mode** to the controls menu.
 
 ### Acceptance Criteria
 
-- [ ] The console feels visually distinct from the presentation slides.
-- [ ] The console title is **NorthStar Operations Console**.
+- [x] The console feels visually distinct from the presentation slides.
+- [x] The console title is **NorthStar Operations Console**.
 - [ ] The user can move through the console workflow steps.
-- [ ] The user can jump back to presentation sections from the console.
-- [ ] The user can restart the interactive demo without restarting the whole presentation.
+- [x] The user can jump back to presentation sections from the console.
+- [x] The user can restart the interactive demo without restarting the whole presentation.
 
 ## Phase 3: Build Interactive Work Order Workflow
 
@@ -319,11 +319,11 @@ Make the demo stable, polished, and presentation-ready.
 
 ### Day 1: Navigation And Console Shell
 
-- [ ] Add `/operations-console` route.
-- [ ] Create NorthStar Operations Console page.
-- [ ] Add **Launch Interactive Demo** buttons.
-- [ ] Add Demo Controls menu.
-- [ ] Add workflow stepper.
+- [x] Add `/operations-console` route.
+- [x] Create NorthStar Operations Console page.
+- [x] Add **Launch Interactive Demo** buttons.
+- [x] Add Demo Controls menu.
+- [x] Add workflow stepper.
 
 **Success target:** The audience can clearly move from presentation mode into interactive demo mode.
 
@@ -398,8 +398,8 @@ Click:
 ## Final Readiness Checklist
 
 - [ ] Presentation opening is concise.
-- [ ] AI Crew Recommendation has **Launch Interactive Demo**.
-- [ ] NorthStar Operations Console opens correctly.
+- [x] AI Crew Recommendation has **Launch Interactive Demo**.
+- [x] NorthStar Operations Console opens correctly.
 - [ ] Work order selection works.
 - [ ] Map or field context is visible.
 - [ ] Crew evaluation works.
@@ -407,7 +407,7 @@ Click:
 - [ ] Explanation is clear.
 - [ ] Assignment confirmation works.
 - [ ] ROI/business impact is visible.
-- [ ] Return to presentation works.
+- [x] Return to presentation works.
 - [ ] Build passes.
 - [ ] Screenshots are captured.
 - [ ] Live talk track is rehearsed.
