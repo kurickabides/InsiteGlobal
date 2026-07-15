@@ -106,7 +106,7 @@ export const demoRoutes: DemoRoute[] = [
   {
     path: "/map",
     title: "Map",
-    eyebrow: "Esri field view",
+    eyebrow: "Local field view",
     summary: "Interactive field view for service area polygons, work order points, crew locations, and route simulation.",
     surfaceTitle: "Geospatial context for the decision",
     focus: ["Service territories", "Crew proximity", "Work order priority"],
@@ -153,7 +153,7 @@ export const demoRoutes: DemoRoute[] = [
     path: "/architecture",
     title: "Architecture",
     eyebrow: "Demo architecture",
-    summary: "React, MUI, Esri JS, local API, workforce data model, and route simulation service.",
+    summary: "React, MUI, local GeoJSON map, local API, workforce data model, and route simulation service.",
     surfaceTitle: "Reference architecture for the demo",
     focus: ["Frontend shell", "REST endpoints", "SQL or PostGIS data layer"],
     componentKey: "architecture"

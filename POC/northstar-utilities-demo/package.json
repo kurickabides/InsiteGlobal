@@ -1,6 +1,6 @@
 {
   "name": "northstar-utilities-demo",
-  "description": "A demo project showcasing the Northstar Utilities library for building web applications with React and ArcGIS.",
+  "description": "A demo project showcasing the Northstar Utilities library for building web applications with React and local mock operations data.",
   "version": "2.1.0",
   "private": true,
   "type": "module",
@@ -10,10 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arcgis/ai-components": "^5.1.0",
-    "@arcgis/core": "^5.1.0",
-    "@arcgis/map-components": "^5.1.0",
-    "@esri/calcite-components": "^5.1.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.7",

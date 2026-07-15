@@ -1,14 +1,12 @@
 // ================================================
-// File: Esri Map Viewer Types
-// Description: Defines reusable Esri map configuration, markers, layers, controls, and viewer callbacks.
+// File: Field Map Viewer Types
+// Description: Defines reusable local map configuration, markers, layers, controls, and viewer callbacks.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
 // Filename: index.ts
 // Type: TypeScript type definition file
 // ================================================
-
-import type MapView from "@arcgis/core/views/MapView";
 
 export type EsriBasemap =
   | "streets-vector"
@@ -60,6 +58,6 @@ export interface EsriMapViewerProps extends EsriViewpoint {
   layers?: EsriLayerConfig[];
   markers?: EsriMarkerConfig[];
   controls?: EsriMapControlOptions;
-  onReady?: (view: MapView) => void;
+  onReady?: (view: null) => void;
   onViewpointChange?: (viewpoint: EsriViewpoint) => void;
 }

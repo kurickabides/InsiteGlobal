@@ -1,6 +1,6 @@
 // ================================================
-// File: Esri Map Module Types
-// Description: Defines the NorthStar Esri map module settings and props.
+// File: Field Map Module Types
+// Description: Defines the NorthStar local map module settings and props.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal

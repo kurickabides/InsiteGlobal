@@ -1,6 +1,6 @@
 // ================================================
-// File: Esri Map Module View
-// Description: Provides a presentation-ready map window for NorthStar field operations pages.
+// File: Field Map Module View
+// Description: Provides a presentation-ready local map window for NorthStar field operations pages.
 // Author: NimbusCore.OpenAI
 // Architect: Chad Martin
 // Company: InsiteGlobal
@@ -8,7 +8,7 @@
 // Type: React TypeScript component file
 // ================================================
 
-import { Box, Chip, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Chip, Grid, Paper, Stack, Typography } from "@mui/material";
 import { EsriMapViewer } from "../../components/esri/EsriMapViewer";
 import { EsriMapModuleProps, EsriMapModuleSettings } from "./types";
 
@@ -43,12 +43,12 @@ export function EsriMapModuleView({ settings, children }: EsriMapModuleProps) {
       <Grid item xs={12} lg={4}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
           <Stack spacing={2}>
-            <Box>
+            <div>
               <Typography variant="h2">Map Controls</Typography>
               <Typography color="text.secondary" sx={{ mt: 1 }}>
-                This module is the reusable Esri window for crews, work orders, territories, and routing overlays.
+                This module is the reusable local field map for crews, work orders, territories, and routing overlays.
               </Typography>
-            </Box>
+            </div>
             <Stack direction="row" gap={1} flexWrap="wrap">
               <Chip label={mapSettings.basemap} color="primary" />
               <Chip label={`${mapSettings.markers.length} demo markers`} />
@@ -57,7 +57,16 @@ export function EsriMapModuleView({ settings, children }: EsriMapModuleProps) {
             <Stack spacing={1}>
               {mapSettings.markers.map((marker) => (
                 <Stack key={marker.id} direction="row" spacing={1} alignItems="center">
-                  <Box sx={{ width: 12, height: 12, borderRadius: "50%", bgcolor: marker.color }} />
+                  <span
+                    style={{
+                      width: 12,
+                      height: 12,
+                      borderRadius: "50%",
+                      backgroundColor: marker.color,
+                      display: "inline-block",
+                      flex: "0 0 auto"
+                    }}
+                  />
                   <Typography variant="body2">{marker.label}</Typography>
                 </Stack>
               ))}

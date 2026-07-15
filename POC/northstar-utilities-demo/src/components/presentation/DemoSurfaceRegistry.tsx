@@ -739,7 +739,7 @@ function ArchitectureSurface(): ReactElement {
   const architectureLayers = [
     { layer: "Presentation", detail: "React, MUI, guided route shell, and executive story surfaces" },
     { layer: "Decision services", detail: "Crew eligibility gates, effective-cost ranking, and explanation payloads" },
-    { layer: "Spatial services", detail: "Esri field map, service territories, crew locations, and work-order layers" },
+    { layer: "Spatial services", detail: "Local GeoJSON field map, service territories, crew locations, and work-order layers" },
     { layer: "Data foundation", detail: "Workforce, work order, certification, equipment, route, and performance history tables" }
   ];
 
@@ -748,7 +748,7 @@ function ArchitectureSurface(): ReactElement {
       <Paper variant="outlined" sx={{ p: 3, background: "rgba(2, 132, 199, 0.08)" }}>
         <Typography variant="h2">How the demo pieces fit together</Typography>
         <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 780 }}>
-          The architecture is intentionally modular so the presentation can start with local synthetic data and later connect to real APIs, SQL/PostGIS, and Esri services without changing the executive story.
+          The architecture is intentionally modular so the presentation can start with local synthetic data and later connect to real APIs, SQL/PostGIS, or approved spatial services without changing the executive story.
         </Typography>
       </Paper>
       <Stack spacing={1.5} divider={<Divider flexItem />}>
