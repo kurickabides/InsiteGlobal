@@ -2,16 +2,9 @@
 
 ## Purpose
 
-This delivery plan captures the design direction, implementation tasks, and progress checklist for turning the NorthStar Utilities presentation into a functional, interactive proof-of-concept demo.
+This plan tracks the NorthStar Utilities interactive proof-of-concept. The console should feel like a working utility operations application, not a slide-based workflow. The guided presentation frames the problem, then launches the **NorthStar Operations Console** where the presenter can operate the demo through real app modules.
 
-The target experience is a hybrid flow:
-
-1. Use the existing guided presentation to frame the business problem and solution vision.
-2. Launch an interactive proof-of-concept from the presentation using the button label **Launch Interactive Demo**.
-3. Present the working demo as the **NorthStar Operations Console**.
-4. Return from the console to the executive close, explainability, architecture, or ROI sections.
-
-## Core Decision
+## Core Direction
 
 Use the title:
 
@@ -21,60 +14,83 @@ Use the launch button label:
 
 > **Launch Interactive Demo**
 
-## Delivery Approach
+The console home is a **Console Hub** with four app modules:
 
-Build this work in sections rather than as one large change. The safest sequence is:
+- **Executive Dashboard**: operating picture, KPIs, active incident, service territory map, crew readiness.
+- **Work Orders**: selectable dispatch queue, selected work order details, skills, equipment, SLA, customer impact.
+- **Dispatch**: task-sensitive map window, crew evaluation, ranking, recommendation, schedule window.
+- **Report Center**: recommendation audit, ETA improvement, overtime avoided, travel/customer impact, ROI bridge.
 
-1. Navigation and console shell.
-2. Interactive work order and map context.
-3. Crew recommendation workflow.
-4. Explainability and ROI close.
-5. Polish, testing, screenshots, and rehearsal.
+The right-side **Current Task** panel drives the live demo path. It should take the user into app screens instead of listing abstract workflow steps.
 
-The primary demo bridge should be:
+## Demo Path
 
-> **AI Crew Recommendation → Launch Interactive Demo → NorthStar Operations Console → Return to Executive Close**
+The primary live path is:
 
-This directly addresses the team feedback that the demo should be presented as a functional, interactive solution rather than only a slide-based concept.
+1. Presentation: AI Crew Recommendation.
+2. Click **Launch Interactive Demo**.
+3. Console Hub opens.
+4. Click **Active emergency work order** in Current Task.
+5. Review `WO-1842` in Work Orders.
+6. Click **Evaluate candidate crews**.
+7. Dispatch map changes to crew proximity context.
+8. Click **Evaluate Crews**.
+9. Crew B is ranked and recommended.
+10. Continue later phases with assignment, explainability, and ROI close.
 
 ## Assumptions
 
-- The current presentation flow stays mostly the same.
-- The primary interactive scenario is the emergency gas leak work order.
-- The emergency work order is `WO-1842`.
-- Crew B remains the recommended assignment.
-- The demo is a functional proof-of-concept, not a production system.
-- The experience supports both guided presentation mode and standalone console mode.
+- The primary emergency scenario is `WO-1842`, a gas leak emergency near a hospital corridor.
+- Crew B remains the deterministic recommendation.
+- The app uses local synthetic utility data with the ArcGIS Maps SDK for JavaScript map module. Esri AI agent and `@arcgis/ai-components` are not used.
+- Production deployment with ArcGIS technology must follow Esri attribution and licensing requirements. The demo should avoid secure/private ArcGIS services unless an approved API key or organization access is available.
+- The demo must support guided presentation mode and standalone console mode.
 
-## Target Presentation Flow
+## Target Console Modules
 
-- [ ] Welcome
-- [ ] Business Problem
-- [ ] Utility Challenges
-- [ ] NorthStar Overview
-- [ ] Executive Dashboard
-- [ ] Map
-- [ ] Work Orders
-- [ ] AI Crew Recommendation
-- [x] Launch Interactive Demo
-- [x] NorthStar Operations Console
-- [ ] Explainability
-- [ ] Architecture
-- [ ] ROI
+### Executive Dashboard
 
-## Target Console Workflow
+- [x] Show a utility operations shell instead of a presentation card.
+- [x] Show KPI tiles for active work, SLA risk, utilization, and modeled savings.
+- [x] Show selected emergency context.
+- [x] Show local service territory map with gas, electric, crew, and work order context.
+- [x] Show crew readiness.
+- [ ] Add drill-down controls from dashboard KPIs into Work Orders and Dispatch.
 
-- [ ] Review operating situation.
-- [ ] Select emergency work order.
-- [ ] View map and geospatial context.
-- [ ] Evaluate candidate crews.
-- [ ] Generate crew recommendation.
-- [ ] Explain why the recommended crew wins.
-- [ ] Confirm assignment.
-- [ ] Show business impact.
-- [ ] Return to presentation close.
+### Work Orders
 
-## Phase 1: Add Demo Launch Navigation
+- [x] Show a selectable planner queue table.
+- [x] Default to `WO-1842`.
+- [x] Include gas leak, transformer outage, meter inspection, pole patrol, and regulator inspection work orders.
+- [x] Highlight the selected work order.
+- [x] Show selected work order priority, domain, district, SLA, assignment, customer impact, required skills, and equipment.
+- [x] Update map and summary context when selected work order changes.
+- [ ] Add table filtering/search behavior.
+
+### Dispatch
+
+- [x] Show a dedicated ArcGIS JavaScript map window inside Dispatch.
+- [x] Change map context based on Current Task.
+- [x] Show emergency task context for selected work order.
+- [x] Show crew proximity context when evaluating candidate crews.
+- [x] Show dispatch route preview context for assignment task.
+- [x] Show customer/SLA impact context for impact task.
+- [x] Add **Evaluate Crews** button.
+- [x] Show short progress state while evaluating.
+- [x] Rank candidate crews after evaluation.
+- [x] Highlight Crew B as recommended.
+- [x] Show fit score, ETA, hourly rate, effective cost, equipment readiness, and overtime risk.
+- [x] Show strengths and penalties so the result is explainable.
+- [ ] Add assignment state change after **Assign Crew B**.
+
+### Report Center
+
+- [x] Show ETA improvement, overtime avoided, and customer risk reduction.
+- [x] Show recommendation audit points.
+- [ ] Add final assignment details after Crew B is assigned.
+- [ ] Add return-to-executive-close action.
+
+## Phase 1: Demo Launch Navigation
 
 ### Objective
 
@@ -82,147 +98,133 @@ Allow the audience to jump from the guided presentation into the interactive con
 
 ### Tasks
 
-- [x] Add a new `/operations-console` route.
+- [x] Add `/operations-console` route.
 - [x] Create `OperationsConsolePage.tsx`.
-- [x] Display the page title **NorthStar Operations Console**.
-- [x] Display a subtitle such as **Interactive dispatch workflow for gas and electric field operations**.
-- [x] Add a **Launch Interactive Demo** button to the AI Crew Recommendation section.
-- [x] Keep a **Continue Presentation** option on the AI Crew Recommendation section.
-- [x] Add a **Launch Interactive Demo** button to the final ROI section beside Restart.
-- [x] Ensure the launch button navigates to `/operations-console`.
+- [x] Add **Launch Interactive Demo** button to AI Crew Recommendation.
+- [x] Add **Launch Interactive Demo** button to ROI/final section.
+- [x] Ensure launch buttons navigate to `/operations-console`.
 
 ### Acceptance Criteria
 
 - [x] The user can launch the console from AI Crew Recommendation.
-- [x] The user can launch the console from the ROI/final section.
-- [x] The AI Crew Recommendation page clearly offers both the product demo path and the continue-presentation path.
-- [x] The final section supports replaying the demo during Q&A.
+- [x] The user can launch the console from ROI/final section.
+- [x] The console opens as a distinct app experience.
 
-## Phase 2: Build NorthStar Operations Console Shell
+## Phase 2: Console Hub And App Shell
 
 ### Objective
 
-Create the app-like container for the interactive demo experience.
+Create a real operations-app container, matching enterprise service/utility software patterns.
 
 ### Tasks
 
-- [x] Build the main console layout.
-- [x] Add a scenario banner for the active emergency.
-- [x] Add a guided workflow stepper.
-- [x] Add a main content area for the current workflow step.
-- [x] Add a decision summary panel.
-- [x] Add a **Demo Controls** menu.
-- [x] Add **Return to Presentation** to the controls menu.
-- [x] Add **Jump to Explainability** to the controls menu.
-- [x] Add **Jump to Architecture** to the controls menu.
-- [x] Add **Jump to ROI** to the controls menu.
-- [x] Add **Restart Demo** to the controls menu.
-- [ ] Add **Exit Presentation Mode** to the controls menu.
+- [x] Build purple product header.
+- [x] Add left icon rail.
+- [x] Replace static workflow with **Console Hub**.
+- [x] Add module buttons for Executive Dashboard, Work Orders, Dispatch, and Report Center.
+- [x] Move **Demo Controls** to a header hamburger menu.
+- [x] Add **Return to Presentation** to the menu.
+- [x] Add **Explainability**, **ROI**, and **Restart Demo** menu actions.
+- [x] Rename decision/workflow panel to **Current Task**.
+- [x] Make Current Task items clickable.
 
 ### Acceptance Criteria
 
-- [x] The console feels visually distinct from the presentation slides.
-- [x] The console title is **NorthStar Operations Console**.
-- [ ] The user can move through the console workflow steps.
-- [x] The user can jump back to presentation sections from the console.
-- [x] The user can restart the interactive demo without restarting the whole presentation.
+- [x] The console feels like an application, not a slide.
+- [x] The user can move between all four modules.
+- [x] Current Task navigates into app screens.
+- [x] Demo controls are accessible from the header.
 
-## Phase 3: Build Interactive Work Order Workflow
+## Phase 3: Interactive Work Order Workflow
 
 ### Objective
 
-Let the user select the emergency case and see realistic dispatch information.
+Let the user select emergency and non-emergency work orders and see realistic utility dispatch details.
 
 ### Tasks
 
-- [ ] Move shared work order data into a reusable data module.
-- [ ] Include the emergency gas leak work order `WO-1842`.
-- [ ] Include additional work orders such as transformer outage, meter inspection, pole damage patrol, and regulator inspection.
-- [ ] Add selectable work order cards.
-- [ ] Highlight the selected work order.
-- [ ] Default the selected work order to `WO-1842`.
-- [ ] Show selected work order details.
-- [ ] Show priority, district, customer impact, required skills, equipment, SLA, and status.
-- [ ] Update console summary panels when a work order is selected.
+- [x] Include emergency gas leak work order `WO-1842`.
+- [x] Include transformer outage, meter inspection, pole damage patrol, and regulator inspection.
+- [x] Add selectable work order table.
+- [x] Highlight selected work order.
+- [x] Default selected work order to `WO-1842`.
+- [x] Show selected work order details.
+- [x] Show priority, domain, district, customer impact, required skills, equipment, SLA, assignment, and status.
+- [x] Update console summary/map context when work order selection changes.
+- [ ] Move hard-coded console work order data into a reusable data module.
 
 ### Acceptance Criteria
 
-- [ ] The user can select a work order.
-- [ ] `WO-1842` is selected by default.
-- [ ] Selecting a work order updates the detail panel.
-- [ ] The emergency gas leak scenario is clearly the hero scenario.
+- [x] The user can select a work order.
+- [x] `WO-1842` is selected by default.
+- [x] Selecting a work order updates the detail panel.
+- [x] The gas leak emergency is clearly the hero scenario.
 
-## Phase 4: Add Map And Field Context
+## Phase 4: Map And Field Context
 
 ### Objective
 
-Show geospatial context inside the console so the dispatch decision feels operational and realistic.
+Show field/geospatial context in the console using the ArcGIS Maps SDK for JavaScript while avoiding Esri AI/agent components.
 
 ### Tasks
 
-- [ ] Reuse the existing Esri map module where practical.
-- [ ] Load or display the gas leak emergency story context.
-- [ ] Show selected work order location.
-- [ ] Show nearby crews or a crew proximity list.
-- [ ] Show service territory or district context.
-- [ ] Show customer impact context.
-- [ ] Show SLA or response-time pressure.
-- [ ] Provide a fallback summary if the map fails to load.
+- [x] Use ArcGIS Maps SDK for JavaScript map renderer.
+- [x] Display selected work order location.
+- [x] Display service territory layers.
+- [x] Display gas and electric network context.
+- [x] Display crew/work order markers.
+- [x] Add Dispatch map window.
+- [x] Change Dispatch map context based on Current Task.
+- [x] Show crew proximity list/context.
+- [x] Show customer/SLA impact context.
+- [x] Provide loading/error fallback in the map component.
 
 ### Acceptance Criteria
 
-- [ ] The user can see where the emergency is located.
-- [ ] The user can understand which crews are nearby.
-- [ ] The field context supports the recommendation story.
-- [ ] The demo remains usable if the map has an environment issue.
+- [x] The user can see where the selected emergency is located.
+- [x] The user can understand which crews are nearby.
+- [x] The Dispatch map changes when the task changes.
+- [x] The demo uses local GeoJSON operational layers and avoids Esri AI/agent dependencies.
+- [ ] Add approved API key or deployment licensing notes if hosted basemaps/services are used beyond demo/dev.
 
-## Phase 5: Build Crew Evaluation And Recommendation Workflow
+## Phase 5: Crew Evaluation And Recommendation
 
 ### Objective
 
-Make the proof-of-concept feel functional by evaluating crews interactively.
+Make the Dispatch module functional by evaluating crews interactively.
 
 ### Tasks
 
-- [ ] Move shared crew data into a reusable data module.
-- [ ] Create or centralize recommendation scoring logic.
-- [ ] Add an **Evaluate Crews** button.
-- [ ] Show a short loading/progress state after clicking Evaluate Crews.
-- [ ] Rank candidate crews after evaluation.
-- [ ] Highlight Crew B as the recommended crew.
-- [ ] Show fit score for each crew.
-- [ ] Show travel time for each crew.
-- [ ] Show hourly rate and effective cost for each crew.
-- [ ] Show equipment readiness.
-- [ ] Show overtime risk.
-- [ ] Show disqualified or penalized reasons for non-winning crews.
-
-### Suggested Scoring Factors
-
-- Required certifications.
-- Equipment readiness.
-- Travel and SLA fit.
-- Productivity factor.
-- Overtime risk.
-- Cost efficiency.
+- [x] Add **Evaluate Crews** button.
+- [x] Show progress state after clicking Evaluate Crews.
+- [x] Rank candidate crews after evaluation.
+- [x] Highlight Crew B as the recommendation.
+- [x] Show fit score for each crew.
+- [x] Show travel/ETA for each crew.
+- [x] Show hourly rate and effective cost.
+- [x] Show equipment readiness.
+- [x] Show overtime risk.
+- [x] Show strengths and penalties for non-winning crews.
+- [ ] Move crew data and scoring factors into a reusable module.
+- [ ] Add unit tests for deterministic scoring once a test runner is added.
 
 ### Acceptance Criteria
 
-- [ ] The user can click **Evaluate Crews**.
-- [ ] Crew ranking appears after evaluation.
-- [ ] Crew B is recommended.
-- [ ] The result is deterministic and demo-safe.
-- [ ] The recommendation looks explainable rather than arbitrary.
+- [x] The user can click **Evaluate Crews**.
+- [x] Crew ranking appears after evaluation.
+- [x] Crew B is recommended.
+- [x] The result is deterministic and demo-safe.
+- [x] The recommendation is explainable, not arbitrary.
 
-## Phase 6: Build Explainability Inside The Console
+## Phase 6: Explainability Inside The Console
 
 ### Objective
 
-Show why the AI recommendation should be trusted.
+Show why the recommendation should be trusted inside the app workflow.
 
 ### Tasks
 
-- [ ] Add a **Why Crew B Wins** panel.
+- [ ] Add **Why Crew B Wins** panel in Dispatch or Report Center.
 - [ ] Show qualification gates.
 - [ ] Show gas emergency certification result.
 - [ ] Show equipment readiness result.
@@ -230,21 +232,10 @@ Show why the AI recommendation should be trusted.
 - [ ] Show effective cost result.
 - [ ] Show overtime risk result.
 - [ ] Show customer impact protection.
-- [ ] Add a score breakdown table.
-- [ ] Add a planner-facing explanation in plain English.
+- [ ] Add score breakdown table.
+- [ ] Add planner-facing explanation.
 
-### Suggested Planner Explanation
-
-> Recommend Crew B because it is fully qualified for gas emergency response, already carries the required equipment, reaches the site inside the SLA window, and produces the lowest effective cost despite not having the lowest hourly rate.
-
-### Acceptance Criteria
-
-- [ ] The user can understand why Crew B wins.
-- [ ] The user can understand why other crews did not win.
-- [ ] The recommendation is transparent and defensible.
-- [ ] The explanation connects safety, cost, travel, equipment, and SLA factors.
-
-## Phase 7: Add Assignment Confirmation And ROI Impact
+## Phase 7: Assignment Confirmation And ROI Impact
 
 ### Objective
 
@@ -252,8 +243,8 @@ Close the loop from recommendation to business value.
 
 ### Tasks
 
-- [ ] Add an **Assign Crew B** button.
-- [ ] Change the selected work order status after assignment.
+- [ ] Add working **Assign Crew B** behavior.
+- [ ] Change selected work order status after assignment.
 - [ ] Show assigned crew details.
 - [ ] Show ETA improvement.
 - [ ] Show overtime avoided.
@@ -261,101 +252,36 @@ Close the loop from recommendation to business value.
 - [ ] Show effective cost savings.
 - [ ] Show SLA risk reduction.
 - [ ] Show customer impact protected.
-- [ ] Add a **Return to Executive Close** button.
-- [ ] Add optional buttons for **Explain the Recommendation**, **View Architecture**, and **Restart Interactive Demo**.
+- [ ] Add **Return to Executive Close** action.
 
-### Acceptance Criteria
-
-- [ ] The user can confirm the recommended assignment.
-- [ ] The work order visibly changes state after assignment.
-- [ ] The console shows measurable business impact.
-- [ ] The user can return to ROI or the executive close.
-
-## Phase 8: Add Presentation Mode And Console Mode Controls
+## Phase 8: Presentation Mode And Console Mode Controls
 
 ### Objective
 
-Allow the app to be shown as either a guided presentation or a standalone product-style console.
+Allow the app to be shown as guided presentation or standalone operations app.
 
 ### Tasks
 
-- [ ] Add a mode concept such as `presentation` and `console`.
-- [ ] Support a URL query pattern such as `/operations-console?mode=console` if practical.
-- [ ] Add **Exit Presentation Mode** to reduce slide-like framing.
-- [ ] Add **Return to Guided Presentation** if presentation mode is off.
-- [ ] Ensure demo controls remain accessible in both modes.
-
-### Acceptance Criteria
-
-- [ ] The console can be shown as part of the guided presentation.
-- [ ] The console can be shown as a standalone operations app.
-- [ ] The presenter can move between modes without disrupting the live demo.
+- [ ] Add `presentation` and `console` mode concept.
+- [ ] Support `/operations-console?mode=console`.
+- [ ] Add **Exit Presentation Mode**.
+- [ ] Add **Return to Guided Presentation** when standalone mode is active.
+- [ ] Keep demo controls available in both modes.
 
 ## Phase 9: Polish, Testing, Screenshots, And Rehearsal
 
 ### Objective
 
-Make the demo stable, polished, and presentation-ready.
+Make the demo stable and presentation-ready.
 
 ### Tasks
 
-- [ ] Improve layout spacing and visual hierarchy.
-- [ ] Tighten button labels.
-- [ ] Confirm responsive layout on presentation screen size.
-- [ ] Run TypeScript/build checks.
-- [ ] Capture screenshots of key states.
-- [ ] Prepare a fallback screenshot path in case the live map has an issue.
-- [ ] Rehearse the live path.
-- [ ] Prepare a short talk track for each major step.
-
-### Acceptance Criteria
-
-- [ ] `npm run build` succeeds.
-- [ ] The main live demo path works without console errors.
-- [ ] Screenshots are available as backup.
-- [ ] The presenter can complete the demo smoothly within the available time.
-
-## Four-Day Delivery Schedule
-
-### Day 1: Navigation And Console Shell
-
-- [x] Add `/operations-console` route.
-- [x] Create NorthStar Operations Console page.
-- [x] Add **Launch Interactive Demo** buttons.
-- [x] Add Demo Controls menu.
-- [x] Add workflow stepper.
-
-**Success target:** The audience can clearly move from presentation mode into interactive demo mode.
-
-### Day 2: Work Order, Map, And Crew Data
-
-- [ ] Add selectable work orders.
-- [ ] Highlight the gas leak emergency scenario.
-- [ ] Add map or field context.
-- [ ] Centralize crew and work order data.
-
-**Success target:** The console feels like a utility operations screen, not a static slide.
-
-### Day 3: Recommendation, Explainability, And Assignment
-
-- [ ] Add **Evaluate Crews** action.
-- [ ] Rank candidate crews.
-- [ ] Recommend Crew B.
-- [ ] Add explainability details.
-- [ ] Add **Assign Crew B** action.
-
-**Success target:** The demo proves the product value through an interactive workflow.
-
-### Day 4: ROI, Polish, Testing, And Rehearsal
-
-- [ ] Add business impact panel.
-- [ ] Add return-to-presentation flow.
-- [ ] Polish UI.
-- [ ] Run build.
-- [ ] Capture screenshots.
-- [ ] Rehearse the live path.
-
-**Success target:** The demo is stable, polished, and ready for the presentation.
+- [ ] Improve responsive layout.
+- [ ] Tighten utility-app terminology.
+- [ ] Capture screenshots for dashboard, work orders, dispatch before evaluation, dispatch after evaluation, and report center.
+- [ ] Prepare fallback screenshot path.
+- [ ] Run build checks.
+- [ ] Rehearse live talk track.
 
 ## Live Demo Script
 
@@ -373,7 +299,23 @@ Click:
 
 ### In NorthStar Operations Console
 
-> We are looking at an emergency gas leak work order near a hospital corridor. The console evaluates the work requirements, crew qualifications, equipment readiness, travel time, overtime risk, and productivity history.
+> We are now in the Console Hub. I will open the active emergency work order, review the field context, then evaluate crews in Dispatch.
+
+Click:
+
+> **Active emergency work order**
+
+Then:
+
+> The work order screen shows priority, SLA, customer impact, required skills, and equipment. Now I will evaluate crews.
+
+Click:
+
+> **Evaluate candidate crews**
+
+Then:
+
+> The Dispatch map changes to crew proximity. I will run the crew evaluation.
 
 Click:
 
@@ -381,33 +323,21 @@ Click:
 
 ### Recommendation Moment
 
-> Crew B is recommended. Notice that it is not simply the lowest hourly rate. It wins because it is fully qualified, has the right equipment already assigned, can arrive inside the SLA window, and produces the lowest effective cost.
-
-Click:
-
-> **Assign Crew B**
-
-### Close
-
-> Now I will return to the executive close and show how this scales into measurable business value.
-
-Click:
-
-> **Return to Executive Close**
+> Crew B is recommended. It wins because it is qualified for gas emergency response, already has the right equipment, can arrive inside the SLA window, and produces the lowest effective cost.
 
 ## Final Readiness Checklist
 
-- [ ] Presentation opening is concise.
-- [x] AI Crew Recommendation has **Launch Interactive Demo**.
-- [x] NorthStar Operations Console opens correctly.
-- [ ] Work order selection works.
-- [ ] Map or field context is visible.
-- [ ] Crew evaluation works.
-- [ ] Crew B recommendation appears.
-- [ ] Explanation is clear.
+- [x] Launch Interactive Demo exists.
+- [x] NorthStar Operations Console opens.
+- [x] Console Hub has four app modules.
+- [x] Work order selection works.
+- [x] Map/field context is visible.
+- [x] Dispatch map changes by task.
+- [x] Crew evaluation works.
+- [x] Crew B recommendation appears.
+- [x] Build passes.
 - [ ] Assignment confirmation works.
-- [ ] ROI/business impact is visible.
-- [x] Return to presentation works.
-- [ ] Build passes.
+- [ ] Console explainability panel is complete.
+- [ ] ROI/business impact updates after assignment.
 - [ ] Screenshots are captured.
 - [ ] Live talk track is rehearsed.

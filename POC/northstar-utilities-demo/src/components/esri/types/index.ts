@@ -8,6 +8,8 @@
 // Type: TypeScript type definition file
 // ================================================
 
+import type MapView from "@arcgis/core/views/MapView";
+
 export type EsriBasemap =
   | "streets-vector"
   | "topo-vector"
@@ -58,6 +60,6 @@ export interface EsriMapViewerProps extends EsriViewpoint {
   layers?: EsriLayerConfig[];
   markers?: EsriMarkerConfig[];
   controls?: EsriMapControlOptions;
-  onReady?: (view: null) => void;
+  onReady?: (view: MapView) => void;
   onViewpointChange?: (viewpoint: EsriViewpoint) => void;
 }

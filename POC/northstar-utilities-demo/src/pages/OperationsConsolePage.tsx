@@ -8,124 +8,664 @@
 // Type: React TypeScript page component file
 // ================================================
 
-import { Button, Chip, Divider, Grid, IconButton, Menu, MenuItem, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Grid,
+  IconButton,
+  LinearProgress,
+  Menu,
+  MenuItem,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography
+} from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
+import BoltIcon from "@mui/icons-material/Bolt";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import MapIcon from "@mui/icons-material/Map";
 import MenuIcon from "@mui/icons-material/Menu";
+import PeopleIcon from "@mui/icons-material/People";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 import ReplayIcon from "@mui/icons-material/Replay";
+import SearchIcon from "@mui/icons-material/Search";
 import SummarizeIcon from "@mui/icons-material/Summarize";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import WorkIcon from "@mui/icons-material/Work";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, ReactElement, useMemo, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
+import { EsriMapViewer } from "../components/esri/EsriMapViewer";
+import { EsriLayerConfig, EsriMarkerConfig } from "../components/esri/types";
 
 type HubKey = "dashboard" | "workOrders" | "dispatch" | "reports";
 type TaskKey = "emergency" | "crews" | "assignment" | "impact";
 
+interface WorkOrder {
+  id: string;
+  type: string;
+  domain: "Gas" | "Electric";
+  priority: "Emergency" | "Critical" | "High" | "Routine";
+  status: string;
+  district: string;
+  sla: string;
+  impact: string;
+  crew: string;
+  skills: string[];
+  equipment: string[];
+  longitude: number;
+  latitude: number;
+}
+
+interface CrewOption {
+  name: string;
+  fit: number;
+  eta: string;
+  district: string;
+  status: string;
+  equipment: string;
+  overtime: string;
+  hourly: string;
+  effectiveCost: string;
+  longitude: number;
+  latitude: number;
+  strengths: string[];
+  penalties: string[];
+}
+
+const workOrders: WorkOrder[] = [
+  {
+    id: "WO-1842",
+    type: "Gas leak investigation",
+    domain: "Gas",
+    priority: "Emergency",
+    status: "Needs assignment",
+    district: "Central",
+    sla: "48 min remaining",
+    impact: "1,240 customers near hospital corridor",
+    crew: "Crew B recommended",
+    skills: ["Gas emergency", "Atmospheric testing", "Vacuum excavation"],
+    equipment: ["Leak detector", "Vac truck", "Traffic kit"],
+    longitude: -122.6615,
+    latitude: 45.5138
+  },
+  {
+    id: "WO-1907",
+    type: "Transformer outage",
+    domain: "Electric",
+    priority: "Critical",
+    status: "Queued",
+    district: "North",
+    sla: "1 hr 25 min",
+    impact: "412 customers on feeder branch",
+    crew: "Pending review",
+    skills: ["Switching", "Bucket truck", "Outage restoration"],
+    equipment: ["Bucket truck", "Transformer kit"],
+    longitude: -122.7041,
+    latitude: 45.531
+  },
+  {
+    id: "WO-2011",
+    type: "Meter inspection",
+    domain: "Electric",
+    priority: "Routine",
+    status: "Scheduled",
+    district: "West",
+    sla: "Tomorrow",
+    impact: "Commercial account follow-up",
+    crew: "Crew E",
+    skills: ["Meter inspection", "Customer appointment"],
+    equipment: ["Meter test kit"],
+    longitude: -122.692,
+    latitude: 45.506
+  },
+  {
+    id: "WO-2144",
+    type: "Pole damage patrol",
+    domain: "Electric",
+    priority: "High",
+    status: "Ready to bundle",
+    district: "South",
+    sla: "2 hr 10 min",
+    impact: "Industrial park feeder inspection",
+    crew: "Unassigned",
+    skills: ["Line patrol", "Damage assessment", "Traffic control"],
+    equipment: ["Patrol vehicle", "Photo kit"],
+    longitude: -122.683,
+    latitude: 45.489
+  },
+  {
+    id: "WO-2198",
+    type: "Regulator inspection",
+    domain: "Gas",
+    priority: "Routine",
+    status: "Schedule after emergency",
+    district: "Central",
+    sla: "3 days",
+    impact: "Preventive compliance inspection",
+    crew: "Crew C",
+    skills: ["Pressure regulation", "Compliance photos"],
+    equipment: ["Pressure kit"],
+    longitude: -122.649,
+    latitude: 45.52
+  }
+];
+
 const consoleHubItems: { key: HubKey; label: string; icon: JSX.Element; metric: string }[] = [
-  { key: "dashboard", label: "Executive Dashboard", icon: <DashboardIcon />, metric: "14 emergency jobs" },
-  { key: "workOrders", label: "Work Orders", icon: <WorkIcon />, metric: "WO-1842 active" },
-  { key: "dispatch", label: "Dispatch", icon: <EngineeringIcon />, metric: "Crew B ready" },
-  { key: "reports", label: "Report Center", icon: <SummarizeIcon />, metric: "$1.8M modeled value" }
+  { key: "dashboard", label: "Executive Dashboard", icon: <DashboardIcon />, metric: "Live operating picture" },
+  { key: "workOrders", label: "Work Orders", icon: <WorkIcon />, metric: "Dispatch queue" },
+  { key: "dispatch", label: "Dispatch", icon: <EngineeringIcon />, metric: "Crew allocation" },
+  { key: "reports", label: "Report Center", icon: <SummarizeIcon />, metric: "Impact and audit" }
 ];
 
-const currentTasks: { key: TaskKey; label: string; detail: string; status: string }[] = [
+const mapLayers: EsriLayerConfig[] = [
+  { id: "gas-network", title: "Gas Network", type: "geojson", url: "/mock-data/gas-network.geojson", visible: true, opacity: 0.8 },
+  { id: "electric-network", title: "Electric Network", type: "geojson", url: "/mock-data/electric-network.geojson", visible: true, opacity: 0.55 },
+  { id: "crew-locations", title: "Crew Locations", type: "geojson", url: "/mock-data/crew-locations.geojson", visible: true, opacity: 0.9 }
+];
+
+const crews: CrewOption[] = [
   {
-    key: "emergency",
-    label: "Active emergency work order",
-    detail: "Open WO-1842, gas leak near hospital corridor.",
-    status: "Next"
+    name: "Crew B",
+    fit: 96,
+    eta: "18 min",
+    district: "Central",
+    status: "Available",
+    equipment: "Ready",
+    overtime: "Low",
+    hourly: "$148/hr",
+    effectiveCost: "$1,860",
+    longitude: -122.6712,
+    latitude: 45.5231,
+    strengths: ["Gas emergency certified", "Vac truck assigned", "Inside SLA", "Lowest effective cost"],
+    penalties: []
   },
   {
-    key: "crews",
-    label: "Evaluate candidate crews",
-    detail: "Compare qualifications, equipment, travel, overtime, and effective cost.",
-    status: "Ready"
+    name: "Crew D",
+    fit: 88,
+    eta: "34 min",
+    district: "South",
+    status: "Available",
+    equipment: "Ready",
+    overtime: "Medium",
+    hourly: "$142/hr",
+    effectiveCost: "$2,070",
+    longitude: -122.6924,
+    latitude: 45.5024,
+    strengths: ["Qualified gas crew", "Strong first-time fix rate"],
+    penalties: ["Longer cross-district travel", "Moderate overtime exposure"]
   },
   {
-    key: "assignment",
-    label: "Confirm dispatch assignment",
-    detail: "Assign Crew B and update emergency response status.",
-    status: "Queued"
-  },
-  {
-    key: "impact",
-    label: "Review business impact",
-    detail: "Show SLA protection, overtime avoided, and cost savings.",
-    status: "Queued"
+    name: "Crew A",
+    fit: 74,
+    eta: "41 min",
+    district: "North",
+    status: "Available",
+    equipment: "Transfer required",
+    overtime: "High",
+    hourly: "$132/hr",
+    effectiveCost: "$2,320",
+    longitude: -122.7041,
+    latitude: 45.531,
+    strengths: ["Available now", "Lowest hourly rate"],
+    penalties: ["Vac truck transfer required", "SLA exposure", "High overtime risk"]
   }
 ];
 
-const hubPanels: Record<HubKey, { title: string; summary: string; stats: { label: string; value: string }[] }> = {
-  dashboard: {
-    title: "Executive Dashboard",
-    summary: "Operating snapshot for the live demo: emergency load, SLA pressure, crew utilization, and value at stake.",
-    stats: [
-      { label: "Emergency jobs", value: "14" },
-      { label: "Crew utilization", value: "82%" },
-      { label: "SLA risk", value: "23 jobs" }
-    ]
-  },
-  workOrders: {
-    title: "Work Orders",
-    summary: "Planner queue focused on WO-1842, with additional gas and electric work visible for operational context.",
-    stats: [
-      { label: "Selected", value: "WO-1842" },
-      { label: "Priority", value: "Emergency" },
-      { label: "Customer impact", value: "1,240" }
-    ]
-  },
-  dispatch: {
-    title: "Dispatch",
-    summary: "Crew recommendation workspace for selecting qualified crews, comparing constraints, and confirming assignment.",
-    stats: [
-      { label: "Recommendation", value: "Crew B" },
-      { label: "Fit score", value: "96%" },
-      { label: "ETA", value: "18 min" }
-    ]
-  },
-  reports: {
-    title: "Report Center",
-    summary: "Closeout view for recommendation rationale, assignment audit, ROI, and executive presentation outputs.",
-    stats: [
-      { label: "Overtime avoided", value: "210 hrs" },
-      { label: "Travel reduction", value: "14%" },
-      { label: "Annualized savings", value: "$1.8M" }
-    ]
-  }
-};
+const currentTasks: { key: TaskKey; label: string; detail: string; status: string; hub: HubKey }[] = [
+  { key: "emergency", label: "Active emergency work order", detail: "Open WO-1842 and review field context.", status: "Next", hub: "workOrders" },
+  { key: "crews", label: "Evaluate candidate crews", detail: "Run qualification and effective-cost comparison.", status: "Ready", hub: "dispatch" },
+  { key: "assignment", label: "Confirm dispatch assignment", detail: "Assign Crew B and update response status.", status: "Queued", hub: "dispatch" },
+  { key: "impact", label: "Review business impact", detail: "Show SLA, overtime, travel, and customer impact.", status: "Queued", hub: "reports" }
+];
 
-const taskPanels: Record<TaskKey, { title: string; body: string; actions: string[] }> = {
-  emergency: {
-    title: "WO-1842 - Gas Leak Emergency",
-    body: "The current task starts inside the work order record so the user feels like they are operating the app, not reading a process list.",
-    actions: ["Review location and SLA", "Confirm required gas skills", "Inspect affected customer context"]
-  },
-  crews: {
-    title: "Crew Evaluation",
-    body: "This task is where the app compares available crews against safety gates, equipment readiness, travel, productivity, and effective cost.",
-    actions: ["Run crew fit check", "Rank qualified crews", "Explain why Crew B wins"]
-  },
-  assignment: {
-    title: "Dispatch Confirmation",
-    body: "After the recommendation is accepted, the console should show assignment state changing from needs assignment to dispatched.",
-    actions: ["Assign Crew B", "Update work order status", "Show ETA confirmation"]
-  },
-  impact: {
-    title: "Impact Summary",
-    body: "The report task turns the dispatch action into business value for the presenter: SLA risk reduced, overtime avoided, and customer impact protected.",
-    actions: ["Calculate savings", "Generate summary", "Return to executive close"]
+function priorityColor(priority: WorkOrder["priority"]): "error" | "warning" | "primary" | "default" {
+  if (priority === "Emergency") {
+    return "error";
   }
-};
+
+  if (priority === "Critical" || priority === "High") {
+    return "warning";
+  }
+
+  return "default";
+}
+
+function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string {
+  if (activeTask === "crews") {
+    return `Crew proximity for ${selectedOrder.id}`;
+  }
+
+  if (activeTask === "assignment") {
+    return `Dispatch route preview for Crew B`;
+  }
+
+  if (activeTask === "impact") {
+    return `Customer and SLA impact for ${selectedOrder.id}`;
+  }
+
+  return `Field context for ${selectedOrder.id}`;
+}
+
+function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriMarkerConfig[] {
+  const selectedMarker: EsriMarkerConfig = {
+    id: selectedOrder.id,
+    label: selectedOrder.id,
+    longitude: selectedOrder.longitude,
+    latitude: selectedOrder.latitude,
+    color: "#dc2626",
+    size: 15
+  };
+
+  if (activeTask === "crews") {
+    return [
+      selectedMarker,
+      ...crews.map((crew) => ({
+        id: crew.name,
+        label: crew.name,
+        longitude: crew.longitude,
+        latitude: crew.latitude,
+        color: crew.name === "Crew B" ? "#16a34a" : "#2563eb",
+        size: crew.name === "Crew B" ? 13 : 10
+      }))
+    ];
+  }
+
+  if (activeTask === "assignment") {
+    return [
+      selectedMarker,
+      {
+        id: "crew-b-route",
+        label: "Crew B",
+        longitude: crews[0].longitude,
+        latitude: crews[0].latitude,
+        color: "#16a34a",
+        size: 13
+      }
+    ];
+  }
+
+  if (activeTask === "impact") {
+    return [
+      selectedMarker,
+      { id: "hospital-corridor", label: "Hospital Corridor", longitude: -122.656, latitude: 45.518, color: "#7c3aed", size: 11 },
+      { id: "affected-zone", label: "1,240 Customers", longitude: -122.668, latitude: 45.508, color: "#f97316", size: 11 }
+    ];
+  }
+
+  return [
+    selectedMarker,
+    ...workOrders
+      .filter((order) => order.id !== selectedOrder.id)
+      .map((order) => ({
+        id: order.id,
+        label: order.id,
+        longitude: order.longitude,
+        latitude: order.latitude,
+        color: order.domain === "Gas" ? "#0f766e" : "#f59e0b",
+        size: 9
+      }))
+  ];
+}
+
+function MetricTile({ label, value, detail, tone = "primary" }: { label: string; value: string; detail: string; tone?: "primary" | "error" | "warning" | "success" }) {
+  return (
+    <Paper variant="outlined" sx={{ p: 1.5, height: "100%", bgcolor: "white" }}>
+      <Stack direction="row" justifyContent="space-between" gap={1}>
+        <Typography color="text.secondary" variant="body2">{label}</Typography>
+        <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: `${tone}.main`, mt: 0.75 }} />
+      </Stack>
+      <Typography fontWeight={900} sx={{ mt: 0.75, fontSize: 28 }}>{value}</Typography>
+      <Typography color="text.secondary" variant="body2">{detail}</Typography>
+    </Paper>
+  );
+}
+
+function WorkOrderTable({ selectedId, onSelect }: { selectedId: string; onSelect: (id: string) => void }) {
+  return (
+    <Table size="small" stickyHeader>
+      <TableHead>
+        <TableRow>
+          <TableCell>Work Order</TableCell>
+          <TableCell>Type</TableCell>
+          <TableCell>Priority</TableCell>
+          <TableCell>District</TableCell>
+          <TableCell>SLA</TableCell>
+          <TableCell>Status</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {workOrders.map((order) => (
+          <TableRow
+            hover
+            key={order.id}
+            onClick={() => onSelect(order.id)}
+            selected={order.id === selectedId}
+            sx={{ cursor: "pointer" }}
+          >
+            <TableCell sx={{ fontWeight: 900 }}>{order.id}</TableCell>
+            <TableCell>{order.type}</TableCell>
+            <TableCell><Chip color={priorityColor(order.priority)} label={order.priority} size="small" /></TableCell>
+            <TableCell>{order.district}</TableCell>
+            <TableCell>{order.sla}</TableCell>
+            <TableCell>{order.status}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[] }) {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography variant="h2">Executive Dashboard</Typography>
+            <Typography color="text.secondary">NorthStar Utilities operating picture for gas and electric field response.</Typography>
+          </div>
+          <Stack direction="row" gap={1} flexWrap="wrap">
+            <Chip icon={<WarningAmberIcon />} color="error" label="Emergency active" />
+            <Chip icon={<CheckCircleIcon />} color="success" label="Crew B eligible" />
+          </Stack>
+        </Stack>
+      </Grid>
+
+      <Grid item md={3} xs={12}><MetricTile label="Active Work Orders" value="128" detail="31% emergency or critical" tone="primary" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="SLA Risk" value="23" detail="Jobs inside 2-hour window" tone="error" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Crew Utilization" value="82%" detail="Central district constrained" tone="warning" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Modeled Savings" value="$1.8M" detail="Annualized dispatch value" tone="success" /></Grid>
+
+      <Grid item lg={8} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
+            <Stack direction="row" alignItems="center" gap={1}>
+              <MapIcon color="primary" />
+              <Typography fontWeight={900}>Service Territory Operations Map</Typography>
+            </Stack>
+            <Chip label="Gas + electric layers" size="small" />
+          </Stack>
+          <EsriMapViewer
+            center={[selectedOrder.longitude, selectedOrder.latitude]}
+            height={420}
+            layers={mapLayers}
+            markers={markers}
+            title=""
+            zoom={13}
+          />
+        </Paper>
+      </Grid>
+
+      <Grid item lg={4} xs={12}>
+        <Stack spacing={2}>
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography fontWeight={900}>Active Incident</Typography>
+            <Divider sx={{ my: 1.5 }} />
+            <Typography fontWeight={900}>{selectedOrder.id} - {selectedOrder.type}</Typography>
+            <Typography color="text.secondary" sx={{ mt: 0.75 }}>{selectedOrder.impact}</Typography>
+            <Stack direction="row" gap={1} flexWrap="wrap" sx={{ mt: 1.5 }}>
+              <Chip color={priorityColor(selectedOrder.priority)} label={selectedOrder.priority} size="small" />
+              <Chip label={selectedOrder.sla} size="small" />
+              <Chip label={selectedOrder.district} size="small" />
+            </Stack>
+          </Paper>
+
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography fontWeight={900}>Crew Readiness</Typography>
+            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+              {crews.map((crew) => (
+                <div key={crew.name}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography fontWeight={800}>{crew.name}</Typography>
+                    <Typography color="text.secondary" variant="body2">{crew.fit}%</Typography>
+                  </Stack>
+                  <LinearProgress color={crew.name === "Crew B" ? "success" : "primary"} value={crew.fit} variant="determinate" />
+                </div>
+              ))}
+            </Stack>
+          </Paper>
+        </Stack>
+      </Grid>
+    </Grid>
+  );
+}
+
+function WorkOrdersScreen({ selectedOrder, onSelectOrder }: { selectedOrder: WorkOrder; onSelectOrder: (id: string) => void }) {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography variant="h2">Work Orders</Typography>
+            <Typography color="text.secondary">Dispatch queue with priority, SLA, skills, equipment, customer impact, and assignment state.</Typography>
+          </div>
+          <Stack direction="row" gap={1}>
+            <Button startIcon={<SearchIcon />} size="small" variant="outlined">Find</Button>
+            <Button startIcon={<FilterListIcon />} size="small" variant="outlined">Filters</Button>
+          </Stack>
+        </Stack>
+      </Grid>
+
+      <Grid item lg={8} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
+            <Typography fontWeight={900}>Planner Queue</Typography>
+            <Chip label={`${workOrders.length} records`} size="small" />
+          </Stack>
+          <Box sx={{ maxHeight: 394, overflow: "auto" }}>
+            <WorkOrderTable selectedId={selectedOrder.id} onSelect={onSelectOrder} />
+          </Box>
+        </Paper>
+      </Grid>
+
+      <Grid item lg={4} xs={12}>
+        <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+          <Stack direction="row" justifyContent="space-between" gap={1}>
+            <div>
+              <Typography color="text.secondary" variant="body2">Selected work order</Typography>
+              <Typography fontWeight={900} fontSize={22}>{selectedOrder.id}</Typography>
+            </div>
+            <Chip color={priorityColor(selectedOrder.priority)} label={selectedOrder.priority} />
+          </Stack>
+          <Divider sx={{ my: 1.5 }} />
+          <Typography fontWeight={900}>{selectedOrder.type}</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.75 }}>{selectedOrder.impact}</Typography>
+          <Grid container spacing={1.25} sx={{ mt: 1 }}>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">Domain</Typography><Typography fontWeight={800}>{selectedOrder.domain}</Typography></Grid>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">District</Typography><Typography fontWeight={800}>{selectedOrder.district}</Typography></Grid>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">SLA</Typography><Typography fontWeight={800}>{selectedOrder.sla}</Typography></Grid>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">Assignment</Typography><Typography fontWeight={800}>{selectedOrder.crew}</Typography></Grid>
+          </Grid>
+          <Divider sx={{ my: 1.5 }} />
+          <Typography fontWeight={900}>Required Skills</Typography>
+          <Stack direction="row" gap={0.75} flexWrap="wrap" sx={{ mt: 1 }}>
+            {selectedOrder.skills.map((skill) => <Chip key={skill} label={skill} size="small" variant="outlined" />)}
+          </Stack>
+          <Typography fontWeight={900} sx={{ mt: 2 }}>Equipment</Typography>
+          <Stack direction="row" gap={0.75} flexWrap="wrap" sx={{ mt: 1 }}>
+            {selectedOrder.equipment.map((item) => <Chip key={item} label={item} size="small" variant="outlined" />)}
+          </Stack>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+}
+
+function DispatchScreen({
+  activeTask,
+  evaluated,
+  evaluating,
+  onEvaluate,
+  selectedOrder
+}: {
+  activeTask: TaskKey;
+  evaluated: boolean;
+  evaluating: boolean;
+  onEvaluate: () => void;
+  selectedOrder: WorkOrder;
+}) {
+  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder);
+  const rankedCrews = evaluated ? [...crews].sort((a, b) => b.fit - a.fit) : crews;
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography variant="h2">Dispatch</Typography>
+            <Typography color="text.secondary">Crew allocation, route readiness, and schedule impact for {selectedOrder.id}.</Typography>
+          </div>
+          <Button disabled={evaluating} onClick={onEvaluate} variant="contained">
+            {evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
+          </Button>
+        </Stack>
+      </Grid>
+      <Grid item lg={7} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
+            <Stack direction="row" alignItems="center" gap={1}>
+              <MapIcon color="primary" />
+              <Typography fontWeight={900}>{getTaskMapTitle(activeTask, selectedOrder)}</Typography>
+            </Stack>
+            <Chip label={activeTask === "crews" ? "Crew layer" : "Task context"} size="small" />
+          </Stack>
+          <EsriMapViewer
+            center={[selectedOrder.longitude, selectedOrder.latitude]}
+            height={330}
+            layers={mapLayers}
+            markers={dispatchMarkers}
+            title=""
+            zoom={13}
+          />
+        </Paper>
+      </Grid>
+      <Grid item lg={5} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden", height: "100%" }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
+            <Stack direction="row" alignItems="center" gap={1}>
+            <PeopleIcon color="primary" />
+            <Typography fontWeight={900}>Candidate Crews</Typography>
+            </Stack>
+            <Chip color={evaluated ? "success" : "default"} label={evaluated ? "Ranked" : "Not evaluated"} size="small" />
+          </Stack>
+          {evaluating && <LinearProgress />}
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>Crew</TableCell>
+                <TableCell>Fit</TableCell>
+                <TableCell>ETA</TableCell>
+                <TableCell>Rate</TableCell>
+                <TableCell>Effective</TableCell>
+                <TableCell>Equipment</TableCell>
+                <TableCell>Overtime</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rankedCrews.map((crew) => (
+                <TableRow key={crew.name} selected={evaluated && crew.name === "Crew B"}>
+                  <TableCell sx={{ fontWeight: 900 }}>{crew.name}</TableCell>
+                  <TableCell>{evaluated ? `${crew.fit}%` : "-"}</TableCell>
+                  <TableCell>{crew.eta}</TableCell>
+                  <TableCell>{crew.hourly}</TableCell>
+                  <TableCell>{evaluated ? crew.effectiveCost : "-"}</TableCell>
+                  <TableCell>{crew.equipment}</TableCell>
+                  <TableCell>{crew.overtime}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Paper>
+      </Grid>
+      <Grid item lg={7} xs={12}>
+        <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+          <Typography fontWeight={900}>{evaluated ? "Why Crew B is recommended" : "Evaluation readiness"}</Typography>
+          {evaluated ? (
+            <Grid container spacing={1.25} sx={{ mt: 1 }}>
+              {crews[0].strengths.map((strength) => (
+                <Grid item md={6} xs={12} key={strength}>
+                  <Stack direction="row" alignItems="center" gap={1}>
+                    <CheckCircleIcon color="success" fontSize="small" />
+                    <Typography>{strength}</Typography>
+                  </Stack>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Typography color="text.secondary" sx={{ mt: 1 }}>
+              Click Evaluate Crews to score required certifications, equipment readiness, travel, SLA fit, productivity, overtime risk, and effective cost.
+            </Typography>
+          )}
+        </Paper>
+      </Grid>
+      <Grid item lg={5} xs={12}>
+        <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+          <Typography fontWeight={900}>Crew B Schedule Window</Typography>
+          <Stack spacing={1.2} sx={{ mt: 2 }}>
+            {["07:30 Travel", "07:48 Arrive on site", "08:05 Safety assessment", "08:30 Leak isolation", "09:15 Repair support"].map((item, index) => (
+              <Stack key={item} direction="row" alignItems="center" gap={1}>
+                <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: index < 2 ? "success.main" : "primary.main" }} />
+                <Typography>{item}</Typography>
+              </Stack>
+            ))}
+          </Stack>
+          <Button startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
+            Assign Crew B
+          </Button>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+}
+
+function ReportsScreen() {
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Typography variant="h2">Report Center</Typography>
+        <Typography color="text.secondary">Operational closeout for recommendation rationale, dispatch audit, and value summary.</Typography>
+      </Grid>
+      <Grid item md={4} xs={12}><MetricTile label="ETA Improvement" value="23 min" detail="Against next qualified alternative" tone="success" /></Grid>
+      <Grid item md={4} xs={12}><MetricTile label="Overtime Avoided" value="2.6 hrs" detail="Single incident estimate" tone="success" /></Grid>
+      <Grid item md={4} xs={12}><MetricTile label="Customer Risk" value="-38%" detail="SLA and hospital corridor exposure" tone="success" /></Grid>
+      <Grid item xs={12}>
+        <Paper variant="outlined" sx={{ p: 2 }}>
+          <Typography fontWeight={900}>Recommendation Audit</Typography>
+          <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+            {["Crew B passed gas emergency certification gate.", "Equipment package is already assigned to the crew.", "Arrival time remains inside the emergency SLA window.", "Effective cost is lowest after travel and overtime adjustments."].map((line) => (
+              <Stack direction="row" alignItems="center" gap={1} key={line}>
+                <CheckCircleIcon color="success" fontSize="small" />
+                <Typography>{line}</Typography>
+              </Stack>
+            ))}
+          </Stack>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+}
 
 export function OperationsConsolePage() {
   const [activeHub, setActiveHub] = useState<HubKey>("dashboard");
   const [activeTask, setActiveTask] = useState<TaskKey>("emergency");
+  const [evaluated, setEvaluated] = useState(false);
+  const [evaluating, setEvaluating] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState("WO-1842");
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(menuAnchor);
-  const hubPanel = hubPanels[activeHub];
-  const taskPanel = taskPanels[activeTask];
+  const selectedOrder = workOrders.find((order) => order.id === selectedOrderId) ?? workOrders[0];
+  const markers = useMemo(() => getTaskMapMarkers(activeTask, selectedOrder), [activeTask, selectedOrder]);
 
   function openMenu(event: MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
@@ -135,163 +675,131 @@ export function OperationsConsolePage() {
     setMenuAnchor(null);
   }
 
+  function selectTask(task: typeof currentTasks[number]) {
+    setActiveTask(task.key);
+    setActiveHub(task.hub);
+    if (task.key === "emergency") {
+      setSelectedOrderId("WO-1842");
+    }
+  }
+
+  function evaluateCrews() {
+    setActiveTask("crews");
+    setEvaluating(true);
+    window.setTimeout(() => {
+      setEvaluated(true);
+      setEvaluating(false);
+    }, 650);
+  }
+
+  function renderActiveHub(): ReactElement {
+    if (activeHub === "workOrders") {
+      return <WorkOrdersScreen selectedOrder={selectedOrder} onSelectOrder={setSelectedOrderId} />;
+    }
+
+    if (activeHub === "dispatch") {
+      return (
+        <DispatchScreen
+          activeTask={activeTask}
+          evaluated={evaluated}
+          evaluating={evaluating}
+          onEvaluate={evaluateCrews}
+          selectedOrder={selectedOrder}
+        />
+      );
+    }
+
+    if (activeHub === "reports") {
+      return <ReportsScreen />;
+    }
+
+    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} />;
+  }
+
   return (
-    <Stack spacing={3}>
-      <Paper
-        sx={{
-          overflow: "hidden",
-          border: "1px solid",
-          borderColor: "divider"
-        }}
-      >
-        <Stack
-          alignItems="center"
-          direction="row"
-          justifyContent="space-between"
-          sx={{
-            px: { xs: 2, md: 3 },
-            py: 2,
-            bgcolor: "#0f172a",
-            color: "white"
-          }}
-        >
-          <div>
-            <Typography sx={{ fontWeight: 900, lineHeight: 1 }} variant="h1">
-              NorthStar Operations Console
-            </Typography>
-            <Typography sx={{ color: "rgba(255,255,255,0.72)", mt: 0.75 }} variant="body2">
-              Console Hub
-            </Typography>
-          </div>
-          <IconButton aria-controls={isMenuOpen ? "demo-controls-menu" : undefined} aria-haspopup="true" aria-label="Demo controls" onClick={openMenu} sx={{ color: "white" }}>
-            <MenuIcon />
-          </IconButton>
-          <Menu
-            anchorEl={menuAnchor}
-            id="demo-controls-menu"
-            onClose={closeMenu}
-            open={isMenuOpen}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem component={RouterLink} onClick={closeMenu} to="/ai-crew-recommendation">
-              Return to Presentation
-            </MenuItem>
-            <MenuItem component={RouterLink} onClick={closeMenu} to="/explainability">
-              <PsychologyIcon fontSize="small" sx={{ mr: 1 }} /> Explainability
-            </MenuItem>
-            <MenuItem component={RouterLink} onClick={closeMenu} to="/roi">
-              <AssessmentIcon fontSize="small" sx={{ mr: 1 }} /> ROI
-            </MenuItem>
-            <MenuItem component={RouterLink} onClick={closeMenu} to="/operations-console">
-              <ReplayIcon fontSize="small" sx={{ mr: 1 }} /> Restart Demo
-            </MenuItem>
-          </Menu>
+    <Box sx={{ bgcolor: "#f3f4f6", mx: { xs: -2, md: -3 }, my: { xs: -2, md: -3 }, minHeight: "calc(100vh - 96px)" }}>
+      <Stack direction="row" sx={{ minHeight: "calc(100vh - 96px)" }}>
+        <Stack sx={{ width: 44, bgcolor: "#111827", color: "white", py: 1, display: { xs: "none", md: "flex" } }} alignItems="center" spacing={1}>
+          {[DashboardIcon, WorkIcon, MapIcon, EngineeringIcon, BoltIcon, AssessmentIcon].map((Icon, index) => (
+            <IconButton key={index} size="small" sx={{ color: "rgba(255,255,255,0.78)" }}>
+              <Icon fontSize="small" />
+            </IconButton>
+          ))}
         </Stack>
 
-        <Grid container spacing={0}>
-          {consoleHubItems.map((item) => (
-            <Grid item key={item.key} md={3} xs={12}>
+        <Stack sx={{ flex: 1, minWidth: 0 }}>
+          <Stack
+            alignItems="center"
+            direction="row"
+            justifyContent="space-between"
+            sx={{ px: { xs: 2, md: 2.5 }, py: 1, bgcolor: "#3b005f", color: "white" }}
+          >
+            <Stack direction="row" alignItems="center" gap={1.5}>
+              <Typography fontWeight={900}>NorthStar</Typography>
+              <Typography color="rgba(255,255,255,0.72)" variant="body2">Operations Console</Typography>
+            </Stack>
+            <IconButton aria-controls={isMenuOpen ? "demo-controls-menu" : undefined} aria-haspopup="true" aria-label="Demo controls" onClick={openMenu} sx={{ color: "white" }}>
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={menuAnchor}
+              id="demo-controls-menu"
+              onClose={closeMenu}
+              open={isMenuOpen}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem component={RouterLink} onClick={closeMenu} to="/ai-crew-recommendation">Return to Presentation</MenuItem>
+              <MenuItem component={RouterLink} onClick={closeMenu} to="/explainability"><PsychologyIcon fontSize="small" sx={{ mr: 1 }} /> Explainability</MenuItem>
+              <MenuItem component={RouterLink} onClick={closeMenu} to="/roi"><AssessmentIcon fontSize="small" sx={{ mr: 1 }} /> ROI</MenuItem>
+              <MenuItem component={RouterLink} onClick={closeMenu} to="/operations-console"><ReplayIcon fontSize="small" sx={{ mr: 1 }} /> Restart Demo</MenuItem>
+            </Menu>
+          </Stack>
+
+          <Stack direction="row" gap={0.5} sx={{ px: 1, py: 0.75, bgcolor: "white", borderBottom: "1px solid", borderColor: "divider", overflowX: "auto" }}>
+            {consoleHubItems.map((item) => (
               <Button
-                fullWidth
+                key={item.key}
                 onClick={() => setActiveHub(item.key)}
                 startIcon={item.icon}
-                sx={{
-                  alignItems: "flex-start",
-                  borderRadius: 0,
-                  borderRight: { md: "1px solid" },
-                  borderBottom: { xs: "1px solid", md: 0 },
-                  borderColor: "divider",
-                  color: activeHub === item.key ? "primary.main" : "text.primary",
-                  justifyContent: "flex-start",
-                  minHeight: 78,
-                  px: 2,
-                  py: 1.5,
-                  textAlign: "left"
-                }}
+                size="small"
+                variant={activeHub === item.key ? "contained" : "text"}
+                sx={{ flex: "0 0 auto" }}
               >
-                <Stack spacing={0.25}>
-                  <Typography fontWeight={900}>{item.label}</Typography>
-                  <Typography color="text.secondary" variant="body2">{item.metric}</Typography>
-                </Stack>
+                {item.label}
               </Button>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
+            ))}
+          </Stack>
 
-      <Grid container spacing={3}>
-        <Grid item lg={8} xs={12}>
-          <Paper sx={{ p: 3, height: "100%" }} variant="outlined">
-            <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-              <div>
-                <Typography variant="h2">{hubPanel.title}</Typography>
-                <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 760 }}>
-                  {hubPanel.summary}
-                </Typography>
-              </div>
-              <Chip color="primary" label="App mode" />
-            </Stack>
+          <Stack direction="row" sx={{ flex: 1, minHeight: 0 }}>
+            <Box sx={{ flex: 1, minWidth: 0, p: 2 }}>
+              {renderActiveHub()}
+            </Box>
 
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              {hubPanel.stats.map((stat) => (
-                <Grid item md={4} xs={12} key={stat.label}>
-                  <Paper sx={{ p: 2, bgcolor: "grey.50" }} variant="outlined">
-                    <Typography color="text.secondary" variant="body2">{stat.label}</Typography>
-                    <Typography fontWeight={900} sx={{ mt: 0.5 }} variant="h2">{stat.value}</Typography>
-                  </Paper>
-                </Grid>
-              ))}
-            </Grid>
-
-            <Divider sx={{ my: 3 }} />
-
-            <Typography fontWeight={900}>{taskPanel.title}</Typography>
-            <Typography color="text.secondary" sx={{ mt: 1 }}>
-              {taskPanel.body}
-            </Typography>
-            <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mt: 2 }}>
-              {taskPanel.actions.map((action) => (
-                <Chip key={action} label={action} variant="outlined" />
-              ))}
-            </Stack>
-          </Paper>
-        </Grid>
-
-        <Grid item lg={4} xs={12}>
-          <Paper sx={{ p: 3, height: "100%" }} variant="outlined">
-            <Typography variant="h2">Current Task</Typography>
-            <Typography color="text.secondary" sx={{ mt: 1 }}>
-              Use these actions to move deeper into the console experience.
-            </Typography>
-            <Stack divider={<Divider flexItem />} sx={{ mt: 2 }}>
-              {currentTasks.map((task) => (
-                <Button
-                  key={task.key}
-                  onClick={() => setActiveTask(task.key)}
-                  sx={{
-                    alignItems: "flex-start",
-                    borderRadius: 1,
-                    color: "text.primary",
-                    justifyContent: "flex-start",
-                    px: 1,
-                    py: 1.5,
-                    textAlign: "left"
-                  }}
-                >
-                  <Stack spacing={0.75} sx={{ width: "100%" }}>
-                    <Stack alignItems="center" direction="row" justifyContent="space-between" gap={1}>
-                      <Typography fontWeight={900}>{task.label}</Typography>
-                      <Chip color={task.key === activeTask ? "primary" : "default"} label={task.status} size="small" />
+            <Paper square variant="outlined" sx={{ width: 330, display: { xs: "none", lg: "block" }, borderTop: 0, borderRight: 0, borderBottom: 0, p: 2, bgcolor: "white" }}>
+              <Typography variant="h2">Current Task</Typography>
+              <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">Work the live demo from an operational task list.</Typography>
+              <Stack divider={<Divider flexItem />} sx={{ mt: 1.5 }}>
+                {currentTasks.map((task) => (
+                  <Button
+                    key={task.key}
+                    onClick={() => selectTask(task)}
+                    sx={{ alignItems: "flex-start", color: "text.primary", justifyContent: "flex-start", px: 0.5, py: 1.25, textAlign: "left" }}
+                  >
+                    <Stack spacing={0.75} sx={{ width: "100%" }}>
+                      <Stack alignItems="center" direction="row" justifyContent="space-between" gap={1}>
+                        <Typography fontWeight={900}>{task.label}</Typography>
+                        <Chip color={task.key === activeTask ? "primary" : "default"} label={task.status} size="small" />
+                      </Stack>
+                      <Typography color="text.secondary" variant="body2">{task.detail}</Typography>
                     </Stack>
-                    <Typography color="text.secondary" variant="body2">{task.detail}</Typography>
-                  </Stack>
-                </Button>
-              ))}
-            </Stack>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Stack>
+                  </Button>
+                ))}
+              </Stack>
+            </Paper>
+          </Stack>
+        </Stack>
+      </Stack>
+    </Box>
   );
 }
