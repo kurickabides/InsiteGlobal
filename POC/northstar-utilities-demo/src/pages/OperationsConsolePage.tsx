@@ -29,6 +29,7 @@ import {
 } from "@mui/material";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import BoltIcon from "@mui/icons-material/Bolt";
+import BuildIcon from "@mui/icons-material/Build";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EngineeringIcon from "@mui/icons-material/Engineering";
@@ -47,8 +48,9 @@ import { MouseEvent, ReactElement, useMemo, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { EsriMapViewer } from "../components/esri/EsriMapViewer";
 import { EsriLayerConfig, EsriMarkerConfig } from "../components/esri/types";
+import { generatedCrews, generatedWorkOrders } from "../data/generatedOperationsData";
 
-type HubKey = "dashboard" | "workOrders" | "dispatch" | "reports";
+type HubKey = "dashboard" | "workOrders" | "workforce" | "dispatch" | "reports";
 type TaskKey = "emergency" | "crews" | "assignment" | "impact";
 
 interface WorkOrder {
@@ -61,6 +63,7 @@ interface WorkOrder {
   sla: string;
   impact: string;
   crew: string;
+  assignmentState: "assigned" | "evaluated" | "unevaluated";
   skills: string[];
   equipment: string[];
   longitude: number;
@@ -73,6 +76,10 @@ interface CrewOption {
   eta: string;
   district: string;
   status: string;
+  crewType: string;
+  vehicleIcon: "truck" | "bucket" | "van" | "patrol";
+  currentAssignment: string;
+  certifications: string[];
   equipment: string;
   overtime: string;
   hourly: string;
@@ -83,87 +90,12 @@ interface CrewOption {
   penalties: string[];
 }
 
-const workOrders: WorkOrder[] = [
-  {
-    id: "WO-1842",
-    type: "Gas leak investigation",
-    domain: "Gas",
-    priority: "Emergency",
-    status: "Needs assignment",
-    district: "Central",
-    sla: "48 min remaining",
-    impact: "1,240 customers near hospital corridor",
-    crew: "Crew B recommended",
-    skills: ["Gas emergency", "Atmospheric testing", "Vacuum excavation"],
-    equipment: ["Leak detector", "Vac truck", "Traffic kit"],
-    longitude: -122.6615,
-    latitude: 45.5138
-  },
-  {
-    id: "WO-1907",
-    type: "Transformer outage",
-    domain: "Electric",
-    priority: "Critical",
-    status: "Queued",
-    district: "North",
-    sla: "1 hr 25 min",
-    impact: "412 customers on feeder branch",
-    crew: "Pending review",
-    skills: ["Switching", "Bucket truck", "Outage restoration"],
-    equipment: ["Bucket truck", "Transformer kit"],
-    longitude: -122.7041,
-    latitude: 45.531
-  },
-  {
-    id: "WO-2011",
-    type: "Meter inspection",
-    domain: "Electric",
-    priority: "Routine",
-    status: "Scheduled",
-    district: "West",
-    sla: "Tomorrow",
-    impact: "Commercial account follow-up",
-    crew: "Crew E",
-    skills: ["Meter inspection", "Customer appointment"],
-    equipment: ["Meter test kit"],
-    longitude: -122.692,
-    latitude: 45.506
-  },
-  {
-    id: "WO-2144",
-    type: "Pole damage patrol",
-    domain: "Electric",
-    priority: "High",
-    status: "Ready to bundle",
-    district: "South",
-    sla: "2 hr 10 min",
-    impact: "Industrial park feeder inspection",
-    crew: "Unassigned",
-    skills: ["Line patrol", "Damage assessment", "Traffic control"],
-    equipment: ["Patrol vehicle", "Photo kit"],
-    longitude: -122.683,
-    latitude: 45.489
-  },
-  {
-    id: "WO-2198",
-    type: "Regulator inspection",
-    domain: "Gas",
-    priority: "Routine",
-    status: "Schedule after emergency",
-    district: "Central",
-    sla: "3 days",
-    impact: "Preventive compliance inspection",
-    crew: "Crew C",
-    skills: ["Pressure regulation", "Compliance photos"],
-    equipment: ["Pressure kit"],
-    longitude: -122.649,
-    latitude: 45.52
-  }
-];
+const workOrders = generatedWorkOrders.map((order) => ({ ...order })) as unknown as WorkOrder[];
 
 const consoleHubItems: { key: HubKey; label: string; icon: JSX.Element; metric: string }[] = [
   { key: "dashboard", label: "Executive Dashboard", icon: <DashboardIcon />, metric: "Live operating picture" },
   { key: "workOrders", label: "Work Orders", icon: <WorkIcon />, metric: "Dispatch queue" },
+  { key: "workforce", label: "Workforce", icon: <PeopleIcon />, metric: "Crew roster" },
   { key: "dispatch", label: "Dispatch", icon: <EngineeringIcon />, metric: "Crew allocation" },
   { key: "reports", label: "Report Center", icon: <SummarizeIcon />, metric: "Impact and audit" }
 ];
@@ -174,58 +106,14 @@ const mapLayers: EsriLayerConfig[] = [
   { id: "crew-locations", title: "Crew Locations", type: "geojson", url: "/mock-data/crew-locations.geojson", visible: true, opacity: 0.9 }
 ];
 
-const crews: CrewOption[] = [
-  {
-    name: "Crew B",
-    fit: 96,
-    eta: "18 min",
-    district: "Central",
-    status: "Available",
-    equipment: "Ready",
-    overtime: "Low",
-    hourly: "$148/hr",
-    effectiveCost: "$1,860",
-    longitude: -122.6712,
-    latitude: 45.5231,
-    strengths: ["Gas emergency certified", "Vac truck assigned", "Inside SLA", "Lowest effective cost"],
-    penalties: []
-  },
-  {
-    name: "Crew D",
-    fit: 88,
-    eta: "34 min",
-    district: "South",
-    status: "Available",
-    equipment: "Ready",
-    overtime: "Medium",
-    hourly: "$142/hr",
-    effectiveCost: "$2,070",
-    longitude: -122.6924,
-    latitude: 45.5024,
-    strengths: ["Qualified gas crew", "Strong first-time fix rate"],
-    penalties: ["Longer cross-district travel", "Moderate overtime exposure"]
-  },
-  {
-    name: "Crew A",
-    fit: 74,
-    eta: "41 min",
-    district: "North",
-    status: "Available",
-    equipment: "Transfer required",
-    overtime: "High",
-    hourly: "$132/hr",
-    effectiveCost: "$2,320",
-    longitude: -122.7041,
-    latitude: 45.531,
-    strengths: ["Available now", "Lowest hourly rate"],
-    penalties: ["Vac truck transfer required", "SLA exposure", "High overtime risk"]
-  }
-];
+const crews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
+const defaultWorkOrderId = workOrders.find((order) => order.priority === "Emergency" && order.assignmentState !== "assigned")?.id ?? workOrders[0].id;
+const defaultCrewName = crews.find((crew) => crew.status === "Available")?.name ?? crews[0].name;
 
 const currentTasks: { key: TaskKey; label: string; detail: string; status: string; hub: HubKey }[] = [
-  { key: "emergency", label: "Active emergency work order", detail: "Open WO-1842 and review field context.", status: "Next", hub: "workOrders" },
+  { key: "emergency", label: "Active emergency work order", detail: "Open the highest-priority gas or power order and review field context.", status: "Next", hub: "workOrders" },
   { key: "crews", label: "Evaluate candidate crews", detail: "Run qualification and effective-cost comparison.", status: "Ready", hub: "dispatch" },
-  { key: "assignment", label: "Confirm dispatch assignment", detail: "Assign Crew B and update response status.", status: "Queued", hub: "dispatch" },
+  { key: "assignment", label: "Confirm dispatch assignment", detail: "Assign the recommended crew and update response status.", status: "Queued", hub: "dispatch" },
   { key: "impact", label: "Review business impact", detail: "Show SLA, overtime, travel, and customer impact.", status: "Queued", hub: "reports" }
 ];
 
@@ -241,13 +129,80 @@ function priorityColor(priority: WorkOrder["priority"]): "error" | "warning" | "
   return "default";
 }
 
+function assignmentLabel(state: WorkOrder["assignmentState"]): string {
+  if (state === "assigned") {
+    return "Assigned crew";
+  }
+
+  if (state === "evaluated") {
+    return "Evaluated";
+  }
+
+  return "Not evaluated";
+}
+
+function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
+  if (icon === "bucket") {
+    return "Bucket truck";
+  }
+
+  if (icon === "van") {
+    return "Service van";
+  }
+
+  if (icon === "patrol") {
+    return "Patrol vehicle";
+  }
+
+  return "Utility truck";
+}
+
+function workOrderMarkerStyle(order: WorkOrder, isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
+  if (order.assignmentState === "assigned") {
+    return {
+      color: "#16a34a",
+      outlineColor: isSelected ? "#111827" : "#ffffff",
+      shape: "square",
+      size: isSelected ? 16 : 12
+    };
+  }
+
+  if (order.assignmentState === "evaluated") {
+    return {
+      color: "#2563eb",
+      outlineColor: isSelected ? "#111827" : "#ffffff",
+      shape: "diamond",
+      size: isSelected ? 17 : 13
+    };
+  }
+
+  return {
+    color: "#dc2626",
+    outlineColor: isSelected ? "#111827" : "#ffffff",
+    shape: "triangle",
+    size: isSelected ? 17 : 13
+  };
+}
+
+function getCandidateCrews(order: WorkOrder): CrewOption[] {
+  const domainMatches = crews.filter((crew) => {
+    if (order.domain === "Gas") {
+      return crew.certifications.some((certification) => certification.includes("Gas") || certification.includes("Pressure"));
+    }
+
+    return crew.certifications.some((certification) => certification.includes("Switching") || certification.includes("Line") || certification.includes("Meter"));
+  });
+
+  return [...domainMatches].sort((a, b) => b.fit - a.fit);
+}
+
 function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string {
   if (activeTask === "crews") {
     return `Crew proximity for ${selectedOrder.id}`;
   }
 
   if (activeTask === "assignment") {
-    return `Dispatch route preview for Crew B`;
+    return "Dispatch route preview for recommended crew";
   }
 
   if (activeTask === "impact") {
@@ -258,64 +213,38 @@ function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string 
 }
 
 function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriMarkerConfig[] {
-  const selectedMarker: EsriMarkerConfig = {
-    id: selectedOrder.id,
-    label: selectedOrder.id,
-    longitude: selectedOrder.longitude,
-    latitude: selectedOrder.latitude,
-    color: "#dc2626",
-    size: 15
-  };
+  const candidateCrewNames = new Set(getCandidateCrews(selectedOrder).map((crew) => crew.name));
+  const workOrderMarkers = workOrders.map((order) => ({
+    id: order.id,
+    label: `${order.id} - ${assignmentLabel(order.assignmentState)}`,
+    longitude: order.longitude,
+    latitude: order.latitude,
+    ...workOrderMarkerStyle(order, order.id === selectedOrder.id),
+    popupContent: `${order.type}<br/>${order.priority} priority<br/>${assignmentLabel(order.assignmentState)}<br/>${order.crew}`
+  }));
 
-  if (activeTask === "crews") {
-    return [
-      selectedMarker,
-      ...crews.map((crew) => ({
-        id: crew.name,
-        label: crew.name,
-        longitude: crew.longitude,
-        latitude: crew.latitude,
-        color: crew.name === "Crew B" ? "#16a34a" : "#2563eb",
-        size: crew.name === "Crew B" ? 13 : 10
-      }))
-    ];
-  }
-
-  if (activeTask === "assignment") {
-    return [
-      selectedMarker,
-      {
-        id: "crew-b-route",
-        label: "Crew B",
-        longitude: crews[0].longitude,
-        latitude: crews[0].latitude,
-        color: "#16a34a",
-        size: 13
-      }
-    ];
-  }
+  const crewMarkers = crews.map((crew) => ({
+    id: `crew-${crew.name}`,
+    label: `${crew.name} - ${crew.crewType}`,
+    longitude: crew.longitude,
+    latitude: crew.latitude,
+    color: candidateCrewNames.has(crew.name) ? "#16a34a" : "#475569",
+    outlineColor: candidateCrewNames.has(crew.name) ? "#dcfce7" : "#ffffff",
+    size: candidateCrewNames.has(crew.name) ? 22 : 18,
+    icon: crew.vehicleIcon,
+    popupContent: `${crew.crewType}<br/>${crew.status}<br/>${crew.currentAssignment}<br/>ETA to selected order: ${crew.eta}`
+  }));
 
   if (activeTask === "impact") {
     return [
-      selectedMarker,
+      ...workOrderMarkers,
+      ...crewMarkers,
       { id: "hospital-corridor", label: "Hospital Corridor", longitude: -122.656, latitude: 45.518, color: "#7c3aed", size: 11 },
       { id: "affected-zone", label: "1,240 Customers", longitude: -122.668, latitude: 45.508, color: "#f97316", size: 11 }
     ];
   }
 
-  return [
-    selectedMarker,
-    ...workOrders
-      .filter((order) => order.id !== selectedOrder.id)
-      .map((order) => ({
-        id: order.id,
-        label: order.id,
-        longitude: order.longitude,
-        latitude: order.latitude,
-        color: order.domain === "Gas" ? "#0f766e" : "#f59e0b",
-        size: 9
-      }))
-  ];
+  return [...workOrderMarkers, ...crewMarkers];
 }
 
 function MetricTile({ label, value, detail, tone = "primary" }: { label: string; value: string; detail: string; tone?: "primary" | "error" | "warning" | "success" }) {
@@ -341,6 +270,7 @@ function WorkOrderTable({ selectedId, onSelect }: { selectedId: string; onSelect
           <TableCell>Priority</TableCell>
           <TableCell>District</TableCell>
           <TableCell>SLA</TableCell>
+          <TableCell>Assignment</TableCell>
           <TableCell>Status</TableCell>
         </TableRow>
       </TableHead>
@@ -358,6 +288,7 @@ function WorkOrderTable({ selectedId, onSelect }: { selectedId: string; onSelect
             <TableCell><Chip color={priorityColor(order.priority)} label={order.priority} size="small" /></TableCell>
             <TableCell>{order.district}</TableCell>
             <TableCell>{order.sla}</TableCell>
+            <TableCell>{assignmentLabel(order.assignmentState)}</TableCell>
             <TableCell>{order.status}</TableCell>
           </TableRow>
         ))}
@@ -377,7 +308,7 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
           </div>
           <Stack direction="row" gap={1} flexWrap="wrap">
             <Chip icon={<WarningAmberIcon />} color="error" label="Emergency active" />
-            <Chip icon={<CheckCircleIcon />} color="success" label="Crew B eligible" />
+            <Chip icon={<CheckCircleIcon />} color="success" label="Qualified crews available" />
           </Stack>
         </Stack>
       </Grid>
@@ -430,7 +361,7 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
                     <Typography fontWeight={800}>{crew.name}</Typography>
                     <Typography color="text.secondary" variant="body2">{crew.fit}%</Typography>
                   </Stack>
-                  <LinearProgress color={crew.name === "Crew B" ? "success" : "primary"} value={crew.fit} variant="determinate" />
+                  <LinearProgress color={crew.fit >= 90 ? "success" : "primary"} value={crew.fit} variant="determinate" />
                 </div>
               ))}
             </Stack>
@@ -502,21 +433,126 @@ function WorkOrdersScreen({ selectedOrder, onSelectOrder }: { selectedOrder: Wor
   );
 }
 
+function CrewTable({ selectedName, onSelect }: { selectedName: string; onSelect: (name: string) => void }) {
+  return (
+    <Table size="small" stickyHeader>
+      <TableHead>
+        <TableRow>
+          <TableCell>Crew</TableCell>
+          <TableCell>Type</TableCell>
+          <TableCell>District</TableCell>
+          <TableCell>Status</TableCell>
+          <TableCell>Vehicle</TableCell>
+          <TableCell>Rate</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {crews.map((crew) => (
+          <TableRow
+            hover
+            key={crew.name}
+            onClick={() => onSelect(crew.name)}
+            selected={crew.name === selectedName}
+            sx={{ cursor: "pointer" }}
+          >
+            <TableCell sx={{ fontWeight: 900 }}>{crew.name}</TableCell>
+            <TableCell>{crew.crewType}</TableCell>
+            <TableCell>{crew.district}</TableCell>
+            <TableCell><Chip color={crew.status === "Available" ? "success" : "default"} label={crew.status} size="small" /></TableCell>
+            <TableCell>{vehicleLabel(crew.vehicleIcon)}</TableCell>
+            <TableCell>{crew.hourly}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
+function WorkforceScreen({ selectedCrewName, onSelectCrew }: { selectedCrewName: string; onSelectCrew: (name: string) => void }) {
+  const selectedCrew = crews.find((crew) => crew.name === selectedCrewName) ?? crews[0];
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
+          <div>
+            <Typography variant="h2">Workforce</Typography>
+            <Typography color="text.secondary">Crew roster with vehicle type, certifications, assignment state, and dispatch readiness.</Typography>
+          </div>
+          <Stack direction="row" gap={1}>
+            <Button startIcon={<SearchIcon />} size="small" variant="outlined">Find</Button>
+            <Button startIcon={<FilterListIcon />} size="small" variant="outlined">Filters</Button>
+          </Stack>
+        </Stack>
+      </Grid>
+
+      <Grid item lg={8} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
+            <Typography fontWeight={900}>Crew List</Typography>
+            <Chip label={`${crews.length} crews`} size="small" />
+          </Stack>
+          <Box sx={{ maxHeight: 394, overflow: "auto" }}>
+            <CrewTable selectedName={selectedCrew.name} onSelect={onSelectCrew} />
+          </Box>
+        </Paper>
+      </Grid>
+
+      <Grid item lg={4} xs={12}>
+        <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
+          <Stack direction="row" justifyContent="space-between" gap={1}>
+            <div>
+              <Typography color="text.secondary" variant="body2">Selected crew</Typography>
+              <Typography fontWeight={900} fontSize={22}>{selectedCrew.name}</Typography>
+            </div>
+            <Chip color={selectedCrew.status === "Available" ? "success" : "default"} label={selectedCrew.status} />
+          </Stack>
+          <Divider sx={{ my: 1.5 }} />
+          <Grid container spacing={1.25}>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">Crew Type</Typography><Typography fontWeight={800}>{selectedCrew.crewType}</Typography></Grid>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">District</Typography><Typography fontWeight={800}>{selectedCrew.district}</Typography></Grid>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">Hourly Rate</Typography><Typography fontWeight={800}>{selectedCrew.hourly}</Typography></Grid>
+            <Grid item xs={6}><Typography color="text.secondary" variant="body2">Overtime Risk</Typography><Typography fontWeight={800}>{selectedCrew.overtime}</Typography></Grid>
+          </Grid>
+          <Typography fontWeight={900} sx={{ mt: 2 }}>Current Assignment</Typography>
+          <Typography color="text.secondary" sx={{ mt: 0.5 }}>{selectedCrew.currentAssignment}</Typography>
+          <Typography fontWeight={900} sx={{ mt: 2 }}>Certifications</Typography>
+          <Stack direction="row" gap={0.75} flexWrap="wrap" sx={{ mt: 1 }}>
+            {selectedCrew.certifications.map((certification) => <Chip key={certification} label={certification} size="small" variant="outlined" />)}
+          </Stack>
+          <Typography fontWeight={900} sx={{ mt: 2 }}>Dispatch Notes</Typography>
+          <Stack spacing={0.75} sx={{ mt: 1 }}>
+            {[...selectedCrew.strengths, ...selectedCrew.penalties].slice(0, 4).map((note) => (
+              <Stack key={note} direction="row" alignItems="center" gap={1}>
+                <BuildIcon color="primary" fontSize="small" />
+                <Typography variant="body2">{note}</Typography>
+              </Stack>
+            ))}
+          </Stack>
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+}
+
 function DispatchScreen({
   activeTask,
   evaluated,
   evaluating,
   onEvaluate,
+  onSelectOrder,
   selectedOrder
 }: {
   activeTask: TaskKey;
   evaluated: boolean;
   evaluating: boolean;
   onEvaluate: () => void;
+  onSelectOrder: (id: string) => void;
   selectedOrder: WorkOrder;
 }) {
   const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder);
-  const rankedCrews = evaluated ? [...crews].sort((a, b) => b.fit - a.fit) : crews;
+  const rankedCrews = getCandidateCrews(selectedOrder);
+  const recommendedCrew = rankedCrews[0] ?? crews[0];
 
   return (
     <Grid container spacing={2}>
@@ -545,9 +581,20 @@ function DispatchScreen({
             height={330}
             layers={mapLayers}
             markers={dispatchMarkers}
+            onMarkerClick={(marker) => {
+              if (workOrders.some((order) => order.id === marker.id)) {
+                onSelectOrder(marker.id);
+              }
+            }}
             title=""
             zoom={13}
           />
+          <Stack direction="row" gap={1} flexWrap="wrap" sx={{ px: 2, py: 1, bgcolor: "white", borderTop: "1px solid", borderColor: "divider" }}>
+            <Chip label="Green square: assigned" size="small" />
+            <Chip label="Blue diamond: evaluated" size="small" />
+            <Chip label="Red triangle: not evaluated" size="small" />
+            <Chip label="Vehicle icons: crews" size="small" />
+          </Stack>
         </Paper>
       </Grid>
       <Grid item lg={5} xs={12}>
@@ -555,7 +602,7 @@ function DispatchScreen({
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
             <PeopleIcon color="primary" />
-            <Typography fontWeight={900}>Candidate Crews</Typography>
+            <Typography fontWeight={900}>Possible Crews</Typography>
             </Stack>
             <Chip color={evaluated ? "success" : "default"} label={evaluated ? "Ranked" : "Not evaluated"} size="small" />
           </Stack>
@@ -574,7 +621,7 @@ function DispatchScreen({
             </TableHead>
             <TableBody>
               {rankedCrews.map((crew) => (
-                <TableRow key={crew.name} selected={evaluated && crew.name === "Crew B"}>
+                <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew.name}>
                   <TableCell sx={{ fontWeight: 900 }}>{crew.name}</TableCell>
                   <TableCell>{evaluated ? `${crew.fit}%` : "-"}</TableCell>
                   <TableCell>{crew.eta}</TableCell>
@@ -590,7 +637,7 @@ function DispatchScreen({
       </Grid>
       <Grid item lg={7} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{evaluated ? "Why Crew B is recommended" : "Evaluation readiness"}</Typography>
+          <Typography fontWeight={900}>{evaluated ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
           {evaluated ? (
             <Grid container spacing={1.25} sx={{ mt: 1 }}>
               {crews[0].strengths.map((strength) => (
@@ -604,14 +651,14 @@ function DispatchScreen({
             </Grid>
           ) : (
             <Typography color="text.secondary" sx={{ mt: 1 }}>
-              Click Evaluate Crews to score required certifications, equipment readiness, travel, SLA fit, productivity, overtime risk, and effective cost.
+              Click a work order on the map to change this list, then evaluate crews to score certifications, equipment readiness, travel, SLA fit, productivity, overtime risk, and effective cost.
             </Typography>
           )}
         </Paper>
       </Grid>
       <Grid item lg={5} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>Crew B Schedule Window</Typography>
+          <Typography fontWeight={900}>{recommendedCrew.name} Schedule Window</Typography>
           <Stack spacing={1.2} sx={{ mt: 2 }}>
             {["07:30 Travel", "07:48 Arrive on site", "08:05 Safety assessment", "08:30 Leak isolation", "09:15 Repair support"].map((item, index) => (
               <Stack key={item} direction="row" alignItems="center" gap={1}>
@@ -621,7 +668,7 @@ function DispatchScreen({
             ))}
           </Stack>
           <Button startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
-            Assign Crew B
+            Assign {recommendedCrew.name}
           </Button>
         </Paper>
       </Grid>
@@ -643,7 +690,7 @@ function ReportsScreen() {
         <Paper variant="outlined" sx={{ p: 2 }}>
           <Typography fontWeight={900}>Recommendation Audit</Typography>
           <Stack spacing={1.25} sx={{ mt: 1.5 }}>
-            {["Crew B passed gas emergency certification gate.", "Equipment package is already assigned to the crew.", "Arrival time remains inside the emergency SLA window.", "Effective cost is lowest after travel and overtime adjustments."].map((line) => (
+            {["Recommended crew passed the required certification gate.", "Equipment package is already assigned or staged.", "Arrival time remains inside the SLA window.", "Effective cost is lowest after travel and overtime adjustments."].map((line) => (
               <Stack direction="row" alignItems="center" gap={1} key={line}>
                 <CheckCircleIcon color="success" fontSize="small" />
                 <Typography>{line}</Typography>
@@ -661,7 +708,8 @@ export function OperationsConsolePage() {
   const [activeTask, setActiveTask] = useState<TaskKey>("emergency");
   const [evaluated, setEvaluated] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
-  const [selectedOrderId, setSelectedOrderId] = useState("WO-1842");
+  const [selectedOrderId, setSelectedOrderId] = useState(defaultWorkOrderId);
+  const [selectedCrewName, setSelectedCrewName] = useState(defaultCrewName);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(menuAnchor);
   const selectedOrder = workOrders.find((order) => order.id === selectedOrderId) ?? workOrders[0];
@@ -679,7 +727,7 @@ export function OperationsConsolePage() {
     setActiveTask(task.key);
     setActiveHub(task.hub);
     if (task.key === "emergency") {
-      setSelectedOrderId("WO-1842");
+      setSelectedOrderId(defaultWorkOrderId);
     }
   }
 
@@ -697,6 +745,10 @@ export function OperationsConsolePage() {
       return <WorkOrdersScreen selectedOrder={selectedOrder} onSelectOrder={setSelectedOrderId} />;
     }
 
+    if (activeHub === "workforce") {
+      return <WorkforceScreen selectedCrewName={selectedCrewName} onSelectCrew={setSelectedCrewName} />;
+    }
+
     if (activeHub === "dispatch") {
       return (
         <DispatchScreen
@@ -704,6 +756,7 @@ export function OperationsConsolePage() {
           evaluated={evaluated}
           evaluating={evaluating}
           onEvaluate={evaluateCrews}
+          onSelectOrder={setSelectedOrderId}
           selectedOrder={selectedOrder}
         />
       );
@@ -720,7 +773,7 @@ export function OperationsConsolePage() {
     <Box sx={{ bgcolor: "#f3f4f6", mx: { xs: -2, md: -3 }, my: { xs: -2, md: -3 }, minHeight: "calc(100vh - 96px)" }}>
       <Stack direction="row" sx={{ minHeight: "calc(100vh - 96px)" }}>
         <Stack sx={{ width: 44, bgcolor: "#111827", color: "white", py: 1, display: { xs: "none", md: "flex" } }} alignItems="center" spacing={1}>
-          {[DashboardIcon, WorkIcon, MapIcon, EngineeringIcon, BoltIcon, AssessmentIcon].map((Icon, index) => (
+          {[DashboardIcon, WorkIcon, PeopleIcon, MapIcon, EngineeringIcon, AssessmentIcon].map((Icon, index) => (
             <IconButton key={index} size="small" sx={{ color: "rgba(255,255,255,0.78)" }}>
               <Icon fontSize="small" />
             </IconButton>

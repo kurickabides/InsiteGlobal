@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "generate:mock-data": "node scripts/generateNorthstarMockData.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },

@@ -2,64 +2,78 @@
   {
     "workOrderId": 1001,
     "workOrderNumber": "WO-GAS-1001",
+    "id": "WO-GAS-1001",
+    "type": "Gas Leak Investigation",
     "workTypeId": 1,
     "utilityDomainId": 1,
-    "serviceAreaId": 202,
-    "latitude": 45.5238,
-    "longitude": -122.6602,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5605,
+    "longitude": -122.67865,
     "priority": "Emergency",
-    "status": "New",
+    "status": "Needs assignment",
+    "assignmentState": "assigned",
+    "sla": "35 min remaining",
+    "crew": "Gas assigned crew",
     "estimatedHours": 4.5,
-    "dueDate": "2026-07-05T11:30:00Z",
+    "dueDate": "2026-07-17T17:00:00.000Z",
     "mapSymbol": "gas-leak",
-    "storyId": "gas-leak-emergency",
-    "affectedCustomers": null,
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 120,
+    "impact": "120 customers affected",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
     ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2001,
-    "workOrderNumber": "WO-ELEC-2001",
-    "workTypeId": 5,
-    "utilityDomainId": 2,
-    "serviceAreaId": 102,
-    "latitude": 45.5364,
-    "longitude": -122.6815,
-    "priority": "Emergency",
-    "status": "New",
-    "estimatedHours": 5.0,
-    "dueDate": "2026-07-05T12:00:00Z",
-    "mapSymbol": "outage",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": 27,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
     "customerGeoJsonFile": "/mock-data/customers.geojson",
     "customerGeoJsonFilter": {
-      "affectedByWorkOrderNumber": "WO-ELEC-2001"
+      "affectedByWorkOrderNumber": "WO-GAS-1001"
     }
   },
   {
     "workOrderId": 1002,
     "workOrderNumber": "WO-GAS-1002",
-    "workTypeId": 3,
+    "id": "WO-GAS-1002",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
     "utilityDomainId": 1,
-    "serviceAreaId": 201,
-    "latitude": 45.581,
-    "longitude": -122.63,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.51615,
+    "longitude": -122.6643,
     "priority": "High",
-    "status": "Assigned",
-    "estimatedHours": 5.0,
-    "dueDate": "2026-07-05T16:00:00Z",
-    "mapSymbol": "regulator",
-    "storyId": "gas-leak-emergency",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "7 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T16:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
@@ -70,18 +84,34 @@
   {
     "workOrderId": 1003,
     "workOrderNumber": "WO-GAS-1003",
-    "workTypeId": 4,
+    "id": "WO-GAS-1003",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
     "utilityDomainId": 1,
-    "serviceAreaId": 201,
-    "latitude": 45.59,
-    "longitude": -122.65,
-    "priority": "Normal",
-    "status": "New",
-    "estimatedHours": 3.0,
-    "dueDate": "2026-07-06T18:00:00Z",
-    "mapSymbol": "inspection",
-    "storyId": "gas-leak-emergency",
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.4998,
+    "longitude": -122.64895,
+    "priority": "Routine",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "3 days",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-19T17:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
@@ -92,18 +122,34 @@
   {
     "workOrderId": 1004,
     "workOrderNumber": "WO-GAS-1004",
-    "workTypeId": 2,
+    "id": "WO-GAS-1004",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
     "utilityDomainId": 1,
-    "serviceAreaId": 202,
-    "latitude": 45.51,
-    "longitude": -122.645,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 6.0,
-    "dueDate": "2026-07-05T20:00:00Z",
-    "mapSymbol": "service",
-    "storyId": "gas-leak-emergency",
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.56545,
+    "longitude": -122.6726,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "38 min remaining",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
@@ -114,18 +160,36 @@
   {
     "workOrderId": 1005,
     "workOrderNumber": "WO-GAS-1005",
+    "id": "WO-GAS-1005",
+    "type": "Gas Leak Investigation",
     "workTypeId": 1,
     "utilityDomainId": 1,
+    "domain": "Gas",
     "serviceAreaId": 202,
-    "latitude": 45.503,
-    "longitude": -122.68,
-    "priority": "Emergency",
-    "status": "Assigned",
+    "district": "Central",
+    "latitude": 45.5211,
+    "longitude": -122.65825,
+    "priority": "Critical",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "1 hr 14 min",
+    "crew": "Pending review",
     "estimatedHours": 4.5,
-    "dueDate": "2026-07-05T13:15:00Z",
+    "dueDate": "2026-07-18T01:00:00.000Z",
     "mapSymbol": "gas-leak",
-    "storyId": "gas-leak-emergency",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
@@ -136,343 +200,78 @@
   {
     "workOrderId": 1006,
     "workOrderNumber": "WO-GAS-1006",
-    "workTypeId": 4,
+    "id": "WO-GAS-1006",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
     "utilityDomainId": 1,
-    "serviceAreaId": 201,
-    "latitude": 45.566,
-    "longitude": -122.603,
-    "priority": "Normal",
-    "status": "Complete",
-    "estimatedHours": 3.0,
-    "dueDate": "2026-07-04T18:00:00Z",
-    "mapSymbol": "inspection",
-    "storyId": "gas-leak-emergency",
-    "affectedCustomers": null,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.50475,
+    "longitude": -122.6429,
+    "priority": "High",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "11 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T20:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 275,
+    "impact": "275 customers affected",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
     ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1006"
+    }
   },
   {
     "workOrderId": 1007,
     "workOrderNumber": "WO-GAS-1007",
-    "workTypeId": 5,
+    "id": "WO-GAS-1007",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
     "utilityDomainId": 1,
-    "serviceAreaId": 202,
-    "latitude": 45.541,
-    "longitude": -122.618,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 5.0,
-    "dueDate": "2026-07-06T12:00:00Z",
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5704,
+    "longitude": -122.66655,
+    "priority": "Routine",
+    "status": "Queued",
+    "assignmentState": "evaluated",
+    "sla": "2 days",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-19T21:00:00.000Z",
     "mapSymbol": "regulator",
-    "storyId": "gas-leak-emergency",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2002,
-    "workOrderNumber": "WO-ELEC-2002",
-    "workTypeId": 6,
-    "utilityDomainId": 2,
-    "serviceAreaId": 101,
-    "latitude": 45.575,
-    "longitude": -122.672,
-    "priority": "Emergency",
-    "status": "Assigned",
-    "estimatedHours": 6.5,
-    "dueDate": "2026-07-05T14:00:00Z",
-    "mapSymbol": "transformer",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": 14,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2003,
-    "workOrderNumber": "WO-ELEC-2003",
-    "workTypeId": 7,
-    "utilityDomainId": 2,
-    "serviceAreaId": 102,
-    "latitude": 45.52,
-    "longitude": -122.69,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 8.0,
-    "dueDate": "2026-07-06T08:00:00Z",
-    "mapSymbol": "pole",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2004,
-    "workOrderNumber": "WO-ELEC-2004",
-    "workTypeId": 8,
-    "utilityDomainId": 2,
-    "serviceAreaId": 103,
-    "latitude": 45.545,
-    "longitude": -122.76,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 7.5,
-    "dueDate": "2026-07-06T10:00:00Z",
-    "mapSymbol": "underground",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2005,
-    "workOrderNumber": "WO-ELEC-2005",
-    "workTypeId": 9,
-    "utilityDomainId": 2,
-    "serviceAreaId": 103,
-    "latitude": 45.512,
-    "longitude": -122.78,
-    "priority": "Normal",
-    "status": "New",
-    "estimatedHours": 4.0,
-    "dueDate": "2026-07-07T12:00:00Z",
-    "mapSymbol": "vegetation",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2006,
-    "workOrderNumber": "WO-ELEC-2006",
-    "workTypeId": 5,
-    "utilityDomainId": 2,
-    "serviceAreaId": 102,
-    "latitude": 45.528,
-    "longitude": -122.655,
-    "priority": "Emergency",
-    "status": "Complete",
-    "estimatedHours": 5.0,
-    "dueDate": "2026-07-04T15:00:00Z",
-    "mapSymbol": "outage",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": 9,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2007,
-    "workOrderNumber": "WO-ELEC-2007",
-    "workTypeId": 6,
-    "utilityDomainId": 2,
-    "serviceAreaId": 101,
-    "latitude": 45.606,
-    "longitude": -122.69,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 6.5,
-    "dueDate": "2026-07-05T22:00:00Z",
-    "mapSymbol": "transformer",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": 7,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2008,
-    "workOrderNumber": "WO-ELEC-2008",
-    "workTypeId": 10,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.557,
-    "longitude": -122.71,
-    "priority": "Normal",
-    "status": "New",
-    "estimatedHours": 2.5,
-    "dueDate": "2026-07-08T17:00:00Z",
-    "mapSymbol": "inspection",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 3001,
-    "workOrderNumber": "WO-SHR-3001",
-    "workTypeId": 11,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.6,
-    "longitude": -122.72,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 3.5,
-    "dueDate": "2026-07-05T18:00:00Z",
-    "mapSymbol": "damage",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 3002,
-    "workOrderNumber": "WO-SHR-3002",
-    "workTypeId": 10,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.495,
-    "longitude": -122.61,
-    "priority": "Normal",
-    "status": "New",
-    "estimatedHours": 2.5,
-    "dueDate": "2026-07-07T17:00:00Z",
-    "mapSymbol": "inspection",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 3003,
-    "workOrderNumber": "WO-SHR-3003",
-    "workTypeId": 10,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.585,
-    "longitude": -122.592,
-    "priority": "Normal",
-    "status": "Complete",
-    "estimatedHours": 2.5,
-    "dueDate": "2026-07-04T19:00:00Z",
-    "mapSymbol": "inspection",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 3004,
-    "workOrderNumber": "WO-SHR-3004",
-    "workTypeId": 11,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.532,
-    "longitude": -122.742,
-    "priority": "High",
-    "status": "Assigned",
-    "estimatedHours": 3.5,
-    "dueDate": "2026-07-05T21:00:00Z",
-    "mapSymbol": "damage",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 3005,
-    "workOrderNumber": "WO-SHR-3005",
-    "workTypeId": 10,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.552,
-    "longitude": -122.735,
-    "priority": "Normal",
-    "status": "New",
-    "estimatedHours": 2.5,
-    "dueDate": "2026-07-08T17:00:00Z",
-    "mapSymbol": "inspection",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 3006,
-    "workOrderNumber": "WO-SHR-3006",
-    "workTypeId": 11,
-    "utilityDomainId": 3,
-    "serviceAreaId": 301,
-    "latitude": 45.617,
-    "longitude": -122.615,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 3.5,
-    "dueDate": "2026-07-06T09:00:00Z",
-    "mapSymbol": "damage",
-    "storyId": "shared-ops",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/crew-locations.geojson"
-    ],
-    "customerGeoJsonFile": null,
-    "customerGeoJsonFilter": null
-  },
-  {
-    "workOrderId": 2009,
-    "workOrderNumber": "WO-ELEC-2009",
-    "workTypeId": 9,
-    "utilityDomainId": 2,
-    "serviceAreaId": 103,
-    "latitude": 45.576,
-    "longitude": -122.789,
-    "priority": "Normal",
-    "status": "New",
-    "estimatedHours": 4.0,
-    "dueDate": "2026-07-09T12:00:00Z",
-    "mapSymbol": "vegetation",
-    "storyId": "power-branch-outage",
-    "affectedCustomers": null,
-    "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
       "/mock-data/crew-locations.geojson"
     ],
     "customerGeoJsonFile": null,
@@ -481,18 +280,34 @@
   {
     "workOrderId": 1008,
     "workOrderNumber": "WO-GAS-1008",
-    "workTypeId": 2,
+    "id": "WO-GAS-1008",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
     "utilityDomainId": 1,
+    "domain": "Gas",
     "serviceAreaId": 202,
-    "latitude": 45.532,
-    "longitude": -122.604,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 6.0,
-    "dueDate": "2026-07-06T14:00:00Z",
-    "mapSymbol": "service",
-    "storyId": "gas-leak-emergency",
+    "district": "Central",
+    "latitude": 45.52605,
+    "longitude": -122.6522,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "assigned",
+    "sla": "42 min remaining",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
     "relatedGeoJsonFiles": [
       "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
@@ -501,25 +316,3699 @@
     "customerGeoJsonFilter": null
   },
   {
-    "workOrderId": 2010,
-    "workOrderNumber": "WO-ELEC-2010",
-    "workTypeId": 8,
-    "utilityDomainId": 2,
-    "serviceAreaId": 103,
-    "latitude": 45.501,
-    "longitude": -122.802,
-    "priority": "High",
-    "status": "New",
-    "estimatedHours": 7.5,
-    "dueDate": "2026-07-06T18:00:00Z",
-    "mapSymbol": "underground",
-    "storyId": "power-branch-outage",
+    "workOrderId": 1009,
+    "workOrderNumber": "WO-GAS-1009",
+    "id": "WO-GAS-1009",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.5097,
+    "longitude": -122.69185,
+    "priority": "Critical",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "1 hr 18 min",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T23:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
     "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
     "relatedGeoJsonFiles": [
-      "/mock-data/electric-network.geojson",
+      "/mock-data/gas-network.geojson",
       "/mock-data/crew-locations.geojson"
     ],
     "customerGeoJsonFile": null,
     "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1010,
+    "workOrderNumber": "WO-GAS-1010",
+    "id": "WO-GAS-1010",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.57535,
+    "longitude": -122.6605,
+    "priority": "High",
+    "status": "Ready to bundle",
+    "assignmentState": "evaluated",
+    "sla": "15 hr",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-19T00:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1011,
+    "workOrderNumber": "WO-GAS-1011",
+    "id": "WO-GAS-1011",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.531,
+    "longitude": -122.64615,
+    "priority": "Routine",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "1 days",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-20T01:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 430,
+    "impact": "430 customers affected",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1011"
+    }
+  },
+  {
+    "workOrderId": 1012,
+    "workOrderNumber": "WO-GAS-1012",
+    "id": "WO-GAS-1012",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.46965,
+    "longitude": -122.6858,
+    "priority": "Emergency",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "46 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1013,
+    "workOrderNumber": "WO-GAS-1013",
+    "id": "WO-GAS-1013",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5803,
+    "longitude": -122.65445,
+    "priority": "Critical",
+    "status": "Scheduled",
+    "assignmentState": "evaluated",
+    "sla": "1 hr 22 min",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T21:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1014,
+    "workOrderNumber": "WO-GAS-1014",
+    "id": "WO-GAS-1014",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.53595,
+    "longitude": -122.6401,
+    "priority": "High",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "7 hr",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T16:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1015,
+    "workOrderNumber": "WO-GAS-1015",
+    "id": "WO-GAS-1015",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.4746,
+    "longitude": -122.67975,
+    "priority": "Routine",
+    "status": "Ready to bundle",
+    "assignmentState": "assigned",
+    "sla": "5 days",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-20T05:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1016,
+    "workOrderNumber": "WO-GAS-1016",
+    "id": "WO-GAS-1016",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.58525,
+    "longitude": -122.6484,
+    "priority": "Emergency",
+    "status": "Needs assignment",
+    "assignmentState": "evaluated",
+    "sla": "50 min remaining",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 585,
+    "impact": "585 customers affected",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1016"
+    }
+  },
+  {
+    "workOrderId": 1017,
+    "workOrderNumber": "WO-GAS-1017",
+    "id": "WO-GAS-1017",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.5409,
+    "longitude": -122.63405,
+    "priority": "Critical",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "1 hr 26 min",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-18T01:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1018,
+    "workOrderNumber": "WO-GAS-1018",
+    "id": "WO-GAS-1018",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.47955,
+    "longitude": -122.6737,
+    "priority": "High",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "11 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T20:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1019,
+    "workOrderNumber": "WO-GAS-1019",
+    "id": "WO-GAS-1019",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5902,
+    "longitude": -122.64235,
+    "priority": "Routine",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "4 days",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-20T09:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1020,
+    "workOrderNumber": "WO-GAS-1020",
+    "id": "WO-GAS-1020",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.50085,
+    "longitude": -122.683,
+    "priority": "Emergency",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "54 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1021,
+    "workOrderNumber": "WO-GAS-1021",
+    "id": "WO-GAS-1021",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.4845,
+    "longitude": -122.66765,
+    "priority": "Critical",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "1 hr 30 min",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T23:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 740,
+    "impact": "740 customers affected",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1021"
+    }
+  },
+  {
+    "workOrderId": 1022,
+    "workOrderNumber": "WO-GAS-1022",
+    "id": "WO-GAS-1022",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.59515,
+    "longitude": -122.6363,
+    "priority": "High",
+    "status": "Queued",
+    "assignmentState": "assigned",
+    "sla": "15 hr",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-19T00:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1023,
+    "workOrderNumber": "WO-GAS-1023",
+    "id": "WO-GAS-1023",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.5058,
+    "longitude": -122.67695,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "57 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1024,
+    "workOrderNumber": "WO-GAS-1024",
+    "id": "WO-GAS-1024",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.48945,
+    "longitude": -122.6616,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "58 min remaining",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1025,
+    "workOrderNumber": "WO-GAS-1025",
+    "id": "WO-GAS-1025",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.6001,
+    "longitude": -122.63025,
+    "priority": "Critical",
+    "status": "Ready to bundle",
+    "assignmentState": "evaluated",
+    "sla": "1 hr 34 min",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T21:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1026,
+    "workOrderNumber": "WO-GAS-1026",
+    "id": "WO-GAS-1026",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.51075,
+    "longitude": -122.6709,
+    "priority": "High",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "7 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T16:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 895,
+    "impact": "895 customers affected",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1026"
+    }
+  },
+  {
+    "workOrderId": 1027,
+    "workOrderNumber": "WO-GAS-1027",
+    "id": "WO-GAS-1027",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.4944,
+    "longitude": -122.65555,
+    "priority": "Routine",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "2 days",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-20T17:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1028,
+    "workOrderNumber": "WO-GAS-1028",
+    "id": "WO-GAS-1028",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.60505,
+    "longitude": -122.6792,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "evaluated",
+    "sla": "62 min remaining",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1029,
+    "workOrderNumber": "WO-GAS-1029",
+    "id": "WO-GAS-1029",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.5157,
+    "longitude": -122.66485,
+    "priority": "Critical",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "1 hr 38 min",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-18T01:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1030,
+    "workOrderNumber": "WO-GAS-1030",
+    "id": "WO-GAS-1030",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.49935,
+    "longitude": -122.6495,
+    "priority": "High",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "11 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T20:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1031,
+    "workOrderNumber": "WO-GAS-1031",
+    "id": "WO-GAS-1031",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.565,
+    "longitude": -122.67315,
+    "priority": "Routine",
+    "status": "Needs assignment",
+    "assignmentState": "evaluated",
+    "sla": "1 days",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-20T21:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 150,
+    "impact": "150 customers affected",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1031"
+    }
+  },
+  {
+    "workOrderId": 1032,
+    "workOrderNumber": "WO-GAS-1032",
+    "id": "WO-GAS-1032",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.52065,
+    "longitude": -122.6588,
+    "priority": "Emergency",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "66 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1033,
+    "workOrderNumber": "WO-GAS-1033",
+    "id": "WO-GAS-1033",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.5043,
+    "longitude": -122.64345,
+    "priority": "Critical",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "1 hr 42 min",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T23:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1034,
+    "workOrderNumber": "WO-GAS-1034",
+    "id": "WO-GAS-1034",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.56995,
+    "longitude": -122.6671,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "68 min remaining",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1035,
+    "workOrderNumber": "WO-GAS-1035",
+    "id": "WO-GAS-1035",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.5256,
+    "longitude": -122.65275,
+    "priority": "Routine",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "5 days",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-21T01:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1036,
+    "workOrderNumber": "WO-GAS-1036",
+    "id": "WO-GAS-1036",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.50925,
+    "longitude": -122.6924,
+    "priority": "Emergency",
+    "status": "Needs assignment",
+    "assignmentState": "assigned",
+    "sla": "70 min remaining",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 305,
+    "impact": "305 customers affected",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1036"
+    }
+  },
+  {
+    "workOrderId": 1037,
+    "workOrderNumber": "WO-GAS-1037",
+    "id": "WO-GAS-1037",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5749,
+    "longitude": -122.66105,
+    "priority": "Critical",
+    "status": "Queued",
+    "assignmentState": "evaluated",
+    "sla": "1 hr 46 min",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T21:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1038,
+    "workOrderNumber": "WO-GAS-1038",
+    "id": "WO-GAS-1038",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.53055,
+    "longitude": -122.6467,
+    "priority": "High",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "7 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T16:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1039,
+    "workOrderNumber": "WO-GAS-1039",
+    "id": "WO-GAS-1039",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.4692,
+    "longitude": -122.68635,
+    "priority": "Routine",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "4 days",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-21T05:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1040,
+    "workOrderNumber": "WO-GAS-1040",
+    "id": "WO-GAS-1040",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.57985,
+    "longitude": -122.655,
+    "priority": "Emergency",
+    "status": "Ready to bundle",
+    "assignmentState": "evaluated",
+    "sla": "74 min remaining",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1041,
+    "workOrderNumber": "WO-GAS-1041",
+    "id": "WO-GAS-1041",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.5355,
+    "longitude": -122.64065,
+    "priority": "Critical",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "1 hr 50 min",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-18T01:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 460,
+    "impact": "460 customers affected",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1041"
+    }
+  },
+  {
+    "workOrderId": 1042,
+    "workOrderNumber": "WO-GAS-1042",
+    "id": "WO-GAS-1042",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.47415,
+    "longitude": -122.6803,
+    "priority": "High",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "11 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T20:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1043,
+    "workOrderNumber": "WO-GAS-1043",
+    "id": "WO-GAS-1043",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5848,
+    "longitude": -122.64895,
+    "priority": "Routine",
+    "status": "Scheduled",
+    "assignmentState": "assigned",
+    "sla": "3 days",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-21T09:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1044,
+    "workOrderNumber": "WO-GAS-1044",
+    "id": "WO-GAS-1044",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.54045,
+    "longitude": -122.6346,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "78 min remaining",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1045,
+    "workOrderNumber": "WO-GAS-1045",
+    "id": "WO-GAS-1045",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.4791,
+    "longitude": -122.67425,
+    "priority": "Emergency",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "79 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1046,
+    "workOrderNumber": "WO-GAS-1046",
+    "id": "WO-GAS-1046",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.58975,
+    "longitude": -122.6429,
+    "priority": "High",
+    "status": "Needs assignment",
+    "assignmentState": "evaluated",
+    "sla": "15 hr",
+    "crew": "Gas crew recommended",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-19T00:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": 615,
+    "impact": "615 customers affected",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-GAS-1046"
+    }
+  },
+  {
+    "workOrderId": 1047,
+    "workOrderNumber": "WO-GAS-1047",
+    "id": "WO-GAS-1047",
+    "type": "Regulator Maintenance",
+    "workTypeId": 3,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.5004,
+    "longitude": -122.68355,
+    "priority": "Routine",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "2 days",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-21T13:00:00.000Z",
+    "mapSymbol": "regulator",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Pressure regulation",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Pressure kit",
+      "Service truck"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1048,
+    "workOrderNumber": "WO-GAS-1048",
+    "id": "WO-GAS-1048",
+    "type": "Corrosion Inspection",
+    "workTypeId": 4,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 203,
+    "district": "South",
+    "latitude": 45.48405,
+    "longitude": -122.6682,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "82 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "corrosion",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in South district",
+    "skills": [
+      "Corrosion inspection",
+      "Compliance photos"
+    ],
+    "equipment": [
+      "Inspection van",
+      "Survey kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1049,
+    "workOrderNumber": "WO-GAS-1049",
+    "id": "WO-GAS-1049",
+    "type": "Gas Leak Investigation",
+    "workTypeId": 1,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 201,
+    "district": "North",
+    "latitude": 45.5947,
+    "longitude": -122.63685,
+    "priority": "Critical",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "1 hr 13 min",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-17T21:00:00.000Z",
+    "mapSymbol": "gas-leak",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in North district",
+    "skills": [
+      "Gas emergency",
+      "Atmospheric testing",
+      "Vacuum excavation"
+    ],
+    "equipment": [
+      "Leak detector",
+      "Vac truck",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 1050,
+    "workOrderNumber": "WO-GAS-1050",
+    "id": "WO-GAS-1050",
+    "type": "Gas Service Installation",
+    "workTypeId": 2,
+    "utilityDomainId": 1,
+    "domain": "Gas",
+    "serviceAreaId": 202,
+    "district": "Central",
+    "latitude": 45.50535,
+    "longitude": -122.6775,
+    "priority": "High",
+    "status": "Ready to bundle",
+    "assignmentState": "assigned",
+    "sla": "7 hr",
+    "crew": "Gas assigned crew",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T16:00:00.000Z",
+    "mapSymbol": "gas-service",
+    "storyId": "gas-operations-queue",
+    "affectedCustomers": null,
+    "impact": "Gas field operation in Central district",
+    "skills": [
+      "Gas service",
+      "Excavation",
+      "Customer relight"
+    ],
+    "equipment": [
+      "Service truck",
+      "Fusion kit",
+      "Traffic kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/gas-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": null,
+    "customerGeoJsonFilter": null
+  },
+  {
+    "workOrderId": 2001,
+    "workOrderNumber": "WO-ELEC-2001",
+    "id": "WO-ELEC-2001",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5605,
+    "longitude": -122.70765,
+    "priority": "Emergency",
+    "status": "Needs assignment",
+    "assignmentState": "assigned",
+    "sla": "35 min remaining",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 35,
+    "impact": "35 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2001"
+    }
+  },
+  {
+    "workOrderId": 2002,
+    "workOrderNumber": "WO-ELEC-2002",
+    "id": "WO-ELEC-2002",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.52515,
+    "longitude": -122.6873,
+    "priority": "Routine",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "2 days",
+    "crew": "Pending review",
+    "estimatedHours": 7,
+    "dueDate": "2026-07-19T16:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 82,
+    "impact": "82 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2002"
+    }
+  },
+  {
+    "workOrderId": 2003,
+    "workOrderNumber": "WO-ELEC-2003",
+    "id": "WO-ELEC-2003",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5268,
+    "longitude": -122.76395,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "37 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 9,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 129,
+    "impact": "129 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2003"
+    }
+  },
+  {
+    "workOrderId": 2004,
+    "workOrderNumber": "WO-ELEC-2004",
+    "id": "WO-ELEC-2004",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.56545,
+    "longitude": -122.7016,
+    "priority": "Critical",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "4 hr 13 min",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 9,
+    "dueDate": "2026-07-18T00:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 176,
+    "impact": "176 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2004"
+    }
+  },
+  {
+    "workOrderId": 2005,
+    "workOrderNumber": "WO-ELEC-2005",
+    "id": "WO-ELEC-2005",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5301,
+    "longitude": -122.68125,
+    "priority": "High",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "10 hr",
+    "crew": "Pending review",
+    "estimatedHours": 4,
+    "dueDate": "2026-07-18T19:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 223,
+    "impact": "223 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2005"
+    }
+  },
+  {
+    "workOrderId": 2006,
+    "workOrderNumber": "WO-ELEC-2006",
+    "id": "WO-ELEC-2006",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.53175,
+    "longitude": -122.7579,
+    "priority": "Routine",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "1 days",
+    "crew": "Pending review",
+    "estimatedHours": 5.5,
+    "dueDate": "2026-07-19T20:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 270,
+    "impact": "270 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2006"
+    }
+  },
+  {
+    "workOrderId": 2007,
+    "workOrderNumber": "WO-ELEC-2007",
+    "id": "WO-ELEC-2007",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5704,
+    "longitude": -122.69555,
+    "priority": "Emergency",
+    "status": "Queued",
+    "assignmentState": "evaluated",
+    "sla": "41 min remaining",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 7.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 317,
+    "impact": "317 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2007"
+    }
+  },
+  {
+    "workOrderId": 2008,
+    "workOrderNumber": "WO-ELEC-2008",
+    "id": "WO-ELEC-2008",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.53505,
+    "longitude": -122.6752,
+    "priority": "Critical",
+    "status": "Scheduled",
+    "assignmentState": "assigned",
+    "sla": "4 hr 17 min",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 9.5,
+    "dueDate": "2026-07-17T22:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 364,
+    "impact": "364 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2008"
+    }
+  },
+  {
+    "workOrderId": 2009,
+    "workOrderNumber": "WO-ELEC-2009",
+    "id": "WO-ELEC-2009",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5367,
+    "longitude": -122.80685,
+    "priority": "High",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "14 hr",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 7.5,
+    "dueDate": "2026-07-18T23:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 411,
+    "impact": "411 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2009"
+    }
+  },
+  {
+    "workOrderId": 2010,
+    "workOrderNumber": "WO-ELEC-2010",
+    "id": "WO-ELEC-2010",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.57535,
+    "longitude": -122.6895,
+    "priority": "Routine",
+    "status": "Ready to bundle",
+    "assignmentState": "evaluated",
+    "sla": "5 days",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-20T00:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 458,
+    "impact": "458 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2010"
+    }
+  },
+  {
+    "workOrderId": 2011,
+    "workOrderNumber": "WO-ELEC-2011",
+    "id": "WO-ELEC-2011",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.54,
+    "longitude": -122.66915,
+    "priority": "Emergency",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "45 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 505,
+    "impact": "505 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2011"
+    }
+  },
+  {
+    "workOrderId": 2012,
+    "workOrderNumber": "WO-ELEC-2012",
+    "id": "WO-ELEC-2012",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.49665,
+    "longitude": -122.8008,
+    "priority": "Emergency",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "46 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 8,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 552,
+    "impact": "552 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2012"
+    }
+  },
+  {
+    "workOrderId": 2013,
+    "workOrderNumber": "WO-ELEC-2013",
+    "id": "WO-ELEC-2013",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5803,
+    "longitude": -122.68345,
+    "priority": "High",
+    "status": "Scheduled",
+    "assignmentState": "evaluated",
+    "sla": "6 hr",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 8,
+    "dueDate": "2026-07-18T15:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 599,
+    "impact": "599 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2013"
+    }
+  },
+  {
+    "workOrderId": 2014,
+    "workOrderNumber": "WO-ELEC-2014",
+    "id": "WO-ELEC-2014",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.54495,
+    "longitude": -122.6631,
+    "priority": "Routine",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "4 days",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 8,
+    "dueDate": "2026-07-20T04:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 646,
+    "impact": "646 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2014"
+    }
+  },
+  {
+    "workOrderId": 2015,
+    "workOrderNumber": "WO-ELEC-2015",
+    "id": "WO-ELEC-2015",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5016,
+    "longitude": -122.79475,
+    "priority": "Emergency",
+    "status": "Ready to bundle",
+    "assignmentState": "assigned",
+    "sla": "49 min remaining",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 693,
+    "impact": "693 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2015"
+    }
+  },
+  {
+    "workOrderId": 2016,
+    "workOrderNumber": "WO-ELEC-2016",
+    "id": "WO-ELEC-2016",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.58525,
+    "longitude": -122.6774,
+    "priority": "Critical",
+    "status": "Needs assignment",
+    "assignmentState": "evaluated",
+    "sla": "4 hr 25 min",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T00:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 740,
+    "impact": "740 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2016"
+    }
+  },
+  {
+    "workOrderId": 2017,
+    "workOrderNumber": "WO-ELEC-2017",
+    "id": "WO-ELEC-2017",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5499,
+    "longitude": -122.65705,
+    "priority": "High",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "10 hr",
+    "crew": "Pending review",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T19:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 787,
+    "impact": "787 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2017"
+    }
+  },
+  {
+    "workOrderId": 2018,
+    "workOrderNumber": "WO-ELEC-2018",
+    "id": "WO-ELEC-2018",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.50655,
+    "longitude": -122.7887,
+    "priority": "Routine",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "3 days",
+    "crew": "Pending review",
+    "estimatedHours": 8.5,
+    "dueDate": "2026-07-20T08:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 834,
+    "impact": "834 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2018"
+    }
+  },
+  {
+    "workOrderId": 2019,
+    "workOrderNumber": "WO-ELEC-2019",
+    "id": "WO-ELEC-2019",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5902,
+    "longitude": -122.67135,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "53 min remaining",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 8.5,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 881,
+    "impact": "881 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2019"
+    }
+  },
+  {
+    "workOrderId": 2020,
+    "workOrderNumber": "WO-ELEC-2020",
+    "id": "WO-ELEC-2020",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.50985,
+    "longitude": -122.706,
+    "priority": "Critical",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "4 hr 29 min",
+    "crew": "Pending review",
+    "estimatedHours": 5.5,
+    "dueDate": "2026-07-17T22:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 928,
+    "impact": "928 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2020"
+    }
+  },
+  {
+    "workOrderId": 2021,
+    "workOrderNumber": "WO-ELEC-2021",
+    "id": "WO-ELEC-2021",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5115,
+    "longitude": -122.78265,
+    "priority": "High",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "14 hr",
+    "crew": "Pending review",
+    "estimatedHours": 5,
+    "dueDate": "2026-07-18T23:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 975,
+    "impact": "975 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2021"
+    }
+  },
+  {
+    "workOrderId": 2022,
+    "workOrderNumber": "WO-ELEC-2022",
+    "id": "WO-ELEC-2022",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.59515,
+    "longitude": -122.6653,
+    "priority": "Routine",
+    "status": "Queued",
+    "assignmentState": "assigned",
+    "sla": "2 days",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 7,
+    "dueDate": "2026-07-20T12:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1022,
+    "impact": "1,022 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2022"
+    }
+  },
+  {
+    "workOrderId": 2023,
+    "workOrderNumber": "WO-ELEC-2023",
+    "id": "WO-ELEC-2023",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5148,
+    "longitude": -122.69995,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "57 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 9,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1069,
+    "impact": "1,069 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2023"
+    }
+  },
+  {
+    "workOrderId": 2024,
+    "workOrderNumber": "WO-ELEC-2024",
+    "id": "WO-ELEC-2024",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.51645,
+    "longitude": -122.7766,
+    "priority": "Critical",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "4 hr 33 min",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 9,
+    "dueDate": "2026-07-18T02:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1116,
+    "impact": "1,116 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2024"
+    }
+  },
+  {
+    "workOrderId": 2025,
+    "workOrderNumber": "WO-ELEC-2025",
+    "id": "WO-ELEC-2025",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.6001,
+    "longitude": -122.65925,
+    "priority": "High",
+    "status": "Ready to bundle",
+    "assignmentState": "evaluated",
+    "sla": "6 hr",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 4,
+    "dueDate": "2026-07-18T15:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1163,
+    "impact": "1,163 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2025"
+    }
+  },
+  {
+    "workOrderId": 2026,
+    "workOrderNumber": "WO-ELEC-2026",
+    "id": "WO-ELEC-2026",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.51975,
+    "longitude": -122.6939,
+    "priority": "Routine",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "1 days",
+    "crew": "Pending review",
+    "estimatedHours": 5.5,
+    "dueDate": "2026-07-20T16:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1210,
+    "impact": "1,210 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2026"
+    }
+  },
+  {
+    "workOrderId": 2027,
+    "workOrderNumber": "WO-ELEC-2027",
+    "id": "WO-ELEC-2027",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5214,
+    "longitude": -122.77055,
+    "priority": "Emergency",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "61 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 7.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1257,
+    "impact": "1,257 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2027"
+    }
+  },
+  {
+    "workOrderId": 2028,
+    "workOrderNumber": "WO-ELEC-2028",
+    "id": "WO-ELEC-2028",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.60505,
+    "longitude": -122.7082,
+    "priority": "Critical",
+    "status": "Scheduled",
+    "assignmentState": "evaluated",
+    "sla": "4 hr 37 min",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 9.5,
+    "dueDate": "2026-07-18T00:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1304,
+    "impact": "1,304 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2028"
+    }
+  },
+  {
+    "workOrderId": 2029,
+    "workOrderNumber": "WO-ELEC-2029",
+    "id": "WO-ELEC-2029",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5247,
+    "longitude": -122.68785,
+    "priority": "High",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "10 hr",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 7.5,
+    "dueDate": "2026-07-18T19:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1351,
+    "impact": "1,351 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2029"
+    }
+  },
+  {
+    "workOrderId": 2030,
+    "workOrderNumber": "WO-ELEC-2030",
+    "id": "WO-ELEC-2030",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.52635,
+    "longitude": -122.7645,
+    "priority": "Routine",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "5 days",
+    "crew": "Pending review",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-20T20:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1398,
+    "impact": "1,398 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2030"
+    }
+  },
+  {
+    "workOrderId": 2031,
+    "workOrderNumber": "WO-ELEC-2031",
+    "id": "WO-ELEC-2031",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.565,
+    "longitude": -122.70215,
+    "priority": "Emergency",
+    "status": "Needs assignment",
+    "assignmentState": "evaluated",
+    "sla": "65 min remaining",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 6,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1445,
+    "impact": "1,445 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2031"
+    }
+  },
+  {
+    "workOrderId": 2032,
+    "workOrderNumber": "WO-ELEC-2032",
+    "id": "WO-ELEC-2032",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.52965,
+    "longitude": -122.6818,
+    "priority": "Critical",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "4 hr 41 min",
+    "crew": "Pending review",
+    "estimatedHours": 8,
+    "dueDate": "2026-07-17T22:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1492,
+    "impact": "1,492 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2032"
+    }
+  },
+  {
+    "workOrderId": 2033,
+    "workOrderNumber": "WO-ELEC-2033",
+    "id": "WO-ELEC-2033",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5313,
+    "longitude": -122.75845,
+    "priority": "High",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "14 hr",
+    "crew": "Pending review",
+    "estimatedHours": 8,
+    "dueDate": "2026-07-18T23:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1539,
+    "impact": "1,539 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2033"
+    }
+  },
+  {
+    "workOrderId": 2034,
+    "workOrderNumber": "WO-ELEC-2034",
+    "id": "WO-ELEC-2034",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.56995,
+    "longitude": -122.6961,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "68 min remaining",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 8,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1586,
+    "impact": "1,586 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2034"
+    }
+  },
+  {
+    "workOrderId": 2035,
+    "workOrderNumber": "WO-ELEC-2035",
+    "id": "WO-ELEC-2035",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5346,
+    "longitude": -122.67575,
+    "priority": "Emergency",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "69 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 5,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 1633,
+    "impact": "1,633 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2035"
+    }
+  },
+  {
+    "workOrderId": 2036,
+    "workOrderNumber": "WO-ELEC-2036",
+    "id": "WO-ELEC-2036",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.53625,
+    "longitude": -122.8074,
+    "priority": "Critical",
+    "status": "Needs assignment",
+    "assignmentState": "assigned",
+    "sla": "4 hr 45 min",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T02:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 80,
+    "impact": "80 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2036"
+    }
+  },
+  {
+    "workOrderId": 2037,
+    "workOrderNumber": "WO-ELEC-2037",
+    "id": "WO-ELEC-2037",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5749,
+    "longitude": -122.69005,
+    "priority": "High",
+    "status": "Queued",
+    "assignmentState": "evaluated",
+    "sla": "6 hr",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 6.5,
+    "dueDate": "2026-07-18T15:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 127,
+    "impact": "127 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2037"
+    }
+  },
+  {
+    "workOrderId": 2038,
+    "workOrderNumber": "WO-ELEC-2038",
+    "id": "WO-ELEC-2038",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.53955,
+    "longitude": -122.6697,
+    "priority": "Routine",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "3 days",
+    "crew": "Pending review",
+    "estimatedHours": 8.5,
+    "dueDate": "2026-07-21T04:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 174,
+    "impact": "174 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2038"
+    }
+  },
+  {
+    "workOrderId": 2039,
+    "workOrderNumber": "WO-ELEC-2039",
+    "id": "WO-ELEC-2039",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.4962,
+    "longitude": -122.80135,
+    "priority": "Emergency",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "73 min remaining",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 8.5,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 221,
+    "impact": "221 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2039"
+    }
+  },
+  {
+    "workOrderId": 2040,
+    "workOrderNumber": "WO-ELEC-2040",
+    "id": "WO-ELEC-2040",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.57985,
+    "longitude": -122.684,
+    "priority": "Critical",
+    "status": "Ready to bundle",
+    "assignmentState": "evaluated",
+    "sla": "4 hr 49 min",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 5.5,
+    "dueDate": "2026-07-18T00:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 268,
+    "impact": "268 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2040"
+    }
+  },
+  {
+    "workOrderId": 2041,
+    "workOrderNumber": "WO-ELEC-2041",
+    "id": "WO-ELEC-2041",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5445,
+    "longitude": -122.66365,
+    "priority": "High",
+    "status": "Needs assignment",
+    "assignmentState": "unevaluated",
+    "sla": "10 hr",
+    "crew": "Pending review",
+    "estimatedHours": 5,
+    "dueDate": "2026-07-18T19:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 315,
+    "impact": "315 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2041"
+    }
+  },
+  {
+    "workOrderId": 2042,
+    "workOrderNumber": "WO-ELEC-2042",
+    "id": "WO-ELEC-2042",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.50115,
+    "longitude": -122.7953,
+    "priority": "Routine",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "2 days",
+    "crew": "Pending review",
+    "estimatedHours": 7,
+    "dueDate": "2026-07-21T08:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 362,
+    "impact": "362 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2042"
+    }
+  },
+  {
+    "workOrderId": 2043,
+    "workOrderNumber": "WO-ELEC-2043",
+    "id": "WO-ELEC-2043",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5848,
+    "longitude": -122.67795,
+    "priority": "Emergency",
+    "status": "Scheduled",
+    "assignmentState": "assigned",
+    "sla": "77 min remaining",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 9,
+    "dueDate": "2026-07-17T17:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 409,
+    "impact": "409 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2043"
+    }
+  },
+  {
+    "workOrderId": 2044,
+    "workOrderNumber": "WO-ELEC-2044",
+    "id": "WO-ELEC-2044",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.54945,
+    "longitude": -122.6576,
+    "priority": "Critical",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "4 hr 53 min",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 9,
+    "dueDate": "2026-07-17T22:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 456,
+    "impact": "456 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2044"
+    }
+  },
+  {
+    "workOrderId": 2045,
+    "workOrderNumber": "WO-ELEC-2045",
+    "id": "WO-ELEC-2045",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.5061,
+    "longitude": -122.78925,
+    "priority": "Emergency",
+    "status": "Ready to bundle",
+    "assignmentState": "unevaluated",
+    "sla": "79 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 4,
+    "dueDate": "2026-07-17T19:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 503,
+    "impact": "503 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2045"
+    }
+  },
+  {
+    "workOrderId": 2046,
+    "workOrderNumber": "WO-ELEC-2046",
+    "id": "WO-ELEC-2046",
+    "type": "Feeder Branch Outage",
+    "workTypeId": 5,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.58975,
+    "longitude": -122.6719,
+    "priority": "Routine",
+    "status": "Needs assignment",
+    "assignmentState": "evaluated",
+    "sla": "1 days",
+    "crew": "Electric crew recommended",
+    "estimatedHours": 5.5,
+    "dueDate": "2026-07-21T12:00:00.000Z",
+    "mapSymbol": "outage",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 550,
+    "impact": "550 customers affected",
+    "skills": [
+      "Switching",
+      "Outage restoration",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Switching kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2046"
+    }
+  },
+  {
+    "workOrderId": 2047,
+    "workOrderNumber": "WO-ELEC-2047",
+    "id": "WO-ELEC-2047",
+    "type": "Transformer Outage",
+    "workTypeId": 6,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.5094,
+    "longitude": -122.70655,
+    "priority": "Emergency",
+    "status": "Queued",
+    "assignmentState": "unevaluated",
+    "sla": "81 min remaining",
+    "crew": "Pending review",
+    "estimatedHours": 7.5,
+    "dueDate": "2026-07-17T18:00:00.000Z",
+    "mapSymbol": "transformer",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 597,
+    "impact": "597 customers affected",
+    "skills": [
+      "Transformer replacement",
+      "Switching",
+      "Outage restoration"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Transformer kit"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2047"
+    }
+  },
+  {
+    "workOrderId": 2048,
+    "workOrderNumber": "WO-ELEC-2048",
+    "id": "WO-ELEC-2048",
+    "type": "Electric Pole Replacement",
+    "workTypeId": 7,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 103,
+    "district": "West",
+    "latitude": 45.51105,
+    "longitude": -122.7832,
+    "priority": "Critical",
+    "status": "Scheduled",
+    "assignmentState": "unevaluated",
+    "sla": "4 hr 12 min",
+    "crew": "Pending review",
+    "estimatedHours": 9.5,
+    "dueDate": "2026-07-18T02:00:00.000Z",
+    "mapSymbol": "pole",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 644,
+    "impact": "644 customers affected",
+    "skills": [
+      "Line construction",
+      "Traffic control",
+      "Bucket truck"
+    ],
+    "equipment": [
+      "Bucket truck",
+      "Pole trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2048"
+    }
+  },
+  {
+    "workOrderId": 2049,
+    "workOrderNumber": "WO-ELEC-2049",
+    "id": "WO-ELEC-2049",
+    "type": "Underground Cable Fault",
+    "workTypeId": 8,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 101,
+    "district": "North",
+    "latitude": 45.5947,
+    "longitude": -122.66585,
+    "priority": "High",
+    "status": "Assigned",
+    "assignmentState": "assigned",
+    "sla": "6 hr",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 7.5,
+    "dueDate": "2026-07-18T15:00:00.000Z",
+    "mapSymbol": "underground",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 691,
+    "impact": "691 customers affected",
+    "skills": [
+      "Cable fault locating",
+      "Underground electric",
+      "Switching"
+    ],
+    "equipment": [
+      "Fault locator",
+      "Cable repair trailer"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2049"
+    }
+  },
+  {
+    "workOrderId": 2050,
+    "workOrderNumber": "WO-ELEC-2050",
+    "id": "WO-ELEC-2050",
+    "type": "Vegetation Clearance",
+    "workTypeId": 9,
+    "utilityDomainId": 2,
+    "domain": "Electric",
+    "serviceAreaId": 102,
+    "district": "Central",
+    "latitude": 45.51435,
+    "longitude": -122.7005,
+    "priority": "Routine",
+    "status": "Ready to bundle",
+    "assignmentState": "assigned",
+    "sla": "5 days",
+    "crew": "Electric assigned crew",
+    "estimatedHours": 4.5,
+    "dueDate": "2026-07-21T16:00:00.000Z",
+    "mapSymbol": "vegetation",
+    "storyId": "electric-operations-queue",
+    "affectedCustomers": 738,
+    "impact": "738 customers affected",
+    "skills": [
+      "Vegetation clearance",
+      "Line patrol"
+    ],
+    "equipment": [
+      "Forestry truck",
+      "Chipper"
+    ],
+    "relatedGeoJsonFiles": [
+      "/mock-data/electric-network.geojson",
+      "/mock-data/crew-locations.geojson"
+    ],
+    "customerGeoJsonFile": "/mock-data/customers.geojson",
+    "customerGeoJsonFilter": {
+      "affectedByWorkOrderNumber": "WO-ELEC-2050"
+    }
   }
 ]

@@ -6,40 +6,19 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.7025,
-          45.5205
+          -122.6705,
+          45.5818
         ]
       },
       "properties": {
         "crewId": 1,
-        "crewName": "Electric Trouble Crew A",
-        "crewType": "Electric",
-        "homeServiceAreaId": 102,
+        "crewName": "Gas Emergency Response - Andre Lewis",
+        "crewType": "Gas Emergency",
+        "domain": "Gas",
+        "homeServiceAreaId": 101,
         "availabilityStatus": "Available",
-        "currentMapStatus": "Ready to dispatch",
-        "linkedStoryId": "power-branch-outage",
-        "activeRouteId": "ELEC-ROUTE-2001",
-        "displayColor": "#f59e0b"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -122.681,
-          45.5168
-        ]
-      },
-      "properties": {
-        "crewId": 2,
-        "crewName": "Gas Emergency Crew B",
-        "crewType": "Gas",
-        "homeServiceAreaId": 202,
-        "availabilityStatus": "Available",
-        "currentMapStatus": "Ready to dispatch",
-        "linkedStoryId": "gas-leak-emergency",
-        "activeRouteId": "GAS-ROUTE-1001",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "truck",
         "displayColor": "#dc2626"
       }
     },
@@ -48,19 +27,418 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.764,
-          45.543
+          -122.702,
+          45.5446
+        ]
+      },
+      "properties": {
+        "crewId": 2,
+        "crewName": "Gas Emergency Response - Maya Thompson",
+        "crewType": "Gas Emergency",
+        "domain": "Gas",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7805,
+          45.5044
         ]
       },
       "properties": {
         "crewId": 3,
-        "crewName": "Underground Electric Crew C",
-        "crewType": "Electric",
+        "crewName": "Gas Emergency Response - Luis Rivera",
+        "crewType": "Gas Emergency",
+        "domain": "Gas",
         "homeServiceAreaId": 103,
         "availabilityStatus": "Available",
-        "currentMapStatus": "Available",
-        "linkedStoryId": "power-branch-outage",
-        "activeRouteId": null,
+        "currentMapStatus": "Available in West district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.636,
+          45.5862
+        ]
+      },
+      "properties": {
+        "crewId": 4,
+        "crewName": "Gas Emergency Response - Priya Shah",
+        "crewType": "Gas Emergency",
+        "domain": "Gas",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6735,
+          45.54
+        ]
+      },
+      "properties": {
+        "crewId": 5,
+        "crewName": "Gas Emergency Response - Ethan Brooks",
+        "crewType": "Gas Emergency",
+        "domain": "Gas",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.66,
+          45.4818
+        ]
+      },
+      "properties": {
+        "crewId": 6,
+        "crewName": "Gas Construction - Grace Morgan",
+        "crewType": "Gas Construction",
+        "domain": "Gas",
+        "homeServiceAreaId": 203,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Active gas field order",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6595,
+          45.5906
+        ]
+      },
+      "properties": {
+        "crewId": 7,
+        "crewName": "Gas Construction - Jordan Kim",
+        "crewType": "Gas Construction",
+        "domain": "Gas",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.691,
+          45.5134
+        ]
+      },
+      "properties": {
+        "crewId": 8,
+        "crewName": "Gas Construction - Sofia Martinez",
+        "crewType": "Gas Construction",
+        "domain": "Gas",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7695,
+          45.5132
+        ]
+      },
+      "properties": {
+        "crewId": 9,
+        "crewName": "Gas Construction - Noah Patel",
+        "crewType": "Gas Construction",
+        "domain": "Gas",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Off",
+        "currentMapStatus": "Off shift",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.675,
+          45.595
+        ]
+      },
+      "properties": {
+        "crewId": 10,
+        "crewName": "Gas Construction - Harper Nguyen",
+        "crewType": "Gas Construction",
+        "domain": "Gas",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "truck",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6625,
+          45.5088
+        ]
+      },
+      "properties": {
+        "crewId": 11,
+        "crewName": "Gas Regulator Maintenance - Camila Reed",
+        "crewType": "Gas Maintenance",
+        "domain": "Gas",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.649,
+          45.4906
+        ]
+      },
+      "properties": {
+        "crewId": 12,
+        "crewName": "Gas Regulator Maintenance - Marcus Johnson",
+        "crewType": "Gas Maintenance",
+        "domain": "Gas",
+        "homeServiceAreaId": 203,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Active gas field order",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6985,
+          45.5994
+        ]
+      },
+      "properties": {
+        "crewId": 13,
+        "crewName": "Gas Regulator Maintenance - Olivia Chen",
+        "crewType": "Gas Maintenance",
+        "domain": "Gas",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.68,
+          45.5222
+        ]
+      },
+      "properties": {
+        "crewId": 14,
+        "crewName": "Gas Regulator Maintenance - Darius Walker",
+        "crewType": "Gas Maintenance",
+        "domain": "Gas",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7585,
+          45.522
+        ]
+      },
+      "properties": {
+        "crewId": 15,
+        "crewName": "Gas Regulator Maintenance - Nina Patel",
+        "crewType": "Gas Maintenance",
+        "domain": "Gas",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in West district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.664,
+          45.5638
+        ]
+      },
+      "properties": {
+        "crewId": 16,
+        "crewName": "Gas Inspection - Avery Coleman",
+        "crewType": "Gas Inspection",
+        "domain": "Gas",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6515,
+          45.5176
+        ]
+      },
+      "properties": {
+        "crewId": 17,
+        "crewName": "Gas Inspection - Elena Garcia",
+        "crewType": "Gas Inspection",
+        "domain": "Gas",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.688,
+          45.4994
+        ]
+      },
+      "properties": {
+        "crewId": 18,
+        "crewName": "Gas Inspection - Damon Wright",
+        "crewType": "Gas Inspection",
+        "domain": "Gas",
+        "homeServiceAreaId": 203,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Active gas field order",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6875,
+          45.5682
+        ]
+      },
+      "properties": {
+        "crewId": 19,
+        "crewName": "Gas Inspection - Isabella Ross",
+        "crewType": "Gas Inspection",
+        "domain": "Gas",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.669,
+          45.531
+        ]
+      },
+      "properties": {
+        "crewId": 20,
+        "crewName": "Gas Inspection - Mateo Clark",
+        "crewType": "Gas Inspection",
+        "domain": "Gas",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "van",
+        "displayColor": "#dc2626"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7975,
+          45.5308
+        ]
+      },
+      "properties": {
+        "crewId": 21,
+        "crewName": "Electric Trouble - Riley Adams",
+        "crewType": "Electric Trouble",
+        "domain": "Electric",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in West district",
+        "vehicleIcon": "bucket",
         "displayColor": "#f59e0b"
       }
     },
@@ -69,19 +447,418 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.724,
-          45.533
+          -122.653,
+          45.5726
         ]
       },
       "properties": {
-        "crewId": 4,
-        "crewName": "Shared Inspection Crew D",
-        "crewType": "Shared",
-        "homeServiceAreaId": 301,
+        "crewId": 22,
+        "crewName": "Electric Trouble - Kai Bennett",
+        "crewType": "Electric Trouble",
+        "domain": "Electric",
+        "homeServiceAreaId": 201,
         "availabilityStatus": "Available",
-        "currentMapStatus": "Available",
-        "linkedStoryId": "shared-ops",
-        "activeRouteId": null,
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6405,
+          45.5264
+        ]
+      },
+      "properties": {
+        "crewId": 23,
+        "crewName": "Electric Trouble - Tessa Hall",
+        "crewType": "Electric Trouble",
+        "domain": "Electric",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.677,
+          45.5082
+        ]
+      },
+      "properties": {
+        "crewId": 24,
+        "crewName": "Electric Trouble - Owen Foster",
+        "crewType": "Electric Trouble",
+        "domain": "Electric",
+        "homeServiceAreaId": 203,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Active electric field order",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6765,
+          45.577
+        ]
+      },
+      "properties": {
+        "crewId": 25,
+        "crewName": "Electric Trouble - Leah Simmons",
+        "crewType": "Electric Trouble",
+        "domain": "Electric",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.708,
+          45.5398
+        ]
+      },
+      "properties": {
+        "crewId": 26,
+        "crewName": "Underground Electric - Caleb Price",
+        "crewType": "Underground Electric",
+        "domain": "Electric",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "truck",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7865,
+          45.4996
+        ]
+      },
+      "properties": {
+        "crewId": 27,
+        "crewName": "Underground Electric - Zara Mitchell",
+        "crewType": "Underground Electric",
+        "domain": "Electric",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Off",
+        "currentMapStatus": "Off shift",
+        "vehicleIcon": "truck",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.642,
+          45.5814
+        ]
+      },
+      "properties": {
+        "crewId": 28,
+        "crewName": "Underground Electric - Miles Turner",
+        "crewType": "Underground Electric",
+        "domain": "Electric",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "truck",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6795,
+          45.5352
+        ]
+      },
+      "properties": {
+        "crewId": 29,
+        "crewName": "Underground Electric - Amara Scott",
+        "crewType": "Underground Electric",
+        "domain": "Electric",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "truck",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.666,
+          45.477
+        ]
+      },
+      "properties": {
+        "crewId": 30,
+        "crewName": "Underground Electric - Jules Carter",
+        "crewType": "Underground Electric",
+        "domain": "Electric",
+        "homeServiceAreaId": 203,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Active electric field order",
+        "vehicleIcon": "truck",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6655,
+          45.5858
+        ]
+      },
+      "properties": {
+        "crewId": 31,
+        "crewName": "Line Construction - Rafael Ortiz",
+        "crewType": "Line Patrol",
+        "domain": "Electric",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.697,
+          45.5486
+        ]
+      },
+      "properties": {
+        "crewId": 32,
+        "crewName": "Line Construction - Mina Park",
+        "crewType": "Line Patrol",
+        "domain": "Electric",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7755,
+          45.5084
+        ]
+      },
+      "properties": {
+        "crewId": 33,
+        "crewName": "Line Construction - Theo Russell",
+        "crewType": "Line Patrol",
+        "domain": "Electric",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in West district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.631,
+          45.5902
+        ]
+      },
+      "properties": {
+        "crewId": 34,
+        "crewName": "Line Construction - Layla Hughes",
+        "crewType": "Line Patrol",
+        "domain": "Electric",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6685,
+          45.504
+        ]
+      },
+      "properties": {
+        "crewId": 35,
+        "crewName": "Line Construction - Grant Bailey",
+        "crewType": "Line Patrol",
+        "domain": "Electric",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "bucket",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.655,
+          45.4858
+        ]
+      },
+      "properties": {
+        "crewId": 36,
+        "crewName": "Vegetation Line Clearance - Iris Cooper",
+        "crewType": "Vegetation",
+        "domain": "Electric",
+        "homeServiceAreaId": 203,
+        "availabilityStatus": "Assigned",
+        "currentMapStatus": "Active electric field order",
+        "vehicleIcon": "patrol",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7045,
+          45.5946
+        ]
+      },
+      "properties": {
+        "crewId": 37,
+        "crewName": "Vegetation Line Clearance - Cole Jenkins",
+        "crewType": "Vegetation",
+        "domain": "Electric",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "patrol",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.686,
+          45.5174
+        ]
+      },
+      "properties": {
+        "crewId": 38,
+        "crewName": "Vegetation Line Clearance - Nora Flores",
+        "crewType": "Vegetation",
+        "domain": "Electric",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "patrol",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.7645,
+          45.5172
+        ]
+      },
+      "properties": {
+        "crewId": 39,
+        "crewName": "Vegetation Line Clearance - Simon Ward",
+        "crewType": "Vegetation",
+        "domain": "Electric",
+        "homeServiceAreaId": 103,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in West district",
+        "vehicleIcon": "patrol",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.67,
+          45.599
+        ]
+      },
+      "properties": {
+        "crewId": 40,
+        "crewName": "Vegetation Line Clearance - Vivian Kelly",
+        "crewType": "Vegetation",
+        "domain": "Electric",
+        "homeServiceAreaId": 201,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "patrol",
+        "displayColor": "#f59e0b"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.6575,
+          45.5128
+        ]
+      },
+      "properties": {
+        "crewId": 41,
+        "crewName": "Damage Assessment - Micah Bell",
+        "crewType": "Inspection",
+        "domain": "Shared",
+        "homeServiceAreaId": 202,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "patrol",
         "displayColor": "#0f766e"
       }
     },
@@ -90,62 +867,20 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.79,
-          45.514
+          -122.644,
+          45.4946
         ]
       },
       "properties": {
-        "crewId": 5,
-        "crewName": "Vegetation Crew E",
-        "crewType": "Electric",
-        "homeServiceAreaId": 103,
-        "availabilityStatus": "Available",
-        "currentMapStatus": "Available",
-        "linkedStoryId": "power-branch-outage",
-        "activeRouteId": null,
-        "displayColor": "#f59e0b"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -122.632,
-          45.579
-        ]
-      },
-      "properties": {
-        "crewId": 6,
-        "crewName": "Contractor Gas Crew F",
-        "crewType": "Gas",
-        "homeServiceAreaId": 201,
-        "availabilityStatus": "Available",
-        "currentMapStatus": "Available",
-        "linkedStoryId": "gas-leak-emergency",
-        "activeRouteId": null,
-        "displayColor": "#dc2626"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -122.6715,
-          45.5745
-        ]
-      },
-      "properties": {
-        "crewId": 7,
-        "crewName": "Transformer Crew G",
-        "crewType": "Electric",
-        "homeServiceAreaId": 101,
+        "crewId": 42,
+        "crewName": "Damage Assessment - Ari Brooks",
+        "crewType": "Inspection",
+        "domain": "Shared",
+        "homeServiceAreaId": 203,
         "availabilityStatus": "Assigned",
-        "currentMapStatus": "Assigned",
-        "linkedStoryId": "power-branch-outage",
-        "activeRouteId": null,
-        "displayColor": "#f59e0b"
+        "currentMapStatus": "Active shared field order",
+        "vehicleIcon": "patrol",
+        "displayColor": "#0f766e"
       }
     },
     {
@@ -153,19 +888,61 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -122.735,
-          45.602
+          -122.6935,
+          45.5634
         ]
       },
       "properties": {
-        "crewId": 8,
-        "crewName": "Mutual Aid Crew H",
-        "crewType": "Shared",
-        "homeServiceAreaId": 301,
+        "crewId": 43,
+        "crewName": "Damage Assessment - June Parker",
+        "crewType": "Inspection",
+        "domain": "Shared",
+        "homeServiceAreaId": 101,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in North district",
+        "vehicleIcon": "patrol",
+        "displayColor": "#0f766e"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.675,
+          45.5262
+        ]
+      },
+      "properties": {
+        "crewId": 44,
+        "crewName": "Damage Assessment - Reid Murphy",
+        "crewType": "Inspection",
+        "domain": "Shared",
+        "homeServiceAreaId": 102,
+        "availabilityStatus": "Available",
+        "currentMapStatus": "Available in Central district",
+        "vehicleIcon": "patrol",
+        "displayColor": "#0f766e"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.8035,
+          45.526
+        ]
+      },
+      "properties": {
+        "crewId": 45,
+        "crewName": "Damage Assessment - Naomi Sanders",
+        "crewType": "Inspection",
+        "domain": "Shared",
+        "homeServiceAreaId": 103,
         "availabilityStatus": "Off",
-        "currentMapStatus": "Off duty",
-        "linkedStoryId": "shared-ops",
-        "activeRouteId": null,
+        "currentMapStatus": "Off shift",
+        "vehicleIcon": "patrol",
         "displayColor": "#0f766e"
       }
     }

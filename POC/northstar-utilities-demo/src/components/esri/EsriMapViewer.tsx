@@ -57,6 +57,7 @@ export function EsriMapViewer({
   layers = [],
   markers = [],
   controls = { attribution: true, compass: true, zoom: true },
+  onMarkerClick,
   onReady,
   onViewpointChange
 }: EsriMapViewerProps) {
@@ -108,25 +109,41 @@ export function EsriMapViewer({
 
         const markerLayer = new GraphicsLayer({ id: `${id}-markers`, title: "NorthStar demo markers" });
         markers.forEach((marker) => {
+          const symbol = marker.icon
+            ? {
+              type: "text" as const,
+              color: marker.color,
+              text: marker.icon === "bucket" ? "🚒" : marker.icon === "van" ? "🚐" : marker.icon === "patrol" ? "🚙" : "🚚",
+              font: {
+                size: marker.size ?? 18,
+                family: "Arial"
+              },
+              haloColor: marker.outlineColor ?? "#ffffff",
+              haloSize: 1.5
+            }
+            : {
+              type: "simple-marker" as const,
+              color: marker.color,
+              size: marker.size ?? 12,
+              style: marker.shape ?? "circle",
+              outline: {
+                color: marker.outlineColor ?? "#ffffff",
+                width: 2
+              }
+            };
+
           markerLayer.add(
             new Graphic({
               geometry: new Point({ longitude: marker.longitude, latitude: marker.latitude }),
-              symbol: {
-                type: "simple-marker",
-                color: marker.color,
-                size: marker.size ?? 12,
-                outline: {
-                  color: marker.outlineColor ?? "#ffffff",
-                  width: 2
-                }
-              },
+              symbol,
               attributes: {
                 id: marker.id,
-                label: marker.label
+                label: marker.label,
+                northStarMarker: true
               },
               popupTemplate: {
                 title: marker.label,
-                content: `NorthStar demo marker: ${marker.label}`
+                content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`
               }
             })
           );
@@ -147,6 +164,19 @@ export function EsriMapViewer({
         if (controls.compass !== false) {
           view.ui.add(new Compass({ view }), "top-left");
         }
+
+        view.on("click", async (event: Parameters<typeof view.hitTest>[0]) => {
+          const response = await view.hitTest(event);
+          const markerGraphic = response.results.find((result) => {
+            const graphic = "graphic" in result ? result.graphic : null;
+            return graphic?.attributes?.northStarMarker === true;
+          });
+          const markerId = markerGraphic && "graphic" in markerGraphic ? markerGraphic.graphic.attributes?.id : null;
+          const marker = markers.find((candidate) => candidate.id === markerId);
+          if (marker) {
+            onMarkerClick?.(marker);
+          }
+        });
 
         mapRef.current = map;
         markerLayerRef.current = markerLayer;
@@ -183,7 +213,7 @@ export function EsriMapViewer({
       markerLayerRef.current = null;
       mapRef.current = null;
     };
-  }, [basemap, center, controls.compass, controls.zoom, height, id, layerKey, markerKey, layers, markers, onReady, onViewpointChange, zoom]);
+  }, [basemap, center, controls.compass, controls.zoom, height, id, layerKey, markerKey, layers, markers, onMarkerClick, onReady, onViewpointChange, zoom]);
 
   return (
     <Paper variant="outlined" sx={{ height: "100%", overflow: "hidden" }}>

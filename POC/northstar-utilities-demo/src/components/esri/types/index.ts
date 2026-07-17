@@ -44,6 +44,9 @@ export interface EsriMarkerConfig {
   color: string;
   outlineColor?: string;
   size?: number;
+  shape?: "circle" | "square" | "diamond" | "triangle" | "x" | "cross";
+  icon?: "truck" | "bucket" | "van" | "patrol";
+  popupContent?: string;
 }
 
 export interface EsriMapControlOptions {
@@ -60,6 +63,7 @@ export interface EsriMapViewerProps extends EsriViewpoint {
   layers?: EsriLayerConfig[];
   markers?: EsriMarkerConfig[];
   controls?: EsriMapControlOptions;
+  onMarkerClick?: (marker: EsriMarkerConfig) => void;
   onReady?: (view: MapView) => void;
   onViewpointChange?: (viewpoint: EsriViewpoint) => void;
 }
