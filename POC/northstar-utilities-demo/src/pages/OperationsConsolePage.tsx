@@ -210,6 +210,15 @@ function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
 }
 
 function workOrderMarkerStyle(order: WorkOrder, isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
+  if (order.priority === "Emergency") {
+    return {
+      color: "#dc2626",
+      outlineColor: isSelected ? "#111827" : "#ffffff",
+      shape: "triangle",
+      size: isSelected ? 18 : 14
+    };
+  }
+
   if (order.assignmentState === "assigned") {
     return {
       color: "#16a34a",
@@ -236,16 +245,54 @@ function workOrderMarkerStyle(order: WorkOrder, isSelected: boolean): Pick<EsriM
   };
 }
 
-function getCandidateCrews(order: WorkOrder): CrewOption[] {
-  const domainMatches = crews.filter((crew) => {
-    if (order.domain === "Gas") {
-      return crew.certifications.some((certification) => certification.includes("Gas") || certification.includes("Pressure"));
+function getRequiredCrewFamilies(order: WorkOrder): string[] {
+  if (order.domain === "Gas") {
+    if (order.type.includes("Leak")) {
+      return ["Gas Emergency"];
     }
 
-    return crew.certifications.some((certification) => certification.includes("Switching") || certification.includes("Line") || certification.includes("Meter"));
-  });
+    if (order.type.includes("Service")) {
+      return ["Gas Construction"];
+    }
 
-  return [...domainMatches].sort((a, b) => b.fit - a.fit);
+    return ["Gas Maintenance", "Gas Construction"];
+  }
+
+  if (order.type.includes("Transformer") || order.type.includes("Outage") || order.type.includes("Trouble")) {
+    return ["Electric Trouble", "Line Patrol"];
+  }
+
+  if (order.type.includes("Underground")) {
+    return ["Underground Electric"];
+  }
+
+  if (order.type.includes("Vegetation")) {
+    return ["Vegetation"];
+  }
+
+  return ["Electric Trouble", "Underground Electric", "Line Patrol"];
+}
+
+function getCandidateCrews(order: WorkOrder): CrewOption[] {
+  const requiredFamilies = getRequiredCrewFamilies(order);
+
+  return crews
+    .filter((crew) => (
+      crew.status !== "Off"
+      && crew.equipment !== "Limited"
+      && requiredFamilies.some((family) => crew.crewType.includes(family) || crew.name.includes(family))
+    ))
+    .sort((a, b) => {
+      if (a.status === "Available" && b.status !== "Available") {
+        return -1;
+      }
+
+      if (a.status !== "Available" && b.status === "Available") {
+        return 1;
+      }
+
+      return b.fit - a.fit;
+    });
 }
 
 function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string {
@@ -264,9 +311,9 @@ function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string 
   return `Field context for ${selectedOrder.id}`;
 }
 
-function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriMarkerConfig[] {
+function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCandidateCrews = true): EsriMarkerConfig[] {
   const candidateCrewNames = new Set(getCandidateCrews(selectedOrder).map((crew) => crew.name));
-  const workOrderMarkers = workOrders.map((order) => ({
+  const workOrderMarkers: EsriMarkerConfig[] = workOrders.map((order) => ({
     id: order.id,
     label: `${order.id} - ${assignmentLabel(order.assignmentState)}`,
     longitude: order.longitude,
@@ -275,7 +322,8 @@ function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriM
     popupContent: `${order.type}<br/>${order.priority} priority<br/>${assignmentLabel(order.assignmentState)}<br/>${order.crew}`
   }));
 
-  const crewMarkers = crews.map((crew) => ({
+  const visibleCrews = showCandidateCrews ? crews.filter((crew) => candidateCrewNames.has(crew.name)) : [];
+  const crewMarkers: EsriMarkerConfig[] = visibleCrews.map((crew) => ({
     id: `crew-${crew.name}`,
     label: `${crew.name} - ${crew.crewType}`,
     longitude: crew.longitude,
@@ -283,7 +331,7 @@ function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriM
     color: candidateCrewNames.has(crew.name) ? "#16a34a" : "#475569",
     outlineColor: candidateCrewNames.has(crew.name) ? "#dcfce7" : "#ffffff",
     size: candidateCrewNames.has(crew.name) ? 22 : 18,
-    icon: crew.vehicleIcon,
+    shape: (crew.vehicleIcon === "bucket" ? "square" : crew.vehicleIcon === "van" ? "diamond" : crew.vehicleIcon === "patrol" ? "x" : "circle") as EsriMarkerConfig["shape"],
     popupContent: `${crew.crewType}<br/>${crew.status}<br/>${crew.currentAssignment}<br/>ETA to selected order: ${crew.eta}`
   }));
 
@@ -671,7 +719,8 @@ function DispatchScreen({
   evaluating,
   onEvaluate,
   onSelectOrder,
-  selectedOrder
+  selectedOrder,
+  hasSelectedWorkOrder
 }: {
   activeTask: TaskKey;
   evaluated: boolean;
@@ -679,10 +728,11 @@ function DispatchScreen({
   onEvaluate: () => void;
   onSelectOrder: (id: string) => void;
   selectedOrder: WorkOrder;
+  hasSelectedWorkOrder: boolean;
 }) {
-  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder);
-  const rankedCrews = getCandidateCrews(selectedOrder);
-  const recommendedCrew = rankedCrews[0] ?? crews[0];
+  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder);
+  const rankedCrews = hasSelectedWorkOrder ? getCandidateCrews(selectedOrder) : [];
+  const recommendedCrew = rankedCrews[0];
 
   return (
     <Grid container spacing={2}>
@@ -692,7 +742,7 @@ function DispatchScreen({
             <Typography variant="h2">Dispatch</Typography>
             <Typography color="text.secondary">Crew allocation, route readiness, and schedule impact for {selectedOrder.id}.</Typography>
           </div>
-          <Button disabled={evaluating} onClick={onEvaluate} variant="contained">
+          <Button disabled={evaluating || !hasSelectedWorkOrder} onClick={onEvaluate} variant="contained">
             {evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
           </Button>
         </Stack>
@@ -720,10 +770,10 @@ function DispatchScreen({
             zoom={13}
           />
           <Stack direction="row" gap={1} flexWrap="wrap" sx={{ px: 2, py: 1, bgcolor: "white", borderTop: "1px solid", borderColor: "divider" }}>
+            <Chip label="Red triangle: emergency" size="small" />
             <Chip label="Green square: assigned" size="small" />
             <Chip label="Blue diamond: evaluated" size="small" />
-            <Chip label="Red triangle: not evaluated" size="small" />
-            <Chip label="Vehicle icons: crews" size="small" />
+            <Chip label="Green circles/diamonds: qualified crews" size="small" />
           </Stack>
         </Paper>
       </Grid>
@@ -737,6 +787,12 @@ function DispatchScreen({
             <Chip color={evaluated ? "success" : "default"} label={evaluated ? "Ranked" : "Not evaluated"} size="small" />
           </Stack>
           {evaluating && <LinearProgress />}
+          {!hasSelectedWorkOrder ? (
+            <Stack alignItems="center" justifyContent="center" sx={{ minHeight: 260, p: 3, textAlign: "center" }}>
+              <Typography fontWeight={900}>Select a work order first</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }} variant="body2">Click a work order marker on the map or choose one from the Work Orders queue before possible crews are shown.</Typography>
+            </Stack>
+          ) : (
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -750,9 +806,9 @@ function DispatchScreen({
               </TableRow>
             </TableHead>
             <TableBody>
-              {rankedCrews.map((crew) => (
-                <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew.name}>
-                  <TableCell sx={{ fontWeight: 900 }}>{crew.name}</TableCell>
+              {rankedCrews.map((crew, index) => (
+                <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew?.name}>
+                  <TableCell sx={{ fontWeight: 900 }}>{evaluated ? `${index + 1}. ` : ""}{crew.name}</TableCell>
                   <TableCell>{evaluated ? `${crew.fit}%` : "-"}</TableCell>
                   <TableCell>{crew.eta}</TableCell>
                   <TableCell>{crew.hourly}</TableCell>
@@ -763,14 +819,15 @@ function DispatchScreen({
               ))}
             </TableBody>
           </Table>
+          )}
         </Paper>
       </Grid>
       <Grid item lg={7} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{evaluated ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
+          <Typography fontWeight={900}>{evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
           {evaluated ? (
             <Grid container spacing={1.25} sx={{ mt: 1 }}>
-              {crews[0].strengths.map((strength) => (
+              {(recommendedCrew?.strengths ?? []).map((strength) => (
                 <Grid item md={6} xs={12} key={strength}>
                   <Stack direction="row" alignItems="center" gap={1}>
                     <CheckCircleIcon color="success" fontSize="small" />
@@ -788,7 +845,7 @@ function DispatchScreen({
       </Grid>
       <Grid item lg={5} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{recommendedCrew.name} Schedule Window</Typography>
+          <Typography fontWeight={900}>{recommendedCrew ? `${recommendedCrew.name} Schedule Window` : "Schedule Window"}</Typography>
           <Stack spacing={1.2} sx={{ mt: 2 }}>
             {["07:30 Travel", "07:48 Arrive on site", "08:05 Safety assessment", "08:30 Leak isolation", "09:15 Repair support"].map((item, index) => (
               <Stack key={item} direction="row" alignItems="center" gap={1}>
@@ -798,7 +855,7 @@ function DispatchScreen({
             ))}
           </Stack>
           <Button startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
-            Assign {recommendedCrew.name}
+            Assign {recommendedCrew?.name ?? "Recommended Crew"}
           </Button>
         </Paper>
       </Grid>
@@ -843,6 +900,8 @@ export function OperationsConsolePage() {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(menuAnchor);
   const selectedOrder = workOrders.find((order) => order.id === selectedOrderId) ?? workOrders[0];
+  const [hasSelectedWorkOrder, setHasSelectedWorkOrder] = useState(false);
+  const markers = useMemo(() => getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder), [activeTask, hasSelectedWorkOrder, selectedOrder]);
 
   function openMenu(event: MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
@@ -857,7 +916,15 @@ export function OperationsConsolePage() {
     setActiveHub(task.hub);
     if (task.key === "emergency") {
       setSelectedOrderId(defaultWorkOrderId);
+      setHasSelectedWorkOrder(false);
+      setEvaluated(false);
     }
+  }
+
+  function selectWorkOrder(orderId: string) {
+    setSelectedOrderId(orderId);
+    setHasSelectedWorkOrder(true);
+    setEvaluated(false);
   }
 
   function evaluateCrews() {
@@ -871,7 +938,7 @@ export function OperationsConsolePage() {
 
   function renderActiveHub(): ReactElement {
     if (activeHub === "workOrders") {
-      return <WorkOrdersScreen selectedOrder={selectedOrder} onSelectOrder={setSelectedOrderId} />;
+      return <WorkOrdersScreen selectedOrder={selectedOrder} onSelectOrder={selectWorkOrder} />;
     }
 
     if (activeHub === "workforce") {
@@ -885,8 +952,9 @@ export function OperationsConsolePage() {
           evaluated={evaluated}
           evaluating={evaluating}
           onEvaluate={evaluateCrews}
-          onSelectOrder={setSelectedOrderId}
+          onSelectOrder={selectWorkOrder}
           selectedOrder={selectedOrder}
+          hasSelectedWorkOrder={hasSelectedWorkOrder}
         />
       );
     }
