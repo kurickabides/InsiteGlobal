@@ -52,6 +52,7 @@ import { generatedCrews, generatedWorkOrders } from "../data/generatedOperations
 
 type HubKey = "dashboard" | "workOrders" | "workforce" | "dispatch" | "reports";
 type TaskKey = "emergency" | "crews" | "assignment" | "impact";
+type WorkOrderHealth = "onTrack" | "belowEfficiency" | "dangerZone";
 
 interface WorkOrder {
   id: string;
@@ -109,6 +110,11 @@ const mapLayers: EsriLayerConfig[] = [
 const crews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
 const defaultWorkOrderId = workOrders.find((order) => order.priority === "Emergency" && order.assignmentState !== "assigned")?.id ?? workOrders[0].id;
 const defaultCrewName = crews.find((crew) => crew.status === "Available")?.name ?? crews[0].name;
+const workOrderHealthLabels: Record<WorkOrderHealth, string> = {
+  onTrack: "On track",
+  belowEfficiency: "Below efficiency",
+  dangerZone: "Danger zone"
+};
 
 const currentTasks: { key: TaskKey; label: string; detail: string; status: string; hub: HubKey }[] = [
   { key: "emergency", label: "Active emergency work order", detail: "Open the highest-priority gas or power order and review field context.", status: "Next", hub: "workOrders" },
@@ -139,6 +145,52 @@ function assignmentLabel(state: WorkOrder["assignmentState"]): string {
   }
 
   return "Not evaluated";
+}
+
+function parseSlaMinutes(sla: string): number {
+  const hourMatch = sla.match(/(\d+)\s*hr/);
+  const minuteMatch = sla.match(/(\d+)\s*min/);
+  const dayMatch = sla.match(/(\d+)\s*days?/);
+
+  if (dayMatch) {
+    return Number(dayMatch[1]) * 24 * 60;
+  }
+
+  return (hourMatch ? Number(hourMatch[1]) * 60 : 0) + (minuteMatch ? Number(minuteMatch[1]) : 0);
+}
+
+function getWorkOrderHealth(order: WorkOrder): WorkOrderHealth {
+  const slaMinutes = parseSlaMinutes(order.sla);
+
+  if (
+    (order.assignmentState === "unevaluated" && (order.priority === "Emergency" || order.priority === "Critical")) ||
+    (order.priority === "Emergency" && slaMinutes <= 60)
+  ) {
+    return "dangerZone";
+  }
+
+  if (
+    order.assignmentState === "unevaluated" ||
+    order.status === "Ready to bundle" ||
+    order.priority === "High" ||
+    (order.priority === "Critical" && slaMinutes <= 120)
+  ) {
+    return "belowEfficiency";
+  }
+
+  return "onTrack";
+}
+
+function healthColor(health: WorkOrderHealth): "success" | "warning" | "error" {
+  if (health === "dangerZone") {
+    return "error";
+  }
+
+  if (health === "belowEfficiency") {
+    return "warning";
+  }
+
+  return "success";
 }
 
 function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
@@ -297,7 +349,34 @@ function WorkOrderTable({ selectedId, onSelect }: { selectedId: string; onSelect
   );
 }
 
-function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[] }) {
+function DashboardScreen({ selectedOrder, onSelectOrder }: { selectedOrder: WorkOrder; onSelectOrder: (id: string) => void }) {
+  const [activeHealthFilter, setActiveHealthFilter] = useState<WorkOrderHealth>("dangerZone");
+  const statusCounts = useMemo(() => {
+    return workOrders.reduce<Record<string, number>>((counts, order) => {
+      counts[order.status] = (counts[order.status] ?? 0) + 1;
+      return counts;
+    }, {});
+  }, []);
+  const maxStatusCount = Math.max(...Object.values(statusCounts));
+  const districtEfficiency = useMemo(() => {
+    const districtNames = Array.from(new Set(workOrders.map((order) => order.district)));
+
+    return districtNames.map((district) => {
+      const districtOrders = workOrders.filter((order) => order.district === district);
+      const healthyOrders = districtOrders.filter((order) => getWorkOrderHealth(order) === "onTrack").length;
+
+      return {
+        district,
+        efficiency: Math.round((healthyOrders / districtOrders.length) * 100)
+      };
+    });
+  }, []);
+  const filteredWorkOrders = workOrders.filter((order) => getWorkOrderHealth(order) === activeHealthFilter);
+  const healthSummary = (["onTrack", "belowEfficiency", "dangerZone"] as WorkOrderHealth[]).map((health) => ({
+    health,
+    count: workOrders.filter((order) => getWorkOrderHealth(order) === health).length
+  }));
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -319,22 +398,46 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
       <Grid item md={3} xs={12}><MetricTile label="Modeled Savings" value="$1.8M" detail="Annualized dispatch value" tone="success" /></Grid>
 
       <Grid item lg={8} xs={12}>
-        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+        <Paper variant="outlined" sx={{ overflow: "hidden", height: "100%" }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
-              <MapIcon color="primary" />
-              <Typography fontWeight={900}>Service Territory Operations Map</Typography>
+              <AssessmentIcon color="primary" />
+              <Typography fontWeight={900}>Completion Status and Efficiency</Typography>
             </Stack>
-            <Chip label="Gas + electric layers" size="small" />
+            <Chip label="Healthy target: 80%+" size="small" />
           </Stack>
-          <EsriMapViewer
-            center={[selectedOrder.longitude, selectedOrder.latitude]}
-            height={420}
-            layers={mapLayers}
-            markers={markers}
-            title=""
-            zoom={13}
-          />
+          <Grid container spacing={0} sx={{ p: 2 }}>
+            <Grid item md={7} xs={12}>
+              <Typography color="text.secondary" fontWeight={800} variant="body2">Work order completion status</Typography>
+              <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+                {Object.entries(statusCounts).map(([status, count]) => (
+                  <Stack key={status} spacing={0.5}>
+                    <Stack direction="row" justifyContent="space-between" gap={1}>
+                      <Typography fontWeight={800}>{status}</Typography>
+                      <Typography color="text.secondary" variant="body2">{count} orders</Typography>
+                    </Stack>
+                    <Box sx={{ height: 18, bgcolor: "grey.100", borderRadius: 1, overflow: "hidden" }}>
+                      <Box sx={{ width: `${(count / maxStatusCount) * 100}%`, height: "100%", bgcolor: status === "Assigned" || status === "Scheduled" ? "success.main" : status === "Needs assignment" ? "error.main" : "warning.main" }} />
+                    </Box>
+                  </Stack>
+                ))}
+              </Stack>
+            </Grid>
+            <Grid item md={5} xs={12}>
+              <Box sx={{ pl: { md: 2 }, pt: { xs: 2, md: 0 } }}>
+                <Typography color="text.secondary" fontWeight={800} variant="body2">District efficiency</Typography>
+                <Stack direction="row" alignItems="flex-end" gap={1.25} sx={{ height: 202, mt: 1.5, borderBottom: "1px solid", borderColor: "divider" }}>
+                  {districtEfficiency.map((item) => (
+                    <Stack key={item.district} alignItems="center" justifyContent="flex-end" sx={{ flex: 1, height: "100%" }}>
+                      <Typography fontWeight={900} variant="body2">{item.efficiency}%</Typography>
+                      <Box sx={{ width: "100%", maxWidth: 42, height: `${item.efficiency}%`, minHeight: 18, bgcolor: item.efficiency >= 80 ? "success.main" : item.efficiency >= 60 ? "warning.main" : "error.main", borderRadius: "4px 4px 0 0" }} />
+                      <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">{item.district}</Typography>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Box>
+            </Grid>
+          </Grid>
         </Paper>
       </Grid>
 
@@ -353,16 +456,43 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
           </Paper>
 
           <Paper variant="outlined" sx={{ p: 2 }}>
-            <Typography fontWeight={900}>Crew Readiness</Typography>
-            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
-              {crews.map((crew) => (
-                <div key={crew.name}>
-                  <Stack direction="row" justifyContent="space-between">
-                    <Typography fontWeight={800}>{crew.name}</Typography>
-                    <Typography color="text.secondary" variant="body2">{crew.fit}%</Typography>
+            <Stack direction="row" justifyContent="space-between" gap={1} alignItems="center">
+              <Typography fontWeight={900}>Work Order Health</Typography>
+              <Chip color={healthColor(activeHealthFilter)} label={`${filteredWorkOrders.length} shown`} size="small" />
+            </Stack>
+            <Stack direction="row" gap={0.75} flexWrap="wrap" sx={{ mt: 1.5 }}>
+              {healthSummary.map((item) => (
+                <Button
+                  color={healthColor(item.health)}
+                  key={item.health}
+                  onClick={() => setActiveHealthFilter(item.health)}
+                  size="small"
+                  variant={activeHealthFilter === item.health ? "contained" : "outlined"}
+                >
+                  {workOrderHealthLabels[item.health]} ({item.count})
+                </Button>
+              ))}
+            </Stack>
+            <Stack spacing={1} sx={{ mt: 1.5, maxHeight: 245, overflow: "auto" }}>
+              {filteredWorkOrders.slice(0, 8).map((order) => (
+                <Button
+                  key={order.id}
+                  onClick={() => onSelectOrder(order.id)}
+                  sx={{ alignItems: "stretch", color: "text.primary", justifyContent: "flex-start", p: 1, textAlign: "left" }}
+                  variant={order.id === selectedOrder.id ? "outlined" : "text"}
+                >
+                  <Stack spacing={0.75} sx={{ width: "100%" }}>
+                    <Stack direction="row" justifyContent="space-between" gap={1}>
+                      <Typography fontWeight={900}>{order.id}</Typography>
+                      <Chip color={priorityColor(order.priority)} label={order.priority} size="small" />
+                    </Stack>
+                    <Typography color="text.secondary" variant="body2">{order.type}</Typography>
+                    <Stack direction="row" gap={0.75} flexWrap="wrap">
+                      <Chip label={order.sla} size="small" />
+                      <Chip label={assignmentLabel(order.assignmentState)} size="small" />
+                    </Stack>
                   </Stack>
-                  <LinearProgress color={crew.fit >= 90 ? "success" : "primary"} value={crew.fit} variant="determinate" />
-                </div>
+                </Button>
               ))}
             </Stack>
           </Paper>
@@ -713,7 +843,6 @@ export function OperationsConsolePage() {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(menuAnchor);
   const selectedOrder = workOrders.find((order) => order.id === selectedOrderId) ?? workOrders[0];
-  const markers = useMemo(() => getTaskMapMarkers(activeTask, selectedOrder), [activeTask, selectedOrder]);
 
   function openMenu(event: MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
@@ -766,7 +895,7 @@ export function OperationsConsolePage() {
       return <ReportsScreen />;
     }
 
-    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} />;
+    return <DashboardScreen selectedOrder={selectedOrder} onSelectOrder={setSelectedOrderId} />;
   }
 
   return (
