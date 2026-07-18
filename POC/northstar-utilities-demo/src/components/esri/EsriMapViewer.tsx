@@ -165,16 +165,37 @@ export function EsriMapViewer({
           view.ui.add(new Compass({ view }), "top-left");
         }
 
-        view.on("click", async (event: Parameters<typeof view.hitTest>[0]) => {
+        async function findMarkerFromHitTest(event: Parameters<typeof view.hitTest>[0]) {
           const response = await view.hitTest(event);
           const markerGraphic = response.results.find((result) => {
             const graphic = "graphic" in result ? result.graphic : null;
             return graphic?.attributes?.northStarMarker === true;
           });
           const markerId = markerGraphic && "graphic" in markerGraphic ? markerGraphic.graphic.attributes?.id : null;
-          const marker = markers.find((candidate) => candidate.id === markerId);
+          return markers.find((candidate) => candidate.id === markerId) ?? null;
+        }
+
+        view.on("click", async (event: Parameters<typeof view.hitTest>[0]) => {
+          const marker = await findMarkerFromHitTest(event);
           if (marker) {
             onMarkerClick?.(marker);
+          }
+        });
+
+        view.on("pointer-move", async (event: Parameters<typeof view.hitTest>[0]) => {
+          const marker = await findMarkerFromHitTest(event);
+          if (view.container) {
+            view.container.style.cursor = marker ? "pointer" : "default";
+          }
+
+          if (marker) {
+            view.openPopup({
+              title: marker.label,
+              content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`,
+              location: new Point({ longitude: marker.longitude, latitude: marker.latitude })
+            });
+          } else if (view.popup?.visible) {
+            view.closePopup();
           }
         });
 
