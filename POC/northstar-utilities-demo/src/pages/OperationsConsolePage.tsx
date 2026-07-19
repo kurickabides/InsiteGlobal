@@ -295,6 +295,60 @@ function getCandidateCrews(order: WorkOrder): CrewOption[] {
     });
 }
 
+function parseMinutes(value: string): number {
+  const match = value.match(/\d+/);
+  return match ? Number(match[0]) : 999;
+}
+
+function parseCurrency(value: string): number {
+  return Number(value.replace(/[^0-9.]/g, ""));
+}
+
+interface RankedCrewOption extends CrewOption {
+  decisionScore: number;
+  decisionReasons: string[];
+}
+
+function getRankedCandidateCrews(order: WorkOrder): RankedCrewOption[] {
+  const candidates = getCandidateCrews(order);
+  const costs = candidates.map((crew) => parseCurrency(crew.effectiveCost));
+  const etas = candidates.map((crew) => parseMinutes(crew.eta));
+  const minCost = Math.min(...costs);
+  const maxCost = Math.max(...costs);
+  const minEta = Math.min(...etas);
+  const maxEta = Math.max(...etas);
+
+  return candidates
+    .map((crew) => {
+      const cost = parseCurrency(crew.effectiveCost);
+      const eta = parseMinutes(crew.eta);
+      const costScore = maxCost === minCost ? 100 : 100 - ((cost - minCost) / (maxCost - minCost)) * 100;
+      const etaScore = maxEta === minEta ? 100 : 100 - ((eta - minEta) / (maxEta - minEta)) * 100;
+      const availabilityScore = crew.status === "Available" ? 100 : 70;
+      const equipmentScore = crew.equipment === "Ready" ? 100 : crew.equipment === "Staged" ? 85 : 65;
+      const decisionScore = Math.round((crew.fit * 0.35) + (costScore * 0.3) + (etaScore * 0.2) + (availabilityScore * 0.1) + (equipmentScore * 0.05));
+      const decisionReasons = [
+        `${crew.fit}% skill fit for ${order.type}`,
+        `${crew.effectiveCost} modeled effective cost`,
+        `${crew.eta} travel ETA`,
+        `${crew.equipment} equipment profile`
+      ];
+
+      return {
+        ...crew,
+        decisionScore,
+        decisionReasons
+      };
+    })
+    .sort((a, b) => {
+      if (b.decisionScore !== a.decisionScore) {
+        return b.decisionScore - a.decisionScore;
+      }
+
+      return parseCurrency(a.effectiveCost) - parseCurrency(b.effectiveCost);
+    });
+}
+
 function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string {
   if (activeTask === "crews") {
     return `Crew proximity for ${selectedOrder.id}`;
@@ -731,7 +785,7 @@ function DispatchScreen({
   hasSelectedWorkOrder: boolean;
 }) {
   const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder);
-  const rankedCrews = hasSelectedWorkOrder ? getCandidateCrews(selectedOrder) : [];
+  const rankedCrews = hasSelectedWorkOrder ? getRankedCandidateCrews(selectedOrder) : [];
   const recommendedCrew = rankedCrews[0];
 
   return (
@@ -787,6 +841,11 @@ function DispatchScreen({
             <Chip color={evaluated ? "success" : "default"} label={evaluated ? "Ranked" : "Not evaluated"} size="small" />
           </Stack>
           {evaluating && <LinearProgress />}
+          {hasSelectedWorkOrder && (
+            <Typography color="text.secondary" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }} variant="body2">
+              Effective cost estimates the total job cost after hourly rate, travel time, overtime risk, productivity, and equipment readiness. Ranking uses decision score, not skill fit alone.
+            </Typography>
+          )}
           {!hasSelectedWorkOrder ? (
             <Stack alignItems="center" justifyContent="center" sx={{ minHeight: 260, p: 3, textAlign: "center" }}>
               <Typography fontWeight={900}>Select a work order first</Typography>
@@ -797,7 +856,8 @@ function DispatchScreen({
             <TableHead>
               <TableRow>
                 <TableCell>Crew</TableCell>
-                <TableCell>Fit</TableCell>
+                <TableCell>Score</TableCell>
+                <TableCell>Skill Fit</TableCell>
                 <TableCell>ETA</TableCell>
                 <TableCell>Rate</TableCell>
                 <TableCell>Effective</TableCell>
@@ -809,6 +869,7 @@ function DispatchScreen({
               {rankedCrews.map((crew, index) => (
                 <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew?.name}>
                   <TableCell sx={{ fontWeight: 900 }}>{evaluated ? `${index + 1}. ` : ""}{crew.name}</TableCell>
+                  <TableCell>{evaluated ? crew.decisionScore : "-"}</TableCell>
                   <TableCell>{evaluated ? `${crew.fit}%` : "-"}</TableCell>
                   <TableCell>{crew.eta}</TableCell>
                   <TableCell>{crew.hourly}</TableCell>
@@ -827,7 +888,7 @@ function DispatchScreen({
           <Typography fontWeight={900}>{evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
           {evaluated ? (
             <Grid container spacing={1.25} sx={{ mt: 1 }}>
-              {(recommendedCrew?.strengths ?? []).map((strength) => (
+              {(recommendedCrew?.decisionReasons ?? []).map((strength) => (
                 <Grid item md={6} xs={12} key={strength}>
                   <Stack direction="row" alignItems="center" gap={1}>
                     <CheckCircleIcon color="success" fontSize="small" />
@@ -838,7 +899,7 @@ function DispatchScreen({
             </Grid>
           ) : (
             <Typography color="text.secondary" sx={{ mt: 1 }}>
-              Click a work order on the map to change this list, then evaluate crews to score certifications, equipment readiness, travel, SLA fit, productivity, overtime risk, and effective cost.
+              Click a work order on the map to change this list, then evaluate crews to score skill fit, effective cost, travel ETA, availability, and equipment readiness. Effective cost is the modeled total job cost after labor rate, travel, overtime risk, productivity, and equipment readiness are considered.
             </Typography>
           )}
         </Paper>
