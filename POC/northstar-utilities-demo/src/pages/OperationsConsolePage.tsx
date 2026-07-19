@@ -21,6 +21,7 @@ import {
   Paper,
   Stack,
   Table,
+  TableContainer,
   TableBody,
   TableCell,
   TableHead,
@@ -44,7 +45,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import WorkIcon from "@mui/icons-material/Work";
-import { MouseEvent, ReactElement, useMemo, useState } from "react";
+import { MouseEvent, ReactElement, useEffect, useMemo, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { EsriMapViewer } from "../components/esri/EsriMapViewer";
 import { EsriLayerConfig, EsriMarkerConfig } from "../components/esri/types";
@@ -90,7 +91,7 @@ interface CrewOption {
   penalties: string[];
 }
 
-const workOrders = generatedWorkOrders.map((order) => ({ ...order })) as unknown as WorkOrder[];
+const initialWorkOrders = generatedWorkOrders.map((order) => ({ ...order })) as unknown as WorkOrder[];
 
 const consoleHubItems: { key: HubKey; label: string; icon: JSX.Element; metric: string }[] = [
   { key: "dashboard", label: "Executive Dashboard", icon: <DashboardIcon />, metric: "Live operating picture" },
@@ -106,9 +107,37 @@ const mapLayers: EsriLayerConfig[] = [
   { id: "crew-locations", title: "Crew Locations", type: "geojson", url: "/mock-data/crew-locations.geojson", visible: true, opacity: 0.9 }
 ];
 
-const crews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
-const defaultWorkOrderId = workOrders.find((order) => order.priority === "Emergency" && order.assignmentState !== "assigned")?.id ?? workOrders[0].id;
-const defaultCrewName = crews.find((crew) => crew.status === "Available")?.name ?? crews[0].name;
+const initialCrews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
+const defaultWorkOrderId = initialWorkOrders.find((order) => order.priority === "Emergency" && order.assignmentState !== "assigned")?.id ?? initialWorkOrders[0].id;
+const defaultCrewName = initialCrews.find((crew) => crew.status === "Available")?.name ?? initialCrews[0].name;
+
+const workflowStorageKey = "northstar-operations-workflow-state";
+
+interface PersistedWorkflowState {
+  workOrders: WorkOrder[];
+  crews: CrewOption[];
+}
+
+function loadPersistedWorkflowState(): PersistedWorkflowState {
+  if (typeof window === "undefined") {
+    return { workOrders: initialWorkOrders, crews: initialCrews };
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(workflowStorageKey);
+    if (!rawValue) {
+      return { workOrders: initialWorkOrders, crews: initialCrews };
+    }
+
+    const parsedValue = JSON.parse(rawValue) as Partial<PersistedWorkflowState>;
+    return {
+      workOrders: parsedValue.workOrders?.length ? parsedValue.workOrders : initialWorkOrders,
+      crews: parsedValue.crews?.length ? parsedValue.crews : initialCrews
+    };
+  } catch {
+    return { workOrders: initialWorkOrders, crews: initialCrews };
+  }
+}
 
 const currentTasks: { key: TaskKey; label: string; detail: string; status: string; hub: HubKey }[] = [
   { key: "emergency", label: "Active emergency work order", detail: "Open the highest-priority gas or power order and review field context.", status: "Next", hub: "workOrders" },
@@ -157,43 +186,157 @@ function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
   return "Utility truck";
 }
 
-function workOrderMarkerStyle(order: WorkOrder, isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
+function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
   if (order.assignmentState === "assigned") {
     return {
       color: "#16a34a",
-      outlineColor: isSelected ? "#111827" : "#ffffff",
+      outlineColor: "#ffffff",
       shape: "square",
-      size: isSelected ? 16 : 12
+      size: 12
+    };
+  }
+
+  if (order.priority === "Emergency") {
+    return {
+      color: "#dc2626",
+      outlineColor: "#ffffff",
+      shape: "triangle",
+      size: 14
     };
   }
 
   if (order.assignmentState === "evaluated") {
     return {
       color: "#2563eb",
-      outlineColor: isSelected ? "#111827" : "#ffffff",
+      outlineColor: "#ffffff",
       shape: "diamond",
-      size: isSelected ? 17 : 13
+      size: 13
     };
   }
 
   return {
     color: "#dc2626",
-    outlineColor: isSelected ? "#111827" : "#ffffff",
+    outlineColor: "#ffffff",
     shape: "triangle",
-    size: isSelected ? 17 : 13
+    size: 13
   };
 }
 
-function getCandidateCrews(order: WorkOrder): CrewOption[] {
-  const domainMatches = crews.filter((crew) => {
-    if (order.domain === "Gas") {
-      return crew.certifications.some((certification) => certification.includes("Gas") || certification.includes("Pressure"));
+function getRequiredCrewFamilies(order: WorkOrder): string[] {
+  if (order.domain === "Gas") {
+    if (order.type.includes("Leak")) {
+      return ["Gas Emergency"];
     }
 
-    return crew.certifications.some((certification) => certification.includes("Switching") || certification.includes("Line") || certification.includes("Meter"));
-  });
+    if (order.type.includes("Service")) {
+      return ["Gas Construction"];
+    }
 
-  return [...domainMatches].sort((a, b) => b.fit - a.fit);
+    return ["Gas Maintenance", "Gas Construction"];
+  }
+
+  if (order.type.includes("Transformer") || order.type.includes("Outage") || order.type.includes("Trouble")) {
+    return ["Electric Trouble", "Line Patrol"];
+  }
+
+  if (order.type.includes("Underground")) {
+    return ["Underground Electric"];
+  }
+
+  if (order.type.includes("Vegetation")) {
+    return ["Vegetation"];
+  }
+
+  return ["Electric Trouble", "Underground Electric", "Line Patrol"];
+}
+
+function getCandidateCrews(order: WorkOrder, crewPool: CrewOption[] = initialCrews): CrewOption[] {
+  const requiredFamilies = getRequiredCrewFamilies(order);
+
+  return crewPool
+    .filter((crew) => (
+      crew.status === "Available"
+      && crew.equipment !== "Limited"
+      && requiredFamilies.some((family) => crew.crewType.includes(family) || crew.name.includes(family))
+    ))
+    .sort((a, b) => {
+      if (a.status === "Available" && b.status !== "Available") {
+        return -1;
+      }
+
+      if (a.status !== "Available" && b.status === "Available") {
+        return 1;
+      }
+
+      return b.fit - a.fit;
+    });
+}
+
+function parseMinutes(value: string): number {
+  const match = value.match(/\d+/);
+  return match ? Number(match[0]) : 999;
+}
+
+function parseCurrency(value: string): number {
+  return Number(value.replace(/[^0-9.]/g, ""));
+}
+
+interface RankedCrewOption extends CrewOption {
+  decisionScore: number;
+  decisionReasons: string[];
+}
+
+function getRankedCandidateCrews(order: WorkOrder, crewPool: CrewOption[] = initialCrews): RankedCrewOption[] {
+  const candidates = getCandidateCrews(order, crewPool);
+  const costs = candidates.map((crew) => parseCurrency(crew.effectiveCost));
+  const etas = candidates.map((crew) => parseMinutes(crew.eta));
+  const minCost = Math.min(...costs);
+  const maxCost = Math.max(...costs);
+  const minEta = Math.min(...etas);
+  const maxEta = Math.max(...etas);
+
+  return candidates
+    .map((crew) => {
+      const cost = parseCurrency(crew.effectiveCost);
+      const eta = parseMinutes(crew.eta);
+      const costScore = maxCost === minCost ? 100 : 100 - ((cost - minCost) / (maxCost - minCost)) * 100;
+      const etaScore = maxEta === minEta ? 100 : 100 - ((eta - minEta) / (maxEta - minEta)) * 100;
+      const availabilityScore = crew.status === "Available" ? 100 : 70;
+      const equipmentScore = crew.equipment === "Ready" ? 100 : crew.equipment === "Staged" ? 85 : 65;
+      const decisionScore = Math.round((crew.fit * 0.35) + (costScore * 0.3) + (etaScore * 0.2) + (availabilityScore * 0.1) + (equipmentScore * 0.05));
+      const decisionReasons = [
+        `${crew.fit}% skill fit for ${order.type}`,
+        `${crew.effectiveCost} modeled effective cost`,
+        `${crew.eta} travel ETA`,
+        `${crew.equipment} equipment profile`
+      ];
+
+      return {
+        ...crew,
+        decisionScore,
+        decisionReasons
+      };
+    })
+    .sort((a, b) => {
+      if (b.decisionScore !== a.decisionScore) {
+        return b.decisionScore - a.decisionScore;
+      }
+
+      return parseCurrency(a.effectiveCost) - parseCurrency(b.effectiveCost);
+    });
+}
+
+function toAssignedCrewRow(crew: CrewOption, order: WorkOrder): RankedCrewOption {
+  return {
+    ...crew,
+    decisionScore: 100,
+    decisionReasons: [
+      `Assigned to ${order.id}`,
+      `${crew.crewType} crew dispatched`,
+      `${crew.currentAssignment}`,
+      `${crew.equipment} equipment profile`
+    ]
+  };
 }
 
 function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string {
@@ -212,9 +355,9 @@ function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string 
   return `Field context for ${selectedOrder.id}`;
 }
 
-function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriMarkerConfig[] {
-  const candidateCrewNames = new Set(getCandidateCrews(selectedOrder).map((crew) => crew.name));
-  const workOrderMarkers = workOrders.map((order) => ({
+function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCandidateCrews = true, workOrderPool: WorkOrder[] = initialWorkOrders, crewPool: CrewOption[] = initialCrews): EsriMarkerConfig[] {
+  const candidateCrewNames = new Set(getCandidateCrews(selectedOrder, crewPool).map((crew) => crew.name));
+  const workOrderMarkers: EsriMarkerConfig[] = workOrderPool.map((order) => ({
     id: order.id,
     label: `${order.id} - ${assignmentLabel(order.assignmentState)}`,
     longitude: order.longitude,
@@ -223,14 +366,21 @@ function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder): EsriM
     popupContent: `${order.type}<br/>${order.priority} priority<br/>${assignmentLabel(order.assignmentState)}<br/>${order.crew}`
   }));
 
-  const crewMarkers = crews.map((crew) => ({
+  const visibleCrews = showCandidateCrews
+    ? crewPool.filter((crew) => (
+      selectedOrder.assignmentState === "assigned"
+        ? crew.name === selectedOrder.crew || crew.currentAssignment.includes(selectedOrder.id)
+        : candidateCrewNames.has(crew.name)
+    ))
+    : [];
+  const crewMarkers: EsriMarkerConfig[] = visibleCrews.map((crew) => ({
     id: `crew-${crew.name}`,
     label: `${crew.name} - ${crew.crewType}`,
     longitude: crew.longitude,
     latitude: crew.latitude,
-    color: candidateCrewNames.has(crew.name) ? "#16a34a" : "#475569",
-    outlineColor: candidateCrewNames.has(crew.name) ? "#dcfce7" : "#ffffff",
-    size: candidateCrewNames.has(crew.name) ? 22 : 18,
+    color: candidateCrewNames.has(crew.name) ? "#16a34a" : "#2563eb",
+    outlineColor: candidateCrewNames.has(crew.name) ? "#dcfce7" : "#dbeafe",
+    size: candidateCrewNames.has(crew.name) ? 22 : 20,
     icon: crew.vehicleIcon,
     popupContent: `${crew.crewType}<br/>${crew.status}<br/>${crew.currentAssignment}<br/>ETA to selected order: ${crew.eta}`
   }));
@@ -260,7 +410,7 @@ function MetricTile({ label, value, detail, tone = "primary" }: { label: string;
   );
 }
 
-function WorkOrderTable({ selectedId, onSelect }: { selectedId: string; onSelect: (id: string) => void }) {
+function WorkOrderTable({ selectedId, onSelect, workOrders }: { selectedId: string; onSelect: (id: string) => void; workOrders: WorkOrder[] }) {
   return (
     <Table size="small" stickyHeader>
       <TableHead>
@@ -297,15 +447,26 @@ function WorkOrderTable({ selectedId, onSelect }: { selectedId: string; onSelect
   );
 }
 
-function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[] }) {
+function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[]; crews: CrewOption[]; workOrders: WorkOrder[] }) {
+  const statusCounts = workOrders.reduce<Record<string, number>>((counts, order) => ({
+    ...counts,
+    [order.status]: (counts[order.status] ?? 0) + 1
+  }), {});
+  const statusBreakdown = Object.entries(statusCounts);
+  const maxStatusCount = Math.max(1, ...statusBreakdown.map(([, count]) => count));
+  const emergencyOrCriticalCount = workOrders.filter((order) => order.priority === "Emergency" || order.priority === "Critical").length;
+  const availableCrewCount = crews.filter((crew) => crew.status === "Available").length;
+  const assignedCrewCount = crews.filter((crew) => crew.status === "Assigned").length;
+  const slaRiskCount = workOrders.filter((order) => order.sla.includes("<") || order.priority === "Emergency" || order.priority === "Critical").length;
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Executive Dashboard</Typography>
             <Typography color="text.secondary">NorthStar Utilities operating picture for gas and electric field response.</Typography>
-          </div>
+          </Box>
           <Stack direction="row" gap={1} flexWrap="wrap">
             <Chip icon={<WarningAmberIcon />} color="error" label="Emergency active" />
             <Chip icon={<CheckCircleIcon />} color="success" label="Qualified crews available" />
@@ -313,10 +474,10 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
         </Stack>
       </Grid>
 
-      <Grid item md={3} xs={12}><MetricTile label="Active Work Orders" value="128" detail="31% emergency or critical" tone="primary" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="SLA Risk" value="23" detail="Jobs inside 2-hour window" tone="error" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Crew Utilization" value="82%" detail="Central district constrained" tone="warning" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Modeled Savings" value="$1.8M" detail="Annualized dispatch value" tone="success" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Active Work Orders" value={`${workOrders.length}`} detail={`${emergencyOrCriticalCount} emergency or critical`} tone="primary" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="SLA Risk" value={`${slaRiskCount}`} detail="Priority jobs inside the response window" tone="error" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Crew Utilization" value={`${assignedCrewCount} assigned`} detail={`${availableCrewCount} available crews`} tone="warning" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Assigned Orders" value={`${statusCounts.Assigned ?? 0}`} detail="Tracked in demo workflow state" tone="success" /></Grid>
 
       <Grid item lg={8} xs={12}>
         <Paper variant="outlined" sx={{ overflow: "hidden" }}>
@@ -353,16 +514,31 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
           </Paper>
 
           <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography fontWeight={900}>Work Order Status</Typography>
+            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+              {statusBreakdown.map(([status, count]) => (
+                <Box key={status}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography fontWeight={800}>{status}</Typography>
+                    <Typography color="text.secondary" variant="body2">{count}</Typography>
+                  </Stack>
+                  <LinearProgress value={(count / maxStatusCount) * 100} variant="determinate" />
+                </Box>
+              ))}
+            </Stack>
+          </Paper>
+
+          <Paper variant="outlined" sx={{ p: 2 }}>
             <Typography fontWeight={900}>Crew Readiness</Typography>
             <Stack spacing={1.25} sx={{ mt: 1.5 }}>
               {crews.map((crew) => (
-                <div key={crew.name}>
+                <Box key={crew.name}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography fontWeight={800}>{crew.name}</Typography>
                     <Typography color="text.secondary" variant="body2">{crew.fit}%</Typography>
                   </Stack>
                   <LinearProgress color={crew.fit >= 90 ? "success" : "primary"} value={crew.fit} variant="determinate" />
-                </div>
+                </Box>
               ))}
             </Stack>
           </Paper>
@@ -372,15 +548,15 @@ function DashboardScreen({ selectedOrder, markers }: { selectedOrder: WorkOrder;
   );
 }
 
-function WorkOrdersScreen({ selectedOrder, onSelectOrder }: { selectedOrder: WorkOrder; onSelectOrder: (id: string) => void }) {
+function WorkOrdersScreen({ selectedOrder, onSelectOrder, workOrders }: { selectedOrder: WorkOrder; onSelectOrder: (id: string) => void; workOrders: WorkOrder[] }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Work Orders</Typography>
             <Typography color="text.secondary">Dispatch queue with priority, SLA, skills, equipment, customer impact, and assignment state.</Typography>
-          </div>
+          </Box>
           <Stack direction="row" gap={1}>
             <Button startIcon={<SearchIcon />} size="small" variant="outlined">Find</Button>
             <Button startIcon={<FilterListIcon />} size="small" variant="outlined">Filters</Button>
@@ -395,7 +571,7 @@ function WorkOrdersScreen({ selectedOrder, onSelectOrder }: { selectedOrder: Wor
             <Chip label={`${workOrders.length} records`} size="small" />
           </Stack>
           <Box sx={{ maxHeight: 394, overflow: "auto" }}>
-            <WorkOrderTable selectedId={selectedOrder.id} onSelect={onSelectOrder} />
+            <WorkOrderTable selectedId={selectedOrder.id} onSelect={onSelectOrder} workOrders={workOrders} />
           </Box>
         </Paper>
       </Grid>
@@ -403,10 +579,10 @@ function WorkOrdersScreen({ selectedOrder, onSelectOrder }: { selectedOrder: Wor
       <Grid item lg={4} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
           <Stack direction="row" justifyContent="space-between" gap={1}>
-            <div>
+            <Box>
               <Typography color="text.secondary" variant="body2">Selected work order</Typography>
               <Typography fontWeight={900} fontSize={22}>{selectedOrder.id}</Typography>
-            </div>
+            </Box>
             <Chip color={priorityColor(selectedOrder.priority)} label={selectedOrder.priority} />
           </Stack>
           <Divider sx={{ my: 1.5 }} />
@@ -433,7 +609,7 @@ function WorkOrdersScreen({ selectedOrder, onSelectOrder }: { selectedOrder: Wor
   );
 }
 
-function CrewTable({ selectedName, onSelect }: { selectedName: string; onSelect: (name: string) => void }) {
+function CrewTable({ selectedName, onSelect, crews }: { selectedName: string; onSelect: (name: string) => void; crews: CrewOption[] }) {
   return (
     <Table size="small" stickyHeader>
       <TableHead>
@@ -468,17 +644,17 @@ function CrewTable({ selectedName, onSelect }: { selectedName: string; onSelect:
   );
 }
 
-function WorkforceScreen({ selectedCrewName, onSelectCrew }: { selectedCrewName: string; onSelectCrew: (name: string) => void }) {
+function WorkforceScreen({ selectedCrewName, onSelectCrew, crews }: { selectedCrewName: string; onSelectCrew: (name: string) => void; crews: CrewOption[] }) {
   const selectedCrew = crews.find((crew) => crew.name === selectedCrewName) ?? crews[0];
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Workforce</Typography>
             <Typography color="text.secondary">Crew roster with vehicle type, certifications, assignment state, and dispatch readiness.</Typography>
-          </div>
+          </Box>
           <Stack direction="row" gap={1}>
             <Button startIcon={<SearchIcon />} size="small" variant="outlined">Find</Button>
             <Button startIcon={<FilterListIcon />} size="small" variant="outlined">Filters</Button>
@@ -493,7 +669,7 @@ function WorkforceScreen({ selectedCrewName, onSelectCrew }: { selectedCrewName:
             <Chip label={`${crews.length} crews`} size="small" />
           </Stack>
           <Box sx={{ maxHeight: 394, overflow: "auto" }}>
-            <CrewTable selectedName={selectedCrew.name} onSelect={onSelectCrew} />
+            <CrewTable selectedName={selectedCrew.name} onSelect={onSelectCrew} crews={crews} />
           </Box>
         </Paper>
       </Grid>
@@ -501,10 +677,10 @@ function WorkforceScreen({ selectedCrewName, onSelectCrew }: { selectedCrewName:
       <Grid item lg={4} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
           <Stack direction="row" justifyContent="space-between" gap={1}>
-            <div>
+            <Box>
               <Typography color="text.secondary" variant="body2">Selected crew</Typography>
               <Typography fontWeight={900} fontSize={22}>{selectedCrew.name}</Typography>
-            </div>
+            </Box>
             <Chip color={selectedCrew.status === "Available" ? "success" : "default"} label={selectedCrew.status} />
           </Stack>
           <Divider sx={{ my: 1.5 }} />
@@ -541,34 +717,48 @@ function DispatchScreen({
   evaluating,
   onEvaluate,
   onSelectOrder,
-  selectedOrder
+  onAssignCrew,
+  selectedOrder,
+  hasSelectedWorkOrder,
+  workOrders,
+  crews
 }: {
   activeTask: TaskKey;
   evaluated: boolean;
   evaluating: boolean;
   onEvaluate: () => void;
   onSelectOrder: (id: string) => void;
+  onAssignCrew: (crew: RankedCrewOption) => void;
   selectedOrder: WorkOrder;
+  hasSelectedWorkOrder: boolean;
+  workOrders: WorkOrder[];
+  crews: CrewOption[];
 }) {
-  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder);
-  const rankedCrews = getCandidateCrews(selectedOrder);
-  const recommendedCrew = rankedCrews[0] ?? crews[0];
+  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder, workOrders, crews);
+  const assignedCrew = crews.find((crew) => selectedOrder.assignmentState === "assigned" && crew.name === selectedOrder.crew);
+  const rankedCrews = hasSelectedWorkOrder
+    ? assignedCrew
+      ? [toAssignedCrewRow(assignedCrew, selectedOrder)]
+      : getRankedCandidateCrews(selectedOrder, crews)
+    : [];
+  const recommendedCrew = rankedCrews[0];
+  const isSelectedOrderAssigned = selectedOrder.assignmentState === "assigned";
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Dispatch</Typography>
             <Typography color="text.secondary">Crew allocation, route readiness, and schedule impact for {selectedOrder.id}.</Typography>
-          </div>
-          <Button disabled={evaluating} onClick={onEvaluate} variant="contained">
-            {evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
+          </Box>
+          <Button disabled={evaluating || !hasSelectedWorkOrder || isSelectedOrderAssigned} onClick={onEvaluate} variant="contained">
+            {isSelectedOrderAssigned ? "Crew Assigned" : evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
           </Button>
         </Stack>
       </Grid>
-      <Grid item lg={7} xs={12}>
-        <Paper variant="outlined" sx={{ overflow: "hidden" }}>
+      <Grid item lg={5} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden", maxWidth: { lg: 680 } }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
               <MapIcon color="primary" />
@@ -578,7 +768,7 @@ function DispatchScreen({
           </Stack>
           <EsriMapViewer
             center={[selectedOrder.longitude, selectedOrder.latitude]}
-            height={330}
+            height={360}
             layers={mapLayers}
             markers={dispatchMarkers}
             onMarkerClick={(marker) => {
@@ -590,28 +780,42 @@ function DispatchScreen({
             zoom={13}
           />
           <Stack direction="row" gap={1} flexWrap="wrap" sx={{ px: 2, py: 1, bgcolor: "white", borderTop: "1px solid", borderColor: "divider" }}>
+            <Chip label="Red triangle: emergency" size="small" />
             <Chip label="Green square: assigned" size="small" />
             <Chip label="Blue diamond: evaluated" size="small" />
-            <Chip label="Red triangle: not evaluated" size="small" />
-            <Chip label="Vehicle icons: crews" size="small" />
+            <Chip label="Truck icons: available qualified crews" size="small" />
+            <Chip label="Blue truck: assigned crew" size="small" />
           </Stack>
         </Paper>
       </Grid>
-      <Grid item lg={5} xs={12}>
+      <Grid item lg={7} xs={12}>
         <Paper variant="outlined" sx={{ overflow: "hidden", height: "100%" }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
             <PeopleIcon color="primary" />
-            <Typography fontWeight={900}>Possible Crews</Typography>
+            <Typography fontWeight={900}>{isSelectedOrderAssigned ? "Assigned Crew" : "Possible Crews"}</Typography>
             </Stack>
-            <Chip color={evaluated ? "success" : "default"} label={evaluated ? "Ranked" : "Not evaluated"} size="small" />
+            <Chip color={isSelectedOrderAssigned ? "success" : evaluated ? "success" : "default"} label={isSelectedOrderAssigned ? "Assigned" : evaluated ? "Ranked" : "Not evaluated"} size="small" />
           </Stack>
           {evaluating && <LinearProgress />}
-          <Table size="small">
+          {hasSelectedWorkOrder && (
+            <Typography color="text.secondary" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }} variant="body2">
+              {isSelectedOrderAssigned ? "This work order is assigned, so only the assigned crew is shown here." : "Effective cost estimates the total job cost after hourly rate, travel time, overtime risk, productivity, and equipment readiness. Ranking uses decision score, not skill fit alone."}
+            </Typography>
+          )}
+          {!hasSelectedWorkOrder ? (
+            <Stack alignItems="center" justifyContent="center" sx={{ minHeight: 260, p: 3, textAlign: "center" }}>
+              <Typography fontWeight={900}>Select a work order first</Typography>
+              <Typography color="text.secondary" sx={{ mt: 1 }} variant="body2">Click a work order marker on the map or choose one from the Work Orders queue before possible crews are shown.</Typography>
+            </Stack>
+          ) : (
+          <TableContainer sx={{ maxHeight: 440, overflowX: "auto" }}>
+          <Table size="small" stickyHeader sx={{ minWidth: 760 }}>
             <TableHead>
               <TableRow>
                 <TableCell>Crew</TableCell>
-                <TableCell>Fit</TableCell>
+                <TableCell>Score</TableCell>
+                <TableCell>Skill Fit</TableCell>
                 <TableCell>ETA</TableCell>
                 <TableCell>Rate</TableCell>
                 <TableCell>Effective</TableCell>
@@ -620,27 +824,30 @@ function DispatchScreen({
               </TableRow>
             </TableHead>
             <TableBody>
-              {rankedCrews.map((crew) => (
-                <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew.name}>
-                  <TableCell sx={{ fontWeight: 900 }}>{crew.name}</TableCell>
-                  <TableCell>{evaluated ? `${crew.fit}%` : "-"}</TableCell>
+              {rankedCrews.map((crew, index) => (
+                <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew?.name}>
+                  <TableCell sx={{ fontWeight: 900 }}>{evaluated && !isSelectedOrderAssigned ? `${index + 1}. ` : ""}{crew.name}</TableCell>
+                  <TableCell>{evaluated || isSelectedOrderAssigned ? crew.decisionScore : "-"}</TableCell>
+                  <TableCell>{evaluated || isSelectedOrderAssigned ? `${crew.fit}%` : "-"}</TableCell>
                   <TableCell>{crew.eta}</TableCell>
                   <TableCell>{crew.hourly}</TableCell>
-                  <TableCell>{evaluated ? crew.effectiveCost : "-"}</TableCell>
+                  <TableCell>{evaluated || isSelectedOrderAssigned ? crew.effectiveCost : "-"}</TableCell>
                   <TableCell>{crew.equipment}</TableCell>
                   <TableCell>{crew.overtime}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          </TableContainer>
+          )}
         </Paper>
       </Grid>
       <Grid item lg={7} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{evaluated ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
-          {evaluated ? (
+          <Typography fontWeight={900}>{isSelectedOrderAssigned && recommendedCrew ? `${recommendedCrew.name} is assigned` : evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
+          {evaluated || isSelectedOrderAssigned ? (
             <Grid container spacing={1.25} sx={{ mt: 1 }}>
-              {crews[0].strengths.map((strength) => (
+              {(recommendedCrew?.decisionReasons ?? []).map((strength) => (
                 <Grid item md={6} xs={12} key={strength}>
                   <Stack direction="row" alignItems="center" gap={1}>
                     <CheckCircleIcon color="success" fontSize="small" />
@@ -651,14 +858,14 @@ function DispatchScreen({
             </Grid>
           ) : (
             <Typography color="text.secondary" sx={{ mt: 1 }}>
-              Click a work order on the map to change this list, then evaluate crews to score certifications, equipment readiness, travel, SLA fit, productivity, overtime risk, and effective cost.
+              Click a work order on the map to change this list, then evaluate crews to score skill fit, effective cost, travel ETA, availability, and equipment readiness. Effective cost is the modeled total job cost after labor rate, travel, overtime risk, productivity, and equipment readiness are considered.
             </Typography>
           )}
         </Paper>
       </Grid>
       <Grid item lg={5} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{recommendedCrew.name} Schedule Window</Typography>
+          <Typography fontWeight={900}>{recommendedCrew ? `${recommendedCrew.name} Schedule Window` : "Schedule Window"}</Typography>
           <Stack spacing={1.2} sx={{ mt: 2 }}>
             {["07:30 Travel", "07:48 Arrive on site", "08:05 Safety assessment", "08:30 Leak isolation", "09:15 Repair support"].map((item, index) => (
               <Stack key={item} direction="row" alignItems="center" gap={1}>
@@ -667,8 +874,8 @@ function DispatchScreen({
               </Stack>
             ))}
           </Stack>
-          <Button startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
-            Assign {recommendedCrew.name}
+          <Button disabled={isSelectedOrderAssigned || !evaluated || !recommendedCrew} onClick={() => recommendedCrew && onAssignCrew(recommendedCrew)} startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
+            {isSelectedOrderAssigned ? `Assigned to ${selectedOrder.crew}` : `Assign ${recommendedCrew?.name ?? "Recommended Crew"}`}
           </Button>
         </Paper>
       </Grid>
@@ -704,16 +911,24 @@ function ReportsScreen() {
 }
 
 export function OperationsConsolePage() {
+  const persistedWorkflowState = useMemo(() => loadPersistedWorkflowState(), []);
   const [activeHub, setActiveHub] = useState<HubKey>("dashboard");
   const [activeTask, setActiveTask] = useState<TaskKey>("emergency");
   const [evaluated, setEvaluated] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
+  const [workOrders, setWorkOrders] = useState<WorkOrder[]>(persistedWorkflowState.workOrders);
+  const [crews, setCrews] = useState<CrewOption[]>(persistedWorkflowState.crews);
   const [selectedOrderId, setSelectedOrderId] = useState(defaultWorkOrderId);
   const [selectedCrewName, setSelectedCrewName] = useState(defaultCrewName);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(menuAnchor);
   const selectedOrder = workOrders.find((order) => order.id === selectedOrderId) ?? workOrders[0];
-  const markers = useMemo(() => getTaskMapMarkers(activeTask, selectedOrder), [activeTask, selectedOrder]);
+  const [hasSelectedWorkOrder, setHasSelectedWorkOrder] = useState(false);
+  const markers = useMemo(() => getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder, workOrders, crews), [activeTask, crews, hasSelectedWorkOrder, selectedOrder, workOrders]);
+
+  useEffect(() => {
+    window.localStorage.setItem(workflowStorageKey, JSON.stringify({ workOrders, crews }));
+  }, [crews, workOrders]);
 
   function openMenu(event: MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
@@ -723,12 +938,32 @@ export function OperationsConsolePage() {
     setMenuAnchor(null);
   }
 
+  function resetWorkflow() {
+    setWorkOrders(initialWorkOrders);
+    setCrews(initialCrews);
+    setSelectedOrderId(defaultWorkOrderId);
+    setSelectedCrewName(defaultCrewName);
+    setHasSelectedWorkOrder(false);
+    setEvaluated(false);
+    setActiveHub("dashboard");
+    setActiveTask("emergency");
+    closeMenu();
+  }
+
   function selectTask(task: typeof currentTasks[number]) {
     setActiveTask(task.key);
     setActiveHub(task.hub);
     if (task.key === "emergency") {
       setSelectedOrderId(defaultWorkOrderId);
+      setHasSelectedWorkOrder(false);
+      setEvaluated(false);
     }
+  }
+
+  function selectWorkOrder(orderId: string) {
+    setSelectedOrderId(orderId);
+    setHasSelectedWorkOrder(true);
+    setEvaluated(false);
   }
 
   function evaluateCrews() {
@@ -740,13 +975,38 @@ export function OperationsConsolePage() {
     }, 650);
   }
 
+  function assignRecommendedCrew(crew: RankedCrewOption) {
+    setWorkOrders((currentWorkOrders) => currentWorkOrders.map((order) => (
+      order.id === selectedOrder.id
+        ? {
+          ...order,
+          assignmentState: "assigned",
+          status: "Assigned",
+          crew: crew.name
+        }
+        : order
+    )));
+    setCrews((currentCrews) => currentCrews.map((candidate) => (
+      candidate.name === crew.name
+        ? {
+          ...candidate,
+          status: "Assigned",
+          currentAssignment: `Assigned to ${selectedOrder.id}`
+        }
+        : candidate
+    )));
+    setSelectedCrewName(crew.name);
+    setActiveTask("assignment");
+    setEvaluated(false);
+  }
+
   function renderActiveHub(): ReactElement {
     if (activeHub === "workOrders") {
-      return <WorkOrdersScreen selectedOrder={selectedOrder} onSelectOrder={setSelectedOrderId} />;
+      return <WorkOrdersScreen selectedOrder={selectedOrder} onSelectOrder={selectWorkOrder} workOrders={workOrders} />;
     }
 
     if (activeHub === "workforce") {
-      return <WorkforceScreen selectedCrewName={selectedCrewName} onSelectCrew={setSelectedCrewName} />;
+      return <WorkforceScreen selectedCrewName={selectedCrewName} onSelectCrew={setSelectedCrewName} crews={crews} />;
     }
 
     if (activeHub === "dispatch") {
@@ -756,8 +1016,12 @@ export function OperationsConsolePage() {
           evaluated={evaluated}
           evaluating={evaluating}
           onEvaluate={evaluateCrews}
-          onSelectOrder={setSelectedOrderId}
+          onSelectOrder={selectWorkOrder}
+          onAssignCrew={assignRecommendedCrew}
           selectedOrder={selectedOrder}
+          hasSelectedWorkOrder={hasSelectedWorkOrder}
+          workOrders={workOrders}
+          crews={crews}
         />
       );
     }
@@ -766,7 +1030,7 @@ export function OperationsConsolePage() {
       return <ReportsScreen />;
     }
 
-    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} />;
+    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} workOrders={workOrders} />;
   }
 
   return (
@@ -805,7 +1069,7 @@ export function OperationsConsolePage() {
               <MenuItem component={RouterLink} onClick={closeMenu} to="/ai-crew-recommendation">Return to Presentation</MenuItem>
               <MenuItem component={RouterLink} onClick={closeMenu} to="/explainability"><PsychologyIcon fontSize="small" sx={{ mr: 1 }} /> Explainability</MenuItem>
               <MenuItem component={RouterLink} onClick={closeMenu} to="/roi"><AssessmentIcon fontSize="small" sx={{ mr: 1 }} /> ROI</MenuItem>
-              <MenuItem component={RouterLink} onClick={closeMenu} to="/operations-console"><ReplayIcon fontSize="small" sx={{ mr: 1 }} /> Restart Demo</MenuItem>
+              <MenuItem onClick={resetWorkflow}><ReplayIcon fontSize="small" sx={{ mr: 1 }} /> Restart Demo</MenuItem>
             </Menu>
           </Stack>
 
