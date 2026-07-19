@@ -501,6 +501,8 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
     ...counts,
     [order.status]: (counts[order.status] ?? 0) + 1
   }), {});
+  const statusBreakdown = Object.entries(statusCounts);
+  const maxStatusCount = Math.max(1, ...statusBreakdown.map(([, count]) => count));
   const emergencyOrCriticalCount = workOrders.filter((order) => order.priority === "Emergency" || order.priority === "Critical").length;
   const availableCrewCount = crews.filter((crew) => crew.status === "Available").length;
   const assignedCrewCount = crews.filter((crew) => crew.status === "Assigned").length;
@@ -585,41 +587,28 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
           </Paper>
 
           <Paper variant="outlined" sx={{ p: 2 }}>
-            <Stack direction="row" justifyContent="space-between" gap={1} alignItems="center">
-              <Typography fontWeight={900}>Work Order Health</Typography>
-              <Chip color={healthColor(activeHealthFilter)} label={`${filteredWorkOrders.length} shown`} size="small" />
-            </Stack>
-            <Stack direction="row" gap={0.75} flexWrap="wrap" sx={{ mt: 1.5 }}>
-              {healthSummary.map((item) => (
-                <Button
-                  color={healthColor(item.health)}
-                  key={item.health}
-                  onClick={() => setActiveHealthFilter(item.health)}
-                  size="small"
-                  variant={activeHealthFilter === item.health ? "contained" : "outlined"}
-                >
-                  {workOrderHealthLabels[item.health]} ({item.count})
-                </Button>
+            <Typography fontWeight={900}>Work Order Status</Typography>
+            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+              {statusBreakdown.map(([status, count]) => (
+                <div key={status}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography fontWeight={800}>{status}</Typography>
+                    <Typography color="text.secondary" variant="body2">{count}</Typography>
+                  </Stack>
+                  <LinearProgress value={(count / maxStatusCount) * 100} variant="determinate" />
+                </div>
               ))}
             </Stack>
-            <Stack spacing={1} sx={{ mt: 1.5, maxHeight: 245, overflow: "auto" }}>
-              {filteredWorkOrders.slice(0, 8).map((order) => (
-                <Button
-                  key={order.id}
-                  onClick={() => onSelectOrder(order.id)}
-                  sx={{ alignItems: "stretch", color: "text.primary", justifyContent: "flex-start", p: 1, textAlign: "left" }}
-                  variant={order.id === selectedOrder.id ? "outlined" : "text"}
-                >
-                  <Stack spacing={0.75} sx={{ width: "100%" }}>
-                    <Stack direction="row" justifyContent="space-between" gap={1}>
-                      <Typography fontWeight={900}>{order.id}</Typography>
-                      <Chip color={priorityColor(order.priority)} label={order.priority} size="small" />
-                    </Stack>
-                    <Typography color="text.secondary" variant="body2">{order.type}</Typography>
-                    <Stack direction="row" gap={0.75} flexWrap="wrap">
-                      <Chip label={order.sla} size="small" />
-                      <Chip label={assignmentLabel(order.assignmentState)} size="small" />
-                    </Stack>
+          </Paper>
+
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography fontWeight={900}>Crew Readiness</Typography>
+            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+              {crews.map((crew) => (
+                <div key={crew.name}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography fontWeight={800}>{crew.name}</Typography>
+                    <Typography color="text.secondary" variant="body2">{crew.fit}%</Typography>
                   </Stack>
                 </Button>
               ))}
