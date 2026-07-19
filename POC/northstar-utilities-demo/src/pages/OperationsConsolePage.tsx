@@ -512,10 +512,10 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Executive Dashboard</Typography>
             <Typography color="text.secondary">NorthStar Utilities operating picture for gas and electric field response.</Typography>
-          </div>
+          </Box>
           <Stack direction="row" gap={1} flexWrap="wrap">
             <Chip icon={<WarningAmberIcon />} color="error" label="Emergency active" />
             <Chip icon={<CheckCircleIcon />} color="success" label="Qualified crews available" />
@@ -590,13 +590,13 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
             <Typography fontWeight={900}>Work Order Status</Typography>
             <Stack spacing={1.25} sx={{ mt: 1.5 }}>
               {statusBreakdown.map(([status, count]) => (
-                <div key={status}>
+                <Box key={status}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography fontWeight={800}>{status}</Typography>
                     <Typography color="text.secondary" variant="body2">{count}</Typography>
                   </Stack>
                   <LinearProgress value={(count / maxStatusCount) * 100} variant="determinate" />
-                </div>
+                </Box>
               ))}
             </Stack>
           </Paper>
@@ -605,12 +605,13 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
             <Typography fontWeight={900}>Crew Readiness</Typography>
             <Stack spacing={1.25} sx={{ mt: 1.5 }}>
               {crews.map((crew) => (
-                <div key={crew.name}>
+                <Box key={crew.name}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography fontWeight={800}>{crew.name}</Typography>
                     <Typography color="text.secondary" variant="body2">{crew.fit}%</Typography>
                   </Stack>
-                </Button>
+                  <LinearProgress color={crew.fit >= 90 ? "success" : "primary"} value={crew.fit} variant="determinate" />
+                </Box>
               ))}
             </Stack>
           </Paper>
@@ -625,10 +626,10 @@ function WorkOrdersScreen({ selectedOrder, onSelectOrder, workOrders }: { select
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Work Orders</Typography>
             <Typography color="text.secondary">Dispatch queue with priority, SLA, skills, equipment, customer impact, and assignment state.</Typography>
-          </div>
+          </Box>
           <Stack direction="row" gap={1}>
             <Button startIcon={<SearchIcon />} size="small" variant="outlined">Find</Button>
             <Button startIcon={<FilterListIcon />} size="small" variant="outlined">Filters</Button>
@@ -651,10 +652,10 @@ function WorkOrdersScreen({ selectedOrder, onSelectOrder, workOrders }: { select
       <Grid item lg={4} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
           <Stack direction="row" justifyContent="space-between" gap={1}>
-            <div>
+            <Box>
               <Typography color="text.secondary" variant="body2">Selected work order</Typography>
               <Typography fontWeight={900} fontSize={22}>{selectedOrder.id}</Typography>
-            </div>
+            </Box>
             <Chip color={priorityColor(selectedOrder.priority)} label={selectedOrder.priority} />
           </Stack>
           <Divider sx={{ my: 1.5 }} />
@@ -723,10 +724,10 @@ function WorkforceScreen({ selectedCrewName, onSelectCrew, crews }: { selectedCr
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Workforce</Typography>
             <Typography color="text.secondary">Crew roster with vehicle type, certifications, assignment state, and dispatch readiness.</Typography>
-          </div>
+          </Box>
           <Stack direction="row" gap={1}>
             <Button startIcon={<SearchIcon />} size="small" variant="outlined">Find</Button>
             <Button startIcon={<FilterListIcon />} size="small" variant="outlined">Filters</Button>
@@ -749,10 +750,10 @@ function WorkforceScreen({ selectedCrewName, onSelectCrew, crews }: { selectedCr
       <Grid item lg={4} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
           <Stack direction="row" justifyContent="space-between" gap={1}>
-            <div>
+            <Box>
               <Typography color="text.secondary" variant="body2">Selected crew</Typography>
               <Typography fontWeight={900} fontSize={22}>{selectedCrew.name}</Typography>
-            </div>
+            </Box>
             <Chip color={selectedCrew.status === "Available" ? "success" : "default"} label={selectedCrew.status} />
           </Stack>
           <Divider sx={{ my: 1.5 }} />
@@ -820,10 +821,10 @@ function DispatchScreen({
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
-          <div>
+          <Box>
             <Typography variant="h2">Dispatch</Typography>
             <Typography color="text.secondary">Crew allocation, route readiness, and schedule impact for {selectedOrder.id}.</Typography>
-          </div>
+          </Box>
           <Button disabled={evaluating || !hasSelectedWorkOrder || isSelectedOrderAssigned} onClick={onEvaluate} variant="contained">
             {isSelectedOrderAssigned ? "Crew Assigned" : evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
           </Button>
