@@ -496,7 +496,16 @@ function WorkOrderTable({ selectedId, onSelect, workOrders }: { selectedId: stri
   );
 }
 
-function DashboardScreen({ selectedOrder, markers, crews }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[]; crews: CrewOption[] }) {
+function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[]; crews: CrewOption[]; workOrders: WorkOrder[] }) {
+  const statusCounts = workOrders.reduce<Record<string, number>>((counts, order) => ({
+    ...counts,
+    [order.status]: (counts[order.status] ?? 0) + 1
+  }), {});
+  const emergencyOrCriticalCount = workOrders.filter((order) => order.priority === "Emergency" || order.priority === "Critical").length;
+  const availableCrewCount = crews.filter((crew) => crew.status === "Available").length;
+  const assignedCrewCount = crews.filter((crew) => crew.status === "Assigned").length;
+  const slaRiskCount = workOrders.filter((order) => order.sla.includes("<") || order.priority === "Emergency" || order.priority === "Critical").length;
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -512,10 +521,10 @@ function DashboardScreen({ selectedOrder, markers, crews }: { selectedOrder: Wor
         </Stack>
       </Grid>
 
-      <Grid item md={3} xs={12}><MetricTile label="Active Work Orders" value="128" detail="31% emergency or critical" tone="primary" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="SLA Risk" value="23" detail="Jobs inside 2-hour window" tone="error" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Crew Utilization" value="82%" detail="Central district constrained" tone="warning" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Modeled Savings" value="$1.8M" detail="Annualized dispatch value" tone="success" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Active Work Orders" value={`${workOrders.length}`} detail={`${emergencyOrCriticalCount} emergency or critical`} tone="primary" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="SLA Risk" value={`${slaRiskCount}`} detail="Priority jobs inside the response window" tone="error" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Crew Utilization" value={`${assignedCrewCount} assigned`} detail={`${availableCrewCount} available crews`} tone="warning" /></Grid>
+      <Grid item md={3} xs={12}><MetricTile label="Assigned Orders" value={`${statusCounts.Assigned ?? 0}`} detail="Tracked in demo workflow state" tone="success" /></Grid>
 
       <Grid item lg={8} xs={12}>
         <Paper variant="outlined" sx={{ overflow: "hidden", height: "100%" }}>
@@ -1105,7 +1114,7 @@ export function OperationsConsolePage() {
       return <ReportsScreen />;
     }
 
-    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} />;
+    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} workOrders={workOrders} />;
   }
 
   return (

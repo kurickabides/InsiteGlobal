@@ -229,23 +229,6 @@ export function EsriMapViewer({
           }
         });
 
-        view.on("pointer-move", async (event: Parameters<typeof view.hitTest>[0]) => {
-          const marker = await findMarkerFromHitTest(event);
-          if (view.container) {
-            view.container.style.cursor = marker ? "pointer" : "default";
-          }
-
-          if (marker) {
-            view.openPopup({
-              title: marker.label,
-              content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`,
-              location: new Point({ longitude: marker.longitude, latitude: marker.latitude })
-            });
-          } else if (view.popup?.visible) {
-            view.closePopup();
-          }
-        });
-
         mapRef.current = map;
         markerLayerRef.current = markerLayer;
         viewRef.current = view;
