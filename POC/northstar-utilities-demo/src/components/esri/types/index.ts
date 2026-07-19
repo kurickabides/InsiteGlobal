@@ -42,6 +42,7 @@ export interface EsriMarkerConfig {
   longitude: number;
   latitude: number;
   color: string;
+  angle?: number;
   outlineColor?: string;
   size?: number;
   shape?: "circle" | "square" | "diamond" | "triangle" | "x" | "cross";

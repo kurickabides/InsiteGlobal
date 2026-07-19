@@ -16,6 +16,8 @@ import type GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import type MapView from "@arcgis/core/views/MapView";
 import { EsriLayerConfig, EsriMapViewerProps, EsriMarkerConfig } from "./types";
 
+const carSymbolPath = "M18.92 11c-.13-.38-.49-.64-.92-.64H6c-.43 0-.79.26-.92.64L3 17v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-6zM6.5 20c-.83 0-1.5-.67-1.5-1.5S5.67 17 6.5 17s1.5.67 1.5 1.5S7.33 20 6.5 20zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 15l1.5-4.5h11L19 15H5z";
+
 async function createLayer(layer: EsriLayerConfig) {
   if (layer.type === "geojson") {
     const { default: GeoJSONLayer } = await import("@arcgis/core/layers/GeoJSONLayer");
@@ -63,6 +65,7 @@ function createMarkerSymbol(marker: EsriMarkerConfig) {
     : {
       type: "simple-marker" as const,
       color: marker.color,
+      angle: marker.angle,
       size: marker.size ?? 12,
       style: marker.shape ?? "circle",
       outline: {
@@ -73,15 +76,14 @@ function createMarkerSymbol(marker: EsriMarkerConfig) {
 }
 
 async function refreshMarkerLayer(markerLayer: GraphicsLayer, markers: EsriMarkerConfig[]) {
-  const [{ default: Graphic }, { default: Point }, { default: WebStyleSymbol }] = await Promise.all([
+  const [{ default: Graphic }, { default: Point }] = await Promise.all([
     import("@arcgis/core/Graphic"),
-    import("@arcgis/core/geometry/Point"),
-    import("@arcgis/core/symbols/WebStyleSymbol")
+    import("@arcgis/core/geometry/Point")
   ]);
 
   markerLayer.removeAll();
   markers.forEach((marker) => {
-    function addMarkerGraphic(symbol: ReturnType<typeof createMarkerSymbol> | InstanceType<typeof WebStyleSymbol>) {
+    function addMarkerGraphic(symbol: ReturnType<typeof createMarkerSymbol>) {
       markerLayer.add(new Graphic({
         geometry: new Point({ longitude: marker.longitude, latitude: marker.latitude }),
         symbol,
@@ -101,19 +103,13 @@ async function refreshMarkerLayer(markerLayer: GraphicsLayer, markers: EsriMarke
       addMarkerGraphic({
         type: "simple-marker" as const,
         color: marker.color,
-        size: marker.size ?? 22,
-        style: "circle" as const,
+        path: carSymbolPath,
+        size: marker.size ?? 24,
         outline: {
           color: marker.outlineColor ?? "#ffffff",
-          width: 3
+          width: 1
         }
-      });
-      const carSymbol = new WebStyleSymbol({
-        name: "car",
-        styleName: "Esri2DPointSymbolsStyle"
-      });
-      (carSymbol as unknown as { color?: string }).color = marker.color;
-      addMarkerGraphic(carSymbol);
+      } as unknown as ReturnType<typeof createMarkerSymbol>);
       return;
     }
 
@@ -213,12 +209,18 @@ export function EsriMapViewer({
           id: `${id}-legend`,
           title: "Dispatch Map Legend",
           source: [
-            ["Emergency Work Order", 1],
-            ["Assigned Gas Work Order", 2],
-            ["Assigned Power Work Order", 3],
-            ["Evaluated Work Order", 4],
-            ["Gas Crew", 5],
-            ["Power Crew", 6]
+            ["Regular Gas Work Order", 1],
+            ["Regular Power Work Order", 2],
+            ["Critical Gas Work Order", 3],
+            ["Critical Power Work Order", 4],
+            ["Emergency Gas Work Order", 5],
+            ["Emergency Power Work Order", 6],
+            ["Assigned Gas Work Order", 7],
+            ["Assigned Power Work Order", 8],
+            ["Emergency Assigned Gas Work Order", 9],
+            ["Emergency Assigned Power Work Order", 10],
+            ["Gas Crew", 11],
+            ["Power Crew", 12]
           ].map(([category, objectId]) => new Graphic({
             geometry: new Point({ longitude: -179.99, latitude: -84.99 }),
             attributes: { ObjectID: objectId, category }
@@ -236,8 +238,54 @@ export function EsriMapViewer({
             field: "category",
             uniqueValueInfos: [
               {
-                value: "Emergency Work Order",
-                label: "Emergency work order",
+                value: "Regular Gas Work Order",
+                label: "Regular gas work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#16a34a",
+                  size: 10,
+                  style: "triangle",
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Regular Power Work Order",
+                label: "Regular power work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#16a34a",
+                  size: 10,
+                  style: "triangle",
+                  angle: 180,
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Critical Gas Work Order",
+                label: "Critical gas work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#f97316",
+                  size: 10,
+                  style: "triangle",
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Critical Power Work Order",
+                label: "Critical power work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#f97316",
+                  size: 10,
+                  style: "triangle",
+                  angle: 180,
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Emergency Gas Work Order",
+                label: "Emergency gas work order",
                 symbol: {
                   type: "simple-marker",
                   color: "#dc2626",
@@ -247,12 +295,24 @@ export function EsriMapViewer({
                 }
               },
               {
+                value: "Emergency Power Work Order",
+                label: "Emergency power work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#dc2626",
+                  size: 10,
+                  style: "triangle",
+                  angle: 180,
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
                 value: "Assigned Gas Work Order",
                 label: "Assigned gas work order",
                 symbol: {
                   type: "simple-marker",
-                  color: "#16a34a",
-                  size: 10,
+                  color: "#facc15",
+                  size: 11,
                   style: "square",
                   outline: { color: "#ffffff", width: 2 }
                 }
@@ -263,20 +323,31 @@ export function EsriMapViewer({
                 symbol: {
                   type: "simple-marker",
                   color: "#2563eb",
-                  size: 10,
+                  size: 11,
                   style: "square",
                   outline: { color: "#ffffff", width: 2 }
                 }
               },
               {
-                value: "Evaluated Work Order",
-                label: "Evaluated work order",
+                value: "Emergency Assigned Gas Work Order",
+                label: "Emergency assigned gas work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#facc15",
+                  size: 12,
+                  style: "square",
+                  outline: { color: "#dc2626", width: 3 }
+                }
+              },
+              {
+                value: "Emergency Assigned Power Work Order",
+                label: "Emergency assigned power work order",
                 symbol: {
                   type: "simple-marker",
                   color: "#2563eb",
-                  size: 10,
-                  style: "diamond",
-                  outline: { color: "#ffffff", width: 2 }
+                  size: 12,
+                  style: "square",
+                  outline: { color: "#dc2626", width: 3 }
                 }
               },
               {
@@ -285,9 +356,9 @@ export function EsriMapViewer({
                 symbol: {
                   type: "simple-marker",
                   color: "#facc15",
-                  size: 12,
-                  style: "circle",
-                  outline: { color: "#713f12", width: 2 }
+                  path: carSymbolPath,
+                  size: 18,
+                  outline: { color: "#713f12", width: 1 }
                 }
               },
               {
@@ -296,9 +367,9 @@ export function EsriMapViewer({
                 symbol: {
                   type: "simple-marker",
                   color: "#2563eb",
-                  size: 12,
-                  style: "circle",
-                  outline: { color: "#dbeafe", width: 2 }
+                  path: carSymbolPath,
+                  size: 18,
+                  outline: { color: "#dbeafe", width: 1 }
                 }
               }
             ]

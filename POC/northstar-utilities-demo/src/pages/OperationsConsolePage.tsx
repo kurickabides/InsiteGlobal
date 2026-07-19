@@ -267,36 +267,41 @@ function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
   return "Utility truck";
 }
 
-function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
+function workOrderPriorityColor(priority: WorkOrder["priority"]): string {
+  if (priority === "Emergency") {
+    return "#dc2626";
+  }
+
+  if (priority === "Critical") {
+    return "#f97316";
+  }
+
+  return "#16a34a";
+}
+
+function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<EsriMarkerConfig, "angle" | "color" | "outlineColor" | "shape" | "size"> {
   if (order.assignmentState === "assigned") {
     return {
-      color: order.domain === "Electric" ? "#2563eb" : "#16a34a",
-      outlineColor: "#ffffff",
+      color: order.domain === "Gas" ? "#facc15" : "#2563eb",
+      outlineColor: order.priority === "Emergency" ? "#dc2626" : "#ffffff",
       shape: "square",
-      size: 12
+      size: order.priority === "Emergency" ? 15 : 13
     };
   }
 
   if (order.priority === "Emergency") {
     return {
-      color: "#dc2626",
+      angle: order.domain === "Electric" ? 180 : 0,
+      color: workOrderPriorityColor(order.priority),
       outlineColor: "#ffffff",
       shape: "triangle",
       size: 14
     };
   }
 
-  if (order.assignmentState === "evaluated") {
-    return {
-      color: "#2563eb",
-      outlineColor: "#ffffff",
-      shape: "diamond",
-      size: 13
-    };
-  }
-
   return {
-    color: "#dc2626",
+    angle: order.domain === "Electric" ? 180 : 0,
+    color: workOrderPriorityColor(order.priority),
     outlineColor: "#ffffff",
     shape: "triangle",
     size: 13
