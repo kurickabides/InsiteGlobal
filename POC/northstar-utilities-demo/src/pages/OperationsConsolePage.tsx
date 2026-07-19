@@ -31,6 +31,8 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import BoltIcon from "@mui/icons-material/Bolt";
 import BuildIcon from "@mui/icons-material/Build";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -959,6 +961,7 @@ export function OperationsConsolePage() {
   const [selectedOrderId, setSelectedOrderId] = useState(defaultWorkOrderId);
   const [selectedCrewName, setSelectedCrewName] = useState(defaultCrewName);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [isTaskPanelOpen, setIsTaskPanelOpen] = useState(true);
   const isMenuOpen = Boolean(menuAnchor);
   const selectedOrder = workOrders.find((order) => order.id === selectedOrderId) ?? workOrders[0];
   const [hasSelectedWorkOrder, setHasSelectedWorkOrder] = useState(false);
@@ -1087,27 +1090,48 @@ export function OperationsConsolePage() {
               {renderActiveHub()}
             </Box>
 
-            <Paper square variant="outlined" sx={{ width: 330, display: { xs: "none", lg: "block" }, borderTop: 0, borderRight: 0, borderBottom: 0, p: 2, bgcolor: "white" }}>
-              <Typography variant="h2">Current Task</Typography>
-              <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">Work the live demo from an operational task list.</Typography>
-              <Stack divider={<Divider flexItem />} sx={{ mt: 1.5 }}>
-                {currentTasks.map((task) => (
-                  <Button
-                    key={task.key}
-                    onClick={() => selectTask(task)}
-                    sx={{ alignItems: "flex-start", color: "text.primary", justifyContent: "flex-start", px: 0.5, py: 1.25, textAlign: "left" }}
-                  >
-                    <Stack spacing={0.75} sx={{ width: "100%" }}>
-                      <Stack alignItems="center" direction="row" justifyContent="space-between" gap={1}>
-                        <Typography fontWeight={900}>{task.label}</Typography>
-                        <Chip color={task.key === activeTask ? "primary" : "default"} label={task.status} size="small" />
+            {isTaskPanelOpen ? (
+              <Paper square variant="outlined" sx={{ width: 330, display: { xs: "none", lg: "block" }, borderTop: 0, borderRight: 0, borderBottom: 0, p: 2, bgcolor: "white" }}>
+                <Stack direction="row" alignItems="flex-start" justifyContent="space-between" gap={1}>
+                  <div>
+                    <Typography variant="h2">Current Task</Typography>
+                    <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">Work the live demo from an operational task list.</Typography>
+                  </div>
+                  <IconButton aria-label="Collapse current task panel" onClick={() => setIsTaskPanelOpen(false)} size="small">
+                    <ChevronRightIcon fontSize="small" />
+                  </IconButton>
+                </Stack>
+                <Stack divider={<Divider flexItem />} sx={{ mt: 1.5 }}>
+                  {currentTasks.map((task) => (
+                    <Button
+                      key={task.key}
+                      onClick={() => selectTask(task)}
+                      sx={{ alignItems: "flex-start", color: "text.primary", justifyContent: "flex-start", px: 0.5, py: 1.25, textAlign: "left" }}
+                    >
+                      <Stack spacing={0.75} sx={{ width: "100%" }}>
+                        <Stack alignItems="center" direction="row" justifyContent="space-between" gap={1}>
+                          <Typography fontWeight={900}>{task.label}</Typography>
+                          <Chip color={task.key === activeTask ? "primary" : "default"} label={task.status} size="small" />
+                        </Stack>
+                        <Typography color="text.secondary" variant="body2">{task.detail}</Typography>
                       </Stack>
-                      <Typography color="text.secondary" variant="body2">{task.detail}</Typography>
-                    </Stack>
-                  </Button>
-                ))}
-              </Stack>
-            </Paper>
+                    </Button>
+                  ))}
+                </Stack>
+              </Paper>
+            ) : (
+              <Paper square variant="outlined" sx={{ width: 52, display: { xs: "none", lg: "block" }, borderTop: 0, borderRight: 0, borderBottom: 0, p: 0.75, bgcolor: "white" }}>
+                <Stack alignItems="center" spacing={1} sx={{ pt: 0.5 }}>
+                  <IconButton aria-label="Expand current task panel" onClick={() => setIsTaskPanelOpen(true)} size="small">
+                    <ChevronLeftIcon fontSize="small" />
+                  </IconButton>
+                  <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "primary.main" }} />
+                  <Typography sx={{ writingMode: "vertical-rl", transform: "rotate(180deg)", fontWeight: 900, fontSize: 12, lineHeight: 1.2 }}>
+                    Current Task
+                  </Typography>
+                </Stack>
+              </Paper>
+            )}
           </Stack>
         </Stack>
       </Stack>
