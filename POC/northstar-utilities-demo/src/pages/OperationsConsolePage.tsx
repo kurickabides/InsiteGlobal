@@ -115,11 +115,6 @@ const defaultWorkOrderId = initialWorkOrders.find((order) => order.priority === 
 const defaultCrewName = initialCrews.find((crew) => crew.status === "Available")?.name ?? initialCrews[0].name;
 
 const workflowStorageKey = "northstar-operations-workflow-state";
-const workOrderHealthLabels: Record<WorkOrderHealth, string> = {
-  onTrack: "On track",
-  belowEfficiency: "Below efficiency",
-  dangerZone: "Danger zone"
-};
 
 interface PersistedWorkflowState {
   workOrders: WorkOrder[];
@@ -240,39 +235,39 @@ function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
   return "Utility truck";
 }
 
-function workOrderMarkerStyle(order: WorkOrder, isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
-  if (order.priority === "Emergency") {
-    return {
-      color: "#dc2626",
-      outlineColor: isSelected ? "#111827" : "#ffffff",
-      shape: "triangle",
-      size: isSelected ? 18 : 14
-    };
-  }
-
+function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
   if (order.assignmentState === "assigned") {
     return {
       color: "#16a34a",
-      outlineColor: isSelected ? "#111827" : "#ffffff",
+      outlineColor: "#ffffff",
       shape: "square",
-      size: isSelected ? 16 : 12
+      size: 12
+    };
+  }
+
+  if (order.priority === "Emergency") {
+    return {
+      color: "#dc2626",
+      outlineColor: "#ffffff",
+      shape: "triangle",
+      size: 14
     };
   }
 
   if (order.assignmentState === "evaluated") {
     return {
       color: "#2563eb",
-      outlineColor: isSelected ? "#111827" : "#ffffff",
+      outlineColor: "#ffffff",
       shape: "diamond",
-      size: isSelected ? 17 : 13
+      size: 13
     };
   }
 
   return {
     color: "#dc2626",
-    outlineColor: isSelected ? "#111827" : "#ffffff",
+    outlineColor: "#ffffff",
     shape: "triangle",
-    size: isSelected ? 17 : 13
+    size: 13
   };
 }
 
@@ -380,6 +375,19 @@ function getRankedCandidateCrews(order: WorkOrder, crewPool: CrewOption[] = init
     });
 }
 
+function toAssignedCrewRow(crew: CrewOption, order: WorkOrder): RankedCrewOption {
+  return {
+    ...crew,
+    decisionScore: 100,
+    decisionReasons: [
+      `Assigned to ${order.id}`,
+      `${crew.crewType} crew dispatched`,
+      `${crew.currentAssignment}`,
+      `${crew.equipment} equipment profile`
+    ]
+  };
+}
+
 function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string {
   if (activeTask === "crews") {
     return `Crew proximity for ${selectedOrder.id}`;
@@ -408,7 +416,11 @@ function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCa
   }));
 
   const visibleCrews = showCandidateCrews
-    ? crewPool.filter((crew) => candidateCrewNames.has(crew.name) || crew.currentAssignment.includes(selectedOrder.id))
+    ? crewPool.filter((crew) => (
+      selectedOrder.assignmentState === "assigned"
+        ? crew.name === selectedOrder.crew || crew.currentAssignment.includes(selectedOrder.id)
+        : candidateCrewNames.has(crew.name)
+    ))
     : [];
   const crewMarkers: EsriMarkerConfig[] = visibleCrews.map((crew) => ({
     id: `crew-${crew.name}`,
@@ -484,42 +496,7 @@ function WorkOrderTable({ selectedId, onSelect, workOrders }: { selectedId: stri
   );
 }
 
-function DashboardScreen({
-  onSelectOrder,
-  selectedOrder,
-  workOrders
-}: {
-  onSelectOrder: (id: string) => void;
-  selectedOrder: WorkOrder;
-  workOrders: WorkOrder[];
-}) {
-  const [activeHealthFilter, setActiveHealthFilter] = useState<WorkOrderHealth>("dangerZone");
-  const statusCounts = useMemo(() => {
-    return workOrders.reduce<Record<string, number>>((counts, order) => {
-      counts[order.status] = (counts[order.status] ?? 0) + 1;
-      return counts;
-    }, {});
-  }, [workOrders]);
-  const maxStatusCount = Math.max(...Object.values(statusCounts), 1);
-  const districtEfficiency = useMemo(() => {
-    const districtNames = Array.from(new Set(workOrders.map((order) => order.district)));
-
-    return districtNames.map((district) => {
-      const districtOrders = workOrders.filter((order) => order.district === district);
-      const healthyOrders = districtOrders.filter((order) => getWorkOrderHealth(order) === "onTrack").length;
-
-      return {
-        district,
-        efficiency: Math.round((healthyOrders / districtOrders.length) * 100)
-      };
-    });
-  }, [workOrders]);
-  const filteredWorkOrders = workOrders.filter((order) => getWorkOrderHealth(order) === activeHealthFilter);
-  const healthSummary = (["onTrack", "belowEfficiency", "dangerZone"] as WorkOrderHealth[]).map((health) => ({
-    health,
-    count: workOrders.filter((order) => getWorkOrderHealth(order) === health).length
-  }));
-
+function DashboardScreen({ selectedOrder, markers, crews }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[]; crews: CrewOption[] }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -832,8 +809,14 @@ function DispatchScreen({
   crews: CrewOption[];
 }) {
   const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder, workOrders, crews);
-  const rankedCrews = hasSelectedWorkOrder ? getRankedCandidateCrews(selectedOrder, crews) : [];
+  const assignedCrew = crews.find((crew) => selectedOrder.assignmentState === "assigned" && crew.name === selectedOrder.crew);
+  const rankedCrews = hasSelectedWorkOrder
+    ? assignedCrew
+      ? [toAssignedCrewRow(assignedCrew, selectedOrder)]
+      : getRankedCandidateCrews(selectedOrder, crews)
+    : [];
   const recommendedCrew = rankedCrews[0];
+  const isSelectedOrderAssigned = selectedOrder.assignmentState === "assigned";
 
   return (
     <Grid container spacing={2}>
@@ -843,8 +826,8 @@ function DispatchScreen({
             <Typography variant="h2">Dispatch</Typography>
             <Typography color="text.secondary">Crew allocation, route readiness, and schedule impact for {selectedOrder.id}.</Typography>
           </div>
-          <Button disabled={evaluating || !hasSelectedWorkOrder} onClick={onEvaluate} variant="contained">
-            {evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
+          <Button disabled={evaluating || !hasSelectedWorkOrder || isSelectedOrderAssigned} onClick={onEvaluate} variant="contained">
+            {isSelectedOrderAssigned ? "Crew Assigned" : evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
           </Button>
         </Stack>
       </Grid>
@@ -884,14 +867,14 @@ function DispatchScreen({
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
             <PeopleIcon color="primary" />
-            <Typography fontWeight={900}>Possible Crews</Typography>
+            <Typography fontWeight={900}>{isSelectedOrderAssigned ? "Assigned Crew" : "Possible Crews"}</Typography>
             </Stack>
-            <Chip color={evaluated ? "success" : "default"} label={evaluated ? "Ranked" : "Not evaluated"} size="small" />
+            <Chip color={isSelectedOrderAssigned ? "success" : evaluated ? "success" : "default"} label={isSelectedOrderAssigned ? "Assigned" : evaluated ? "Ranked" : "Not evaluated"} size="small" />
           </Stack>
           {evaluating && <LinearProgress />}
           {hasSelectedWorkOrder && (
             <Typography color="text.secondary" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }} variant="body2">
-              Effective cost estimates the total job cost after hourly rate, travel time, overtime risk, productivity, and equipment readiness. Ranking uses decision score, not skill fit alone.
+              {isSelectedOrderAssigned ? "This work order is assigned, so only the assigned crew is shown here." : "Effective cost estimates the total job cost after hourly rate, travel time, overtime risk, productivity, and equipment readiness. Ranking uses decision score, not skill fit alone."}
             </Typography>
           )}
           {!hasSelectedWorkOrder ? (
@@ -917,12 +900,12 @@ function DispatchScreen({
             <TableBody>
               {rankedCrews.map((crew, index) => (
                 <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew?.name}>
-                  <TableCell sx={{ fontWeight: 900 }}>{evaluated ? `${index + 1}. ` : ""}{crew.name}</TableCell>
-                  <TableCell>{evaluated ? crew.decisionScore : "-"}</TableCell>
-                  <TableCell>{evaluated ? `${crew.fit}%` : "-"}</TableCell>
+                  <TableCell sx={{ fontWeight: 900 }}>{evaluated && !isSelectedOrderAssigned ? `${index + 1}. ` : ""}{crew.name}</TableCell>
+                  <TableCell>{evaluated || isSelectedOrderAssigned ? crew.decisionScore : "-"}</TableCell>
+                  <TableCell>{evaluated || isSelectedOrderAssigned ? `${crew.fit}%` : "-"}</TableCell>
                   <TableCell>{crew.eta}</TableCell>
                   <TableCell>{crew.hourly}</TableCell>
-                  <TableCell>{evaluated ? crew.effectiveCost : "-"}</TableCell>
+                  <TableCell>{evaluated || isSelectedOrderAssigned ? crew.effectiveCost : "-"}</TableCell>
                   <TableCell>{crew.equipment}</TableCell>
                   <TableCell>{crew.overtime}</TableCell>
                 </TableRow>
@@ -935,8 +918,8 @@ function DispatchScreen({
       </Grid>
       <Grid item lg={7} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
-          {evaluated ? (
+          <Typography fontWeight={900}>{isSelectedOrderAssigned && recommendedCrew ? `${recommendedCrew.name} is assigned` : evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
+          {evaluated || isSelectedOrderAssigned ? (
             <Grid container spacing={1.25} sx={{ mt: 1 }}>
               {(recommendedCrew?.decisionReasons ?? []).map((strength) => (
                 <Grid item md={6} xs={12} key={strength}>
@@ -965,8 +948,8 @@ function DispatchScreen({
               </Stack>
             ))}
           </Stack>
-          <Button disabled={!evaluated || !recommendedCrew} onClick={() => recommendedCrew && onAssignCrew(recommendedCrew)} startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
-            Assign {recommendedCrew?.name ?? "Recommended Crew"}
+          <Button disabled={isSelectedOrderAssigned || !evaluated || !recommendedCrew} onClick={() => recommendedCrew && onAssignCrew(recommendedCrew)} startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
+            {isSelectedOrderAssigned ? `Assigned to ${selectedOrder.crew}` : `Assign ${recommendedCrew?.name ?? "Recommended Crew"}`}
           </Button>
         </Paper>
       </Grid>
@@ -1122,7 +1105,7 @@ export function OperationsConsolePage() {
       return <ReportsScreen />;
     }
 
-    return <DashboardScreen selectedOrder={selectedOrder} onSelectOrder={selectWorkOrder} workOrders={workOrders} />;
+    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} />;
   }
 
   return (
