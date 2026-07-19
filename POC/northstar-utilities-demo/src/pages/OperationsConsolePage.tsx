@@ -452,6 +452,8 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
     ...counts,
     [order.status]: (counts[order.status] ?? 0) + 1
   }), {});
+  const statusBreakdown = Object.entries(statusCounts);
+  const maxStatusCount = Math.max(1, ...statusBreakdown.map(([, count]) => count));
   const emergencyOrCriticalCount = workOrders.filter((order) => order.priority === "Emergency" || order.priority === "Critical").length;
   const availableCrewCount = crews.filter((crew) => crew.status === "Available").length;
   const assignedCrewCount = crews.filter((crew) => crew.status === "Assigned").length;
@@ -508,6 +510,21 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
               <Chip color={priorityColor(selectedOrder.priority)} label={selectedOrder.priority} size="small" />
               <Chip label={selectedOrder.sla} size="small" />
               <Chip label={selectedOrder.district} size="small" />
+            </Stack>
+          </Paper>
+
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography fontWeight={900}>Work Order Status</Typography>
+            <Stack spacing={1.25} sx={{ mt: 1.5 }}>
+              {statusBreakdown.map(([status, count]) => (
+                <div key={status}>
+                  <Stack direction="row" justifyContent="space-between">
+                    <Typography fontWeight={800}>{status}</Typography>
+                    <Typography color="text.secondary" variant="body2">{count}</Typography>
+                  </Stack>
+                  <LinearProgress value={(count / maxStatusCount) * 100} variant="determinate" />
+                </div>
+              ))}
             </Stack>
           </Paper>
 
