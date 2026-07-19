@@ -14,7 +14,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type ArcGISMap from "@arcgis/core/Map";
 import type GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import type MapView from "@arcgis/core/views/MapView";
-import { EsriLayerConfig, EsriMapViewerProps } from "./types";
+import { EsriLayerConfig, EsriMapViewerProps, EsriMarkerConfig } from "./types";
 
 async function createLayer(layer: EsriLayerConfig) {
   if (layer.type === "geojson") {
@@ -47,6 +47,57 @@ async function createLayer(layer: EsriLayerConfig) {
   return new VectorTileLayer(layer);
 }
 
+function createMarkerSymbol(marker: EsriMarkerConfig) {
+  return marker.icon
+    ? {
+      type: "text" as const,
+      color: marker.color,
+      text: marker.icon === "bucket" ? "🚒" : marker.icon === "van" ? "🚐" : marker.icon === "patrol" ? "🚙" : "🚚",
+      font: {
+        size: marker.size ?? 18,
+        family: "Arial"
+      },
+      haloColor: marker.outlineColor ?? "#ffffff",
+      haloSize: 1.5
+    }
+    : {
+      type: "simple-marker" as const,
+      color: marker.color,
+      size: marker.size ?? 12,
+      style: marker.shape ?? "circle",
+      outline: {
+        color: marker.outlineColor ?? "#ffffff",
+        width: 2
+      }
+    };
+}
+
+async function refreshMarkerLayer(markerLayer: GraphicsLayer, markers: EsriMarkerConfig[]) {
+  const [{ default: Graphic }, { default: Point }] = await Promise.all([
+    import("@arcgis/core/Graphic"),
+    import("@arcgis/core/geometry/Point")
+  ]);
+
+  markerLayer.removeAll();
+  markers.forEach((marker) => {
+    markerLayer.add(
+      new Graphic({
+        geometry: new Point({ longitude: marker.longitude, latitude: marker.latitude }),
+        symbol: createMarkerSymbol(marker),
+        attributes: {
+          id: marker.id,
+          label: marker.label,
+          northStarMarker: true
+        },
+        popupTemplate: {
+          title: marker.label,
+          content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`
+        }
+      })
+    );
+  });
+}
+
 export function EsriMapViewer({
   id = "northstar-esri-map",
   title,
@@ -65,10 +116,30 @@ export function EsriMapViewer({
   const mapRef = useRef<ArcGISMap | null>(null);
   const viewRef = useRef<MapView | null>(null);
   const markerLayerRef = useRef<GraphicsLayer | null>(null);
+  const markersRef = useRef(markers);
+  const onMarkerClickRef = useRef(onMarkerClick);
+  const onReadyRef = useRef(onReady);
+  const onViewpointChangeRef = useRef(onViewpointChange);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const layerKey = useMemo(() => JSON.stringify(layers), [layers]);
   const markerKey = useMemo(() => JSON.stringify(markers), [markers]);
+
+  useEffect(() => {
+    markersRef.current = markers;
+  }, [markers]);
+
+  useEffect(() => {
+    onMarkerClickRef.current = onMarkerClick;
+  }, [onMarkerClick]);
+
+  useEffect(() => {
+    onReadyRef.current = onReady;
+  }, [onReady]);
+
+  useEffect(() => {
+    onViewpointChangeRef.current = onViewpointChange;
+  }, [onViewpointChange]);
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -87,14 +158,12 @@ export function EsriMapViewer({
           { default: Map },
           { default: MapView },
           { default: GraphicsLayer },
-          { default: Graphic },
           { default: Point },
           { default: Compass }
         ] = await Promise.all([
           import("@arcgis/core/Map"),
           import("@arcgis/core/views/MapView"),
           import("@arcgis/core/layers/GraphicsLayer"),
-          import("@arcgis/core/Graphic"),
           import("@arcgis/core/geometry/Point"),
           import("@arcgis/core/widgets/Compass")
         ]);
@@ -108,46 +177,7 @@ export function EsriMapViewer({
         map.addMany(resolvedLayers);
 
         const markerLayer = new GraphicsLayer({ id: `${id}-markers`, title: "NorthStar demo markers" });
-        markers.forEach((marker) => {
-          const symbol = marker.icon
-            ? {
-              type: "text" as const,
-              color: marker.color,
-              text: marker.icon === "bucket" ? "🚒" : marker.icon === "van" ? "🚐" : marker.icon === "patrol" ? "🚙" : "🚚",
-              font: {
-                size: marker.size ?? 18,
-                family: "Arial"
-              },
-              haloColor: marker.outlineColor ?? "#ffffff",
-              haloSize: 1.5
-            }
-            : {
-              type: "simple-marker" as const,
-              color: marker.color,
-              size: marker.size ?? 12,
-              style: marker.shape ?? "circle",
-              outline: {
-                color: marker.outlineColor ?? "#ffffff",
-                width: 2
-              }
-            };
-
-          markerLayer.add(
-            new Graphic({
-              geometry: new Point({ longitude: marker.longitude, latitude: marker.latitude }),
-              symbol,
-              attributes: {
-                id: marker.id,
-                label: marker.label,
-                northStarMarker: true
-              },
-              popupTemplate: {
-                title: marker.label,
-                content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`
-              }
-            })
-          );
-        });
+        await refreshMarkerLayer(markerLayer, markersRef.current);
         map.add(markerLayer);
 
         const view = new MapView({
@@ -172,13 +202,30 @@ export function EsriMapViewer({
             return graphic?.attributes?.northStarMarker === true;
           });
           const markerId = markerGraphic && "graphic" in markerGraphic ? markerGraphic.graphic.attributes?.id : null;
-          return markers.find((candidate) => candidate.id === markerId) ?? null;
+          return markersRef.current.find((candidate) => candidate.id === markerId) ?? null;
         }
 
         view.on("click", async (event: Parameters<typeof view.hitTest>[0]) => {
           const marker = await findMarkerFromHitTest(event);
           if (marker) {
-            onMarkerClick?.(marker);
+            onMarkerClickRef.current?.(marker);
+          }
+        });
+
+        view.on("pointer-move", async (event: Parameters<typeof view.hitTest>[0]) => {
+          const marker = await findMarkerFromHitTest(event);
+          if (view.container) {
+            view.container.style.cursor = marker ? "pointer" : "default";
+          }
+
+          if (marker) {
+            view.openPopup({
+              title: marker.label,
+              content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`,
+              location: new Point({ longitude: marker.longitude, latitude: marker.latitude })
+            });
+          } else if (view.popup?.visible) {
+            view.closePopup();
           }
         });
 
@@ -204,7 +251,7 @@ export function EsriMapViewer({
         viewRef.current = view;
 
         watcher = view.watch(["center", "zoom"], () => {
-          onViewpointChange?.({
+          onViewpointChangeRef.current?.({
             center: [view.center.longitude ?? center[0], view.center.latitude ?? center[1]],
             zoom: view.zoom ?? zoom
           });
@@ -214,7 +261,7 @@ export function EsriMapViewer({
 
         if (!cancelled) {
           setStatus("ready");
-          onReady?.(view);
+          onReadyRef.current?.(view);
         }
       } catch (error) {
         if (!cancelled) {
@@ -234,7 +281,23 @@ export function EsriMapViewer({
       markerLayerRef.current = null;
       mapRef.current = null;
     };
-  }, [basemap, center, controls.compass, controls.zoom, height, id, layerKey, markerKey, layers, markers, onMarkerClick, onReady, onViewpointChange, zoom]);
+  }, [basemap, controls.compass, controls.zoom, height, id, layerKey, layers]);
+
+  useEffect(() => {
+    if (!markerLayerRef.current) {
+      return;
+    }
+
+    refreshMarkerLayer(markerLayerRef.current, markers);
+  }, [markerKey, markers]);
+
+  useEffect(() => {
+    if (!viewRef.current || status !== "ready") {
+      return;
+    }
+
+    viewRef.current.goTo({ center, zoom }, { animate: false });
+  }, [center, status, zoom]);
 
   return (
     <Paper variant="outlined" sx={{ height: "100%", overflow: "hidden" }}>

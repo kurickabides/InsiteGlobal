@@ -115,11 +115,6 @@ const defaultWorkOrderId = initialWorkOrders.find((order) => order.priority === 
 const defaultCrewName = initialCrews.find((crew) => crew.status === "Available")?.name ?? initialCrews[0].name;
 
 const workflowStorageKey = "northstar-operations-workflow-state";
-const workOrderHealthLabels: Record<WorkOrderHealth, string> = {
-  onTrack: "On track",
-  belowEfficiency: "Below efficiency",
-  dangerZone: "Danger zone"
-};
 
 interface PersistedWorkflowState {
   workOrders: WorkOrder[];
@@ -501,42 +496,7 @@ function WorkOrderTable({ selectedId, onSelect, workOrders }: { selectedId: stri
   );
 }
 
-function DashboardScreen({
-  onSelectOrder,
-  selectedOrder,
-  workOrders
-}: {
-  onSelectOrder: (id: string) => void;
-  selectedOrder: WorkOrder;
-  workOrders: WorkOrder[];
-}) {
-  const [activeHealthFilter, setActiveHealthFilter] = useState<WorkOrderHealth>("dangerZone");
-  const statusCounts = useMemo(() => {
-    return workOrders.reduce<Record<string, number>>((counts, order) => {
-      counts[order.status] = (counts[order.status] ?? 0) + 1;
-      return counts;
-    }, {});
-  }, [workOrders]);
-  const maxStatusCount = Math.max(...Object.values(statusCounts), 1);
-  const districtEfficiency = useMemo(() => {
-    const districtNames = Array.from(new Set(workOrders.map((order) => order.district)));
-
-    return districtNames.map((district) => {
-      const districtOrders = workOrders.filter((order) => order.district === district);
-      const healthyOrders = districtOrders.filter((order) => getWorkOrderHealth(order) === "onTrack").length;
-
-      return {
-        district,
-        efficiency: Math.round((healthyOrders / districtOrders.length) * 100)
-      };
-    });
-  }, [workOrders]);
-  const filteredWorkOrders = workOrders.filter((order) => getWorkOrderHealth(order) === activeHealthFilter);
-  const healthSummary = (["onTrack", "belowEfficiency", "dangerZone"] as WorkOrderHealth[]).map((health) => ({
-    health,
-    count: workOrders.filter((order) => getWorkOrderHealth(order) === health).length
-  }));
-
+function DashboardScreen({ selectedOrder, markers, crews }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[]; crews: CrewOption[] }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -1145,7 +1105,7 @@ export function OperationsConsolePage() {
       return <ReportsScreen />;
     }
 
-    return <DashboardScreen selectedOrder={selectedOrder} onSelectOrder={selectWorkOrder} workOrders={workOrders} />;
+    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} />;
   }
 
   return (
