@@ -17,6 +17,7 @@ import type MapView from "@arcgis/core/views/MapView";
 import { EsriLayerConfig, EsriMapViewerProps, EsriMarkerConfig } from "./types";
 
 const carSymbolPath = "M18.92 11c-.13-.38-.49-.64-.92-.64H6c-.43 0-.79.26-.92.64L3 17v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-6zM6.5 20c-.83 0-1.5-.67-1.5-1.5S5.67 17 6.5 17s1.5.67 1.5 1.5S7.33 20 6.5 20zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 15l1.5-4.5h11L19 15H5z";
+const bucketTruckSymbolPath = "M1 18h2v2H1zm3 0h14v2H4zm15-5l1 2h3v3h-4zm-8-3l5-4h2l-5 4zm11-1h2v2h-2zm-3-3h3v2h-3zM5 20a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0z";
 
 async function createLayer(layer: EsriLayerConfig) {
   if (layer.type === "geojson") {
@@ -103,7 +104,7 @@ async function refreshMarkerLayer(markerLayer: GraphicsLayer, markers: EsriMarke
       addMarkerGraphic({
         type: "simple-marker" as const,
         color: marker.color,
-        path: carSymbolPath,
+        path: marker.symbolPath ?? carSymbolPath,
         size: marker.size ?? 24,
         outline: {
           color: marker.outlineColor ?? "#ffffff",
@@ -135,6 +136,7 @@ export function EsriMapViewer({
   const mapRef = useRef<ArcGISMap | null>(null);
   const viewRef = useRef<MapView | null>(null);
   const markerLayerRef = useRef<GraphicsLayer | null>(null);
+  const legendWidgetRef = useRef<{ visible: boolean } | null>(null);
   const markersRef = useRef(markers);
   const onMarkerClickRef = useRef(onMarkerClick);
   const onReadyRef = useRef(onReady);
@@ -219,8 +221,10 @@ export function EsriMapViewer({
             ["Assigned Power Work Order", 8],
             ["Emergency Assigned Gas Work Order", 9],
             ["Emergency Assigned Power Work Order", 10],
-            ["Gas Crew", 11],
-            ["Power Crew", 12]
+            ["Gas Investigator Crew", 11],
+            ["Power Line or Vegetation Crew", 12],
+            ["Other Gas Crew", 13],
+            ["Other Power Crew", 14]
           ].map(([category, objectId]) => new Graphic({
             geometry: new Point({ longitude: -179.99, latitude: -84.99 }),
             attributes: { ObjectID: objectId, category }
@@ -351,8 +355,30 @@ export function EsriMapViewer({
                 }
               },
               {
-                value: "Gas Crew",
-                label: "Gas crew",
+                value: "Gas Investigator Crew",
+                label: "Gas investigator crew",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#facc15",
+                  path: bucketTruckSymbolPath,
+                  size: 18,
+                  outline: { color: "#713f12", width: 1 }
+                }
+              },
+              {
+                value: "Power Line or Vegetation Crew",
+                label: "Power line or vegetation crew",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#2563eb",
+                  path: bucketTruckSymbolPath,
+                  size: 18,
+                  outline: { color: "#dbeafe", width: 1 }
+                }
+              },
+              {
+                value: "Other Gas Crew",
+                label: "Other gas crew",
                 symbol: {
                   type: "simple-marker",
                   color: "#facc15",
@@ -362,8 +388,8 @@ export function EsriMapViewer({
                 }
               },
               {
-                value: "Power Crew",
-                label: "Power crew",
+                value: "Other Power Crew",
+                label: "Other power crew",
                 symbol: {
                   type: "simple-marker",
                   color: "#2563eb",
@@ -392,12 +418,12 @@ export function EsriMapViewer({
           view.ui.add(new Compass({ view }), "top-left");
         }
 
-        if (controls.legend !== false) {
-          view.ui.add(new Legend({
-            view,
-            layerInfos: [{ layer: legendLayer, title: "Legend" }]
-          }), "bottom-left");
-        }
+        const legendWidget = new Legend({
+          view,
+          layerInfos: [{ layer: legendLayer, title: "Legend" }]
+        });
+        legendWidget.visible = controls.legend !== false;
+        view.ui.add(legendWidget, "bottom-left");
 
         async function findMarkerFromHitTest(event: Parameters<typeof view.hitTest>[0]) {
           const response = await view.hitTest(event);
@@ -435,6 +461,7 @@ export function EsriMapViewer({
 
         mapRef.current = map;
         markerLayerRef.current = markerLayer;
+        legendWidgetRef.current = legendWidget;
         viewRef.current = view;
 
         watcher = view.watch(["center", "zoom"], () => {
@@ -466,9 +493,18 @@ export function EsriMapViewer({
       viewRef.current?.destroy();
       viewRef.current = null;
       markerLayerRef.current = null;
+      legendWidgetRef.current = null;
       mapRef.current = null;
     };
-  }, [basemap, controls.compass, controls.legend, controls.zoom, height, id, layerKey, layers]);
+  }, [basemap, controls.compass, controls.zoom, height, id, layerKey, layers]);
+
+  useEffect(() => {
+    if (!legendWidgetRef.current) {
+      return;
+    }
+
+    legendWidgetRef.current.visible = controls.legend !== false;
+  }, [controls.legend]);
 
   useEffect(() => {
     if (!markerLayerRef.current) {

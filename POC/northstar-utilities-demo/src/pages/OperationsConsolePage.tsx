@@ -283,9 +283,9 @@ function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<Esri
   if (order.assignmentState === "assigned") {
     return {
       color: order.domain === "Gas" ? "#facc15" : "#2563eb",
-      outlineColor: order.priority === "Emergency" ? "#dc2626" : "#ffffff",
+      outlineColor: workOrderPriorityColor(order.priority),
       shape: "square",
-      size: order.priority === "Emergency" ? 15 : 13
+      size: order.priority === "Emergency" ? 15 : 14
     };
   }
 
@@ -318,6 +318,13 @@ function getCrewMarkerColor(crew: CrewOption): string {
 
 function getCrewMarkerOutlineColor(crew: CrewOption): string {
   return getCrewMapDomain(crew) === "gas" ? "#713f12" : "#dbeafe";
+}
+
+function shouldUseBucketTruckSymbol(crew: CrewOption): boolean {
+  return crew.crewType === "Gas Inspection"
+    || crew.crewType === "Electric Trouble"
+    || crew.crewType === "Line Patrol"
+    || crew.crewType === "Vegetation";
 }
 
 function getRequiredCrewFamilies(order: WorkOrder): string[] {
@@ -618,8 +625,13 @@ function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCr
     latitude: crew.latitude,
     color: getCrewMarkerColor(crew),
     outlineColor: getCrewMarkerOutlineColor(crew),
-    size: candidateCrewNames.has(crew.name) || crew.name === selectedOrder.crew ? 24 : 21,
+    size: shouldUseBucketTruckSymbol(crew)
+      ? candidateCrewNames.has(crew.name) || crew.name === selectedOrder.crew ? 28 : 25
+      : candidateCrewNames.has(crew.name) || crew.name === selectedOrder.crew ? 24 : 21,
     icon: crew.vehicleIcon,
+    symbolPath: shouldUseBucketTruckSymbol(crew)
+      ? "M1 18h2v2H1zm3 0h14v2H4zm15-5l1 2h3v3h-4zm-8-3l5-4h2l-5 4zm11-1h2v2h-2zm-3-3h3v2h-3zM5 20a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm14 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"
+      : undefined,
     popupContent: `${crew.crewType}<br/>${crew.status}<br/>${crew.currentAssignment}<br/>ETA to selected order: ${crew.eta}<br/>${getCrewMapDomain(crew) === "gas" ? "Gas crew" : "Power crew"}`
   }));
 
@@ -1019,6 +1031,7 @@ function DispatchScreen({
 }) {
   const [showCrewMarkers, setShowCrewMarkers] = useState(true);
   const [showMapLegend, setShowMapLegend] = useState(true);
+  const [selectedDispatchCrewName, setSelectedDispatchCrewName] = useState<string | null>(null);
   const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, showCrewMarkers, workOrders, crews);
   const mappedCrewCount = crews.filter((crew) => Number.isFinite(crew.longitude) && Number.isFinite(crew.latitude)).length;
   const assignedCrew = crews.find((crew) => selectedOrder.assignmentState === "assigned" && crew.name === selectedOrder.crew);
@@ -1027,10 +1040,23 @@ function DispatchScreen({
       ? [toAssignedCrewRow(assignedCrew, selectedOrder)]
       : getRankedCandidateCrews(selectedOrder, crews)
     : [];
-  const recommendedCrew = rankedCrews[0];
+  const selectedDispatchCrew = rankedCrews.find((crew) => crew.name === selectedDispatchCrewName) ?? rankedCrews[0];
+  const recommendedCrew = selectedDispatchCrew;
   const scheduleCrew = assignedCrew ?? recommendedCrew;
   const scheduleItems = getScheduleWindowItems(selectedOrder, scheduleCrew);
   const isSelectedOrderAssigned = selectedOrder.assignmentState === "assigned";
+
+  useEffect(() => {
+    setSelectedDispatchCrewName(null);
+  }, [selectedOrder.id]);
+
+  useEffect(() => {
+    if (!selectedDispatchCrewName || rankedCrews.some((crew) => crew.name === selectedDispatchCrewName)) {
+      return;
+    }
+
+    setSelectedDispatchCrewName(null);
+  }, [rankedCrews, selectedDispatchCrewName]);
 
   return (
     <Grid container spacing={2}>
@@ -1112,7 +1138,7 @@ function DispatchScreen({
           {evaluating && <LinearProgress />}
           {hasSelectedWorkOrder && (
             <Typography color="text.secondary" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }} variant="body2">
-              {isSelectedOrderAssigned ? "This work order is assigned, so only the assigned crew is shown here." : "Effective cost estimates the total job cost after hourly rate, travel time, overtime risk, productivity, and equipment readiness. Ranking uses decision score, not skill fit alone."}
+              {isSelectedOrderAssigned ? "This work order is assigned, so only the assigned crew is shown here." : "Select any crew row for special cases. Effective cost estimates total job cost after hourly rate, travel time, overtime risk, productivity, and equipment readiness."}
             </Typography>
           )}
           {!hasSelectedWorkOrder ? (
@@ -1137,7 +1163,13 @@ function DispatchScreen({
             </TableHead>
             <TableBody>
               {rankedCrews.map((crew, index) => (
-                <TableRow key={crew.name} selected={evaluated && crew.name === recommendedCrew?.name}>
+                <TableRow
+                  hover={!isSelectedOrderAssigned}
+                  key={crew.name}
+                  onClick={() => !isSelectedOrderAssigned && setSelectedDispatchCrewName(crew.name)}
+                  selected={crew.name === recommendedCrew?.name}
+                  sx={{ cursor: isSelectedOrderAssigned ? "default" : "pointer" }}
+                >
                   <TableCell sx={{ fontWeight: 900 }}>{evaluated && !isSelectedOrderAssigned ? `${index + 1}. ` : ""}{crew.name}</TableCell>
                   <TableCell>{evaluated || isSelectedOrderAssigned ? crew.decisionScore : "-"}</TableCell>
                   <TableCell>{evaluated || isSelectedOrderAssigned ? `${crew.fit}%` : "-"}</TableCell>
@@ -1156,7 +1188,7 @@ function DispatchScreen({
       </Grid>
       <Grid item lg={7} xs={12}>
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
-          <Typography fontWeight={900}>{isSelectedOrderAssigned && recommendedCrew ? `${recommendedCrew.name} is assigned` : evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is recommended` : "Evaluation readiness"}</Typography>
+          <Typography fontWeight={900}>{isSelectedOrderAssigned && recommendedCrew ? `${recommendedCrew.name} is assigned` : evaluated && recommendedCrew ? `Why ${recommendedCrew.name} is selected` : "Evaluation readiness"}</Typography>
           {evaluated || isSelectedOrderAssigned ? (
             <Grid container spacing={1.25} sx={{ mt: 1 }}>
               {(recommendedCrew?.decisionReasons ?? []).map((strength) => (
@@ -1190,7 +1222,7 @@ function DispatchScreen({
             ))}
           </Stack>
           <Button disabled={isSelectedOrderAssigned || !evaluated || !recommendedCrew} onClick={() => recommendedCrew && onAssignCrew(recommendedCrew)} startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
-            {isSelectedOrderAssigned ? `Assigned to ${selectedOrder.crew}` : `Assign ${recommendedCrew?.name ?? "Recommended Crew"}`}
+            {isSelectedOrderAssigned ? `Assigned to ${selectedOrder.crew}` : `Assign ${recommendedCrew?.name ?? "Selected Crew"}`}
           </Button>
           {isSelectedOrderAssigned && (
             <Button onClick={onUnassignCrew} fullWidth sx={{ mt: 1 }} variant="outlined">

@@ -47,6 +47,7 @@ export interface EsriMarkerConfig {
   size?: number;
   shape?: "circle" | "square" | "diamond" | "triangle" | "x" | "cross";
   icon?: "truck" | "bucket" | "van" | "patrol";
+  symbolPath?: string;
   popupContent?: string;
 }
 
