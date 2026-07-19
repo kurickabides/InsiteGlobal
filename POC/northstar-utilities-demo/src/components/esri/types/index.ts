@@ -52,6 +52,7 @@ export interface EsriMarkerConfig {
 export interface EsriMapControlOptions {
   attribution?: boolean;
   compass?: boolean;
+  legend?: boolean;
   zoom?: boolean;
 }
 

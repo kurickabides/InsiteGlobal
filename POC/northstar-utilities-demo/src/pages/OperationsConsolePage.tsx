@@ -68,6 +68,7 @@ interface WorkOrder {
   impact: string;
   crew: string;
   assignmentState: "assigned" | "evaluated" | "unevaluated";
+  assignedAt?: string;
   skills: string[];
   equipment: string[];
   longitude: number;
@@ -94,7 +95,47 @@ interface CrewOption {
   penalties: string[];
 }
 
-const initialWorkOrders = generatedWorkOrders.map((order) => ({ ...order })) as unknown as WorkOrder[];
+const generatedConsoleWorkOrders = generatedWorkOrders.map((order) => ({ ...order })) as unknown as WorkOrder[];
+const initialCrews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
+
+function resolveInitialCrewName(order: WorkOrder, workOrderIndex: number): string {
+  const hasExistingCrew = initialCrews.some((crew) => crew.name === order.crew);
+
+  if (hasExistingCrew || order.crew === "Pending review") {
+    return order.crew;
+  }
+
+  const candidates = getRankedCandidateCrews(order, initialCrews);
+  const fallbackIndex = candidates.length ? workOrderIndex % candidates.length : 0;
+
+  return candidates[fallbackIndex]?.name ?? order.crew;
+}
+
+function normalizeWorkOrderCrewRelationships(workOrders: WorkOrder[]): WorkOrder[] {
+  return workOrders.map((order, workOrderIndex) => ({
+    ...order,
+    crew: resolveInitialCrewName(order, workOrderIndex)
+  }));
+}
+
+const initialWorkOrders = normalizeWorkOrderCrewRelationships(generatedConsoleWorkOrders);
+
+const defaultWorkOrderId = initialWorkOrders.find((order) => order.priority === "Emergency" && order.assignmentState !== "assigned")?.id ?? initialWorkOrders[0].id;
+const defaultCrewName = initialCrews.find((crew) => crew.status === "Available")?.name ?? initialCrews[0].name;
+
+const workflowStorageKey = "northstar-operations-workflow-state";
+
+interface PersistedWorkflowState {
+  workOrders: WorkOrder[];
+  crews: CrewOption[];
+}
+
+function normalizePersistedWorkflowState(state: PersistedWorkflowState): PersistedWorkflowState {
+  return {
+    ...state,
+    workOrders: normalizeWorkOrderCrewRelationships(state.workOrders)
+  };
+}
 
 const consoleHubItems: { key: HubKey; label: string; icon: JSX.Element; metric: string }[] = [
   { key: "dashboard", label: "Executive Dashboard", icon: <DashboardIcon />, metric: "Live operating picture" },
@@ -109,17 +150,8 @@ const mapLayers: EsriLayerConfig[] = [
   { id: "electric-network", title: "Electric Network", type: "geojson", url: "/mock-data/electric-network.geojson", visible: true, opacity: 0.55 },
   { id: "crew-locations", title: "Crew Locations", type: "geojson", url: "/mock-data/crew-locations.geojson", visible: true, opacity: 0.9 }
 ];
-
-const initialCrews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
-const defaultWorkOrderId = initialWorkOrders.find((order) => order.priority === "Emergency" && order.assignmentState !== "assigned")?.id ?? initialWorkOrders[0].id;
-const defaultCrewName = initialCrews.find((crew) => crew.status === "Available")?.name ?? initialCrews[0].name;
-
-const workflowStorageKey = "northstar-operations-workflow-state";
-
-interface PersistedWorkflowState {
-  workOrders: WorkOrder[];
-  crews: CrewOption[];
-}
+const dispatchMapDefaultZoom = 13;
+const dispatchMapSelectedZoom = 18;
 
 function loadPersistedWorkflowState(): PersistedWorkflowState {
   if (typeof window === "undefined") {
@@ -133,10 +165,10 @@ function loadPersistedWorkflowState(): PersistedWorkflowState {
     }
 
     const parsedValue = JSON.parse(rawValue) as Partial<PersistedWorkflowState>;
-    return {
+    return normalizePersistedWorkflowState({
       workOrders: parsedValue.workOrders?.length ? parsedValue.workOrders : initialWorkOrders,
       crews: parsedValue.crews?.length ? parsedValue.crews : initialCrews
-    };
+    });
   } catch {
     return { workOrders: initialWorkOrders, crews: initialCrews };
   }
@@ -238,7 +270,7 @@ function vehicleLabel(icon: CrewOption["vehicleIcon"]): string {
 function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<EsriMarkerConfig, "color" | "outlineColor" | "shape" | "size"> {
   if (order.assignmentState === "assigned") {
     return {
-      color: "#16a34a",
+      color: order.domain === "Electric" ? "#2563eb" : "#16a34a",
       outlineColor: "#ffffff",
       shape: "square",
       size: 12
@@ -269,6 +301,18 @@ function workOrderMarkerStyle(order: WorkOrder, _isSelected: boolean): Pick<Esri
     shape: "triangle",
     size: 13
   };
+}
+
+function getCrewMapDomain(crew: CrewOption): "gas" | "power" {
+  return crew.crewType.includes("Gas") || crew.name.includes("Gas") ? "gas" : "power";
+}
+
+function getCrewMarkerColor(crew: CrewOption): string {
+  return getCrewMapDomain(crew) === "gas" ? "#facc15" : "#2563eb";
+}
+
+function getCrewMarkerOutlineColor(crew: CrewOption): string {
+  return getCrewMapDomain(crew) === "gas" ? "#713f12" : "#dbeafe";
 }
 
 function getRequiredCrewFamilies(order: WorkOrder): string[] {
@@ -328,6 +372,150 @@ function parseMinutes(value: string): number {
 
 function parseCurrency(value: string): number {
   return Number(value.replace(/[^0-9.]/g, ""));
+}
+
+interface ScheduleStep {
+  label: string;
+  estimateMinutes: number;
+}
+
+interface ScheduleWindowItem {
+  label: string;
+  meta: string;
+  tone: "success" | "primary";
+}
+
+function formatClockTime(date: Date): string {
+  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
+function addMinutes(date: Date, minutes: number): Date {
+  return new Date(date.getTime() + minutes * 60 * 1000);
+}
+
+function formatDuration(minutes: number): string {
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
+
+  const hours = minutes / 60;
+  return Number.isInteger(hours) ? `${hours} hr` : `${hours.toFixed(1)} hr`;
+}
+
+function getScheduleTemplate(order: WorkOrder): ScheduleStep[] {
+  if (order.type.includes("Leak")) {
+    return [
+      { label: "Safety assessment", estimateMinutes: 15 },
+      { label: "Leak isolation", estimateMinutes: 30 },
+      { label: "Repair and restore service", estimateMinutes: 180 }
+    ];
+  }
+
+  if (order.type.includes("Service Installation")) {
+    return [
+      { label: "Site setup and locate verification", estimateMinutes: 15 },
+      { label: "Service line installation", estimateMinutes: 30 },
+      { label: "Pressure test and customer relight", estimateMinutes: 120 }
+    ];
+  }
+
+  if (order.type.includes("Regulator")) {
+    return [
+      { label: "Regulator inspection", estimateMinutes: 15 },
+      { label: "Pressure adjustment", estimateMinutes: 30 },
+      { label: "Compliance test and documentation", estimateMinutes: 120 }
+    ];
+  }
+
+  if (order.type.includes("Corrosion")) {
+    return [
+      { label: "Expose and inspect asset", estimateMinutes: 15 },
+      { label: "Readings and coating check", estimateMinutes: 30 },
+      { label: "Mitigation repair and photos", estimateMinutes: 120 }
+    ];
+  }
+
+  if (order.type.includes("Feeder")) {
+    return [
+      { label: "Feeder patrol and switching review", estimateMinutes: 15 },
+      { label: "Fault section isolation", estimateMinutes: 30 },
+      { label: "Restore branch and verify load", estimateMinutes: 180 }
+    ];
+  }
+
+  if (order.type.includes("Transformer")) {
+    return [
+      { label: "Transformer site assessment", estimateMinutes: 15 },
+      { label: "De-energize and stage replacement", estimateMinutes: 30 },
+      { label: "Replace transformer and re-energize", estimateMinutes: 180 }
+    ];
+  }
+
+  if (order.type.includes("Pole")) {
+    return [
+      { label: "Traffic and work zone setup", estimateMinutes: 15 },
+      { label: "Transfer equipment and conductors", estimateMinutes: 30 },
+      { label: "Set pole and complete restoration", estimateMinutes: 180 }
+    ];
+  }
+
+  if (order.type.includes("Underground")) {
+    return [
+      { label: "Cable fault locate", estimateMinutes: 15 },
+      { label: "Open vault and isolate cable", estimateMinutes: 30 },
+      { label: "Splice repair and test cable", estimateMinutes: 180 }
+    ];
+  }
+
+  if (order.type.includes("Vegetation")) {
+    return [
+      { label: "Hazard tree assessment", estimateMinutes: 15 },
+      { label: "Line clearance setup", estimateMinutes: 30 },
+      { label: "Cut, clear, and release circuit", estimateMinutes: 120 }
+    ];
+  }
+
+  return [
+    { label: "Field assessment", estimateMinutes: 15 },
+    { label: "Primary work task", estimateMinutes: 30 },
+    { label: "Repair and closeout", estimateMinutes: 120 }
+  ];
+}
+
+function getScheduleWindowItems(order: WorkOrder, crew?: CrewOption): ScheduleWindowItem[] {
+  const steps = getScheduleTemplate(order);
+
+  if (order.assignmentState !== "assigned" || !crew) {
+    return [
+      { label: "Travel to job", meta: "Use selected crew ETA after assignment", tone: "success" },
+      ...steps.map((step, index) => ({
+        label: `${index + 1}. ${step.label}`,
+        meta: `${formatDuration(step.estimateMinutes)} estimate`,
+        tone: "primary" as const
+      })),
+      { label: "Complete", meta: `${formatDuration(steps.reduce((total, step) => total + step.estimateMinutes, 0))} field work estimate`, tone: "primary" }
+    ];
+  }
+
+  const assignedAt = order.assignedAt ? new Date(order.assignedAt) : new Date();
+  const travelMinutes = parseMinutes(crew.eta);
+  const jobStart = addMinutes(assignedAt, travelMinutes);
+  let cursor = jobStart;
+  const scheduledSteps = steps.map((step, index) => {
+    cursor = addMinutes(cursor, step.estimateMinutes);
+    return {
+      label: `${index + 1}. ${step.label}`,
+      meta: formatClockTime(cursor),
+      tone: "primary" as const
+    };
+  });
+
+  return [
+    { label: "Travel to job", meta: `${formatClockTime(assignedAt)} - ${formatClockTime(jobStart)} (${formatDuration(travelMinutes)})`, tone: "success" },
+    { label: "Job starts", meta: formatClockTime(jobStart), tone: "success" },
+    ...scheduledSteps,
+    { label: "Complete", meta: formatClockTime(cursor), tone: "primary" }
+  ];
 }
 
 interface RankedCrewOption extends CrewOption {
@@ -404,7 +592,7 @@ function getTaskMapTitle(activeTask: TaskKey, selectedOrder: WorkOrder): string 
   return `Field context for ${selectedOrder.id}`;
 }
 
-function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCandidateCrews = true, workOrderPool: WorkOrder[] = initialWorkOrders, crewPool: CrewOption[] = initialCrews): EsriMarkerConfig[] {
+function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCrews = true, workOrderPool: WorkOrder[] = initialWorkOrders, crewPool: CrewOption[] = initialCrews): EsriMarkerConfig[] {
   const candidateCrewNames = new Set(getCandidateCrews(selectedOrder, crewPool).map((crew) => crew.name));
   const workOrderMarkers: EsriMarkerConfig[] = workOrderPool.map((order) => ({
     id: order.id,
@@ -415,23 +603,19 @@ function getTaskMapMarkers(activeTask: TaskKey, selectedOrder: WorkOrder, showCa
     popupContent: `${order.type}<br/>${order.priority} priority<br/>${assignmentLabel(order.assignmentState)}<br/>${order.crew}`
   }));
 
-  const visibleCrews = showCandidateCrews
-    ? crewPool.filter((crew) => (
-      selectedOrder.assignmentState === "assigned"
-        ? crew.name === selectedOrder.crew || crew.currentAssignment.includes(selectedOrder.id)
-        : candidateCrewNames.has(crew.name)
-    ))
+  const visibleCrews = showCrews
+    ? crewPool.filter((crew) => Number.isFinite(crew.longitude) && Number.isFinite(crew.latitude))
     : [];
   const crewMarkers: EsriMarkerConfig[] = visibleCrews.map((crew) => ({
     id: `crew-${crew.name}`,
     label: `${crew.name} - ${crew.crewType}`,
     longitude: crew.longitude,
     latitude: crew.latitude,
-    color: candidateCrewNames.has(crew.name) ? "#16a34a" : "#2563eb",
-    outlineColor: candidateCrewNames.has(crew.name) ? "#dcfce7" : "#dbeafe",
-    size: candidateCrewNames.has(crew.name) ? 22 : 20,
+    color: getCrewMarkerColor(crew),
+    outlineColor: getCrewMarkerOutlineColor(crew),
+    size: candidateCrewNames.has(crew.name) || crew.name === selectedOrder.crew ? 24 : 21,
     icon: crew.vehicleIcon,
-    popupContent: `${crew.crewType}<br/>${crew.status}<br/>${crew.currentAssignment}<br/>ETA to selected order: ${crew.eta}`
+    popupContent: `${crew.crewType}<br/>${crew.status}<br/>${crew.currentAssignment}<br/>ETA to selected order: ${crew.eta}<br/>${getCrewMapDomain(crew) === "gas" ? "Gas crew" : "Power crew"}`
   }));
 
   if (activeTask === "impact") {
@@ -507,6 +691,23 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders }: { select
   const availableCrewCount = crews.filter((crew) => crew.status === "Available").length;
   const assignedCrewCount = crews.filter((crew) => crew.status === "Assigned").length;
   const slaRiskCount = workOrders.filter((order) => order.sla.includes("<") || order.priority === "Emergency" || order.priority === "Critical").length;
+  const districtEfficiency = Object.entries(
+    workOrders.reduce<Record<string, { total: number; healthy: number }>>((counts, order) => {
+      const districtCounts = counts[order.district] ?? { total: 0, healthy: 0 };
+      const isHealthy = getWorkOrderHealth(order) === "onTrack";
+
+      return {
+        ...counts,
+        [order.district]: {
+          total: districtCounts.total + 1,
+          healthy: districtCounts.healthy + (isHealthy ? 1 : 0)
+        }
+      };
+    }, {})
+  ).map(([district, counts]) => ({
+    district,
+    efficiency: Math.round((counts.healthy / counts.total) * 100)
+  }));
 
   return (
     <Grid container spacing={2}>
@@ -791,6 +992,8 @@ function DispatchScreen({
   onEvaluate,
   onSelectOrder,
   onAssignCrew,
+  onRefreshWorkOrders,
+  onUnassignCrew,
   selectedOrder,
   hasSelectedWorkOrder,
   workOrders,
@@ -802,12 +1005,17 @@ function DispatchScreen({
   onEvaluate: () => void;
   onSelectOrder: (id: string) => void;
   onAssignCrew: (crew: RankedCrewOption) => void;
+  onRefreshWorkOrders: () => void;
+  onUnassignCrew: () => void;
   selectedOrder: WorkOrder;
   hasSelectedWorkOrder: boolean;
   workOrders: WorkOrder[];
   crews: CrewOption[];
 }) {
-  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, hasSelectedWorkOrder, workOrders, crews);
+  const [showCrewMarkers, setShowCrewMarkers] = useState(true);
+  const [showMapLegend, setShowMapLegend] = useState(true);
+  const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, showCrewMarkers, workOrders, crews);
+  const mappedCrewCount = crews.filter((crew) => Number.isFinite(crew.longitude) && Number.isFinite(crew.latitude)).length;
   const assignedCrew = crews.find((crew) => selectedOrder.assignmentState === "assigned" && crew.name === selectedOrder.crew);
   const rankedCrews = hasSelectedWorkOrder
     ? assignedCrew
@@ -815,6 +1023,8 @@ function DispatchScreen({
       : getRankedCandidateCrews(selectedOrder, crews)
     : [];
   const recommendedCrew = rankedCrews[0];
+  const scheduleCrew = assignedCrew ?? recommendedCrew;
+  const scheduleItems = getScheduleWindowItems(selectedOrder, scheduleCrew);
   const isSelectedOrderAssigned = selectedOrder.assignmentState === "assigned";
 
   return (
@@ -825,43 +1035,67 @@ function DispatchScreen({
             <Typography variant="h2">Dispatch</Typography>
             <Typography color="text.secondary">Crew allocation, route readiness, and schedule impact for {selectedOrder.id}.</Typography>
           </Box>
-          <Button disabled={evaluating || !hasSelectedWorkOrder || isSelectedOrderAssigned} onClick={onEvaluate} variant="contained">
-            {isSelectedOrderAssigned ? "Crew Assigned" : evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
-          </Button>
+          <Stack direction="row" gap={1} flexWrap="wrap">
+            <Button onClick={onRefreshWorkOrders} startIcon={<ReplayIcon />} variant="outlined">
+              Refresh Work Orders
+            </Button>
+            <Button disabled={!isSelectedOrderAssigned} onClick={onUnassignCrew} variant="outlined">
+              Unassign Crew
+            </Button>
+            <Button disabled={evaluating || !hasSelectedWorkOrder || isSelectedOrderAssigned} onClick={onEvaluate} variant="contained">
+              {isSelectedOrderAssigned ? "Crew Assigned" : evaluated ? "Re-evaluate Crews" : "Evaluate Crews"}
+            </Button>
+          </Stack>
         </Stack>
       </Grid>
-      <Grid item lg={5} xs={12}>
-        <Paper variant="outlined" sx={{ overflow: "hidden", maxWidth: { lg: 680 } }}>
+      <Grid item lg={6} xs={12}>
+        <Paper variant="outlined" sx={{ overflow: "hidden", maxWidth: { lg: 816 } }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
               <MapIcon color="primary" />
               <Typography fontWeight={900}>{getTaskMapTitle(activeTask, selectedOrder)}</Typography>
             </Stack>
-            <Chip label={activeTask === "crews" ? "Crew layer" : "Task context"} size="small" />
+            <Chip label={showCrewMarkers ? `${mappedCrewCount} crews visible` : "Crews hidden"} size="small" />
           </Stack>
-          <EsriMapViewer
-            center={[selectedOrder.longitude, selectedOrder.latitude]}
-            height={360}
-            layers={mapLayers}
-            markers={dispatchMarkers}
-            onMarkerClick={(marker) => {
-              if (workOrders.some((order) => order.id === marker.id)) {
-                onSelectOrder(marker.id);
-              }
-            }}
-            title=""
-            zoom={13}
-          />
-          <Stack direction="row" gap={1} flexWrap="wrap" sx={{ px: 2, py: 1, bgcolor: "white", borderTop: "1px solid", borderColor: "divider" }}>
-            <Chip label="Red triangle: emergency" size="small" />
-            <Chip label="Green square: assigned" size="small" />
-            <Chip label="Blue diamond: evaluated" size="small" />
-            <Chip label="Truck icons: available qualified crews" size="small" />
-            <Chip label="Blue truck: assigned crew" size="small" />
-          </Stack>
+          <Box sx={{ position: "relative" }}>
+            <Stack direction="row" spacing={1} sx={{ position: "absolute", right: 12, top: 12, zIndex: 30 }}>
+              <Button
+                color="success"
+                onClick={() => setShowCrewMarkers((current) => !current)}
+                size="small"
+                sx={{ bgcolor: "white", boxShadow: 3, fontWeight: 900, "&:hover": { bgcolor: "grey.50" } }}
+                variant="outlined"
+              >
+                {showCrewMarkers ? "Hide Crews" : "Show Crews"}
+              </Button>
+              <Button
+                color="success"
+                onClick={() => setShowMapLegend((current) => !current)}
+                size="small"
+                sx={{ bgcolor: "white", boxShadow: 3, fontWeight: 900, "&:hover": { bgcolor: "grey.50" } }}
+                variant="outlined"
+              >
+                {showMapLegend ? "Hide Legend" : "Show Legend"}
+              </Button>
+            </Stack>
+            <EsriMapViewer
+              center={[selectedOrder.longitude, selectedOrder.latitude]}
+              controls={{ attribution: true, compass: true, legend: showMapLegend, zoom: true }}
+              height={432}
+              layers={mapLayers}
+              markers={dispatchMarkers}
+              onMarkerClick={(marker) => {
+                if (workOrders.some((order) => order.id === marker.id)) {
+                  onSelectOrder(marker.id);
+                }
+              }}
+              title=""
+              zoom={hasSelectedWorkOrder ? dispatchMapSelectedZoom : dispatchMapDefaultZoom}
+            />
+          </Box>
         </Paper>
       </Grid>
-      <Grid item lg={7} xs={12}>
+      <Grid item lg={6} xs={12}>
         <Paper variant="outlined" sx={{ overflow: "hidden", height: "100%" }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
@@ -940,16 +1174,24 @@ function DispatchScreen({
         <Paper variant="outlined" sx={{ p: 2, height: "100%" }}>
           <Typography fontWeight={900}>{recommendedCrew ? `${recommendedCrew.name} Schedule Window` : "Schedule Window"}</Typography>
           <Stack spacing={1.2} sx={{ mt: 2 }}>
-            {["07:30 Travel", "07:48 Arrive on site", "08:05 Safety assessment", "08:30 Leak isolation", "09:15 Repair support"].map((item, index) => (
-              <Stack key={item} direction="row" alignItems="center" gap={1}>
-                <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: index < 2 ? "success.main" : "primary.main" }} />
-                <Typography>{item}</Typography>
+            {scheduleItems.map((item) => (
+              <Stack key={`${item.label}-${item.meta}`} direction="row" alignItems="center" gap={1}>
+                <Box sx={{ width: 10, height: 10, borderRadius: "50%", bgcolor: item.tone === "success" ? "success.main" : "primary.main" }} />
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography fontWeight={800}>{item.label}</Typography>
+                  <Typography color="text.secondary" variant="body2">{item.meta}</Typography>
+                </Box>
               </Stack>
             ))}
           </Stack>
           <Button disabled={isSelectedOrderAssigned || !evaluated || !recommendedCrew} onClick={() => recommendedCrew && onAssignCrew(recommendedCrew)} startIcon={<LocalShippingIcon />} fullWidth sx={{ mt: 2 }} variant="contained">
             {isSelectedOrderAssigned ? `Assigned to ${selectedOrder.crew}` : `Assign ${recommendedCrew?.name ?? "Recommended Crew"}`}
           </Button>
+          {isSelectedOrderAssigned && (
+            <Button onClick={onUnassignCrew} fullWidth sx={{ mt: 1 }} variant="outlined">
+              Unassign and Evaluate Again
+            </Button>
+          )}
         </Paper>
       </Grid>
     </Grid>
@@ -1024,6 +1266,17 @@ export function OperationsConsolePage() {
     closeMenu();
   }
 
+  function refreshWorkOrders() {
+    setWorkOrders(initialWorkOrders);
+    setCrews(initialCrews);
+    setSelectedOrderId(defaultWorkOrderId);
+    setSelectedCrewName(defaultCrewName);
+    setHasSelectedWorkOrder(false);
+    setEvaluated(false);
+    setEvaluating(false);
+    setActiveTask("emergency");
+  }
+
   function selectTask(task: typeof currentTasks[number]) {
     setActiveTask(task.key);
     setActiveHub(task.hub);
@@ -1050,13 +1303,16 @@ export function OperationsConsolePage() {
   }
 
   function assignRecommendedCrew(crew: RankedCrewOption) {
+    const previouslyAssignedCrewName = selectedOrder.assignmentState === "assigned" ? selectedOrder.crew : null;
+
     setWorkOrders((currentWorkOrders) => currentWorkOrders.map((order) => (
       order.id === selectedOrder.id
         ? {
           ...order,
           assignmentState: "assigned",
           status: "Assigned",
-          crew: crew.name
+          crew: crew.name,
+          assignedAt: new Date().toISOString()
         }
         : order
     )));
@@ -1067,11 +1323,47 @@ export function OperationsConsolePage() {
           status: "Assigned",
           currentAssignment: `Assigned to ${selectedOrder.id}`
         }
+        : candidate.name === previouslyAssignedCrewName
+          ? {
+            ...candidate,
+            ...(initialCrews.find((initialCrew) => initialCrew.name === candidate.name) ?? candidate)
+          }
         : candidate
     )));
     setSelectedCrewName(crew.name);
     setActiveTask("assignment");
     setEvaluated(false);
+  }
+
+  function unassignSelectedCrew() {
+    if (selectedOrder.assignmentState !== "assigned") {
+      return;
+    }
+
+    const assignedCrewName = selectedOrder.crew;
+
+    setWorkOrders((currentWorkOrders) => currentWorkOrders.map((order) => (
+      order.id === selectedOrder.id
+        ? {
+          ...order,
+          assignmentState: "unevaluated",
+          status: "Needs assignment",
+          crew: "Pending review",
+          assignedAt: undefined
+        }
+        : order
+    )));
+    setCrews((currentCrews) => currentCrews.map((candidate) => (
+      candidate.name === assignedCrewName
+        ? {
+          ...candidate,
+          ...(initialCrews.find((initialCrew) => initialCrew.name === candidate.name) ?? candidate)
+        }
+        : candidate
+    )));
+    setHasSelectedWorkOrder(true);
+    setEvaluated(false);
+    setActiveTask("crews");
   }
 
   function renderActiveHub(): ReactElement {
@@ -1092,6 +1384,8 @@ export function OperationsConsolePage() {
           onEvaluate={evaluateCrews}
           onSelectOrder={selectWorkOrder}
           onAssignCrew={assignRecommendedCrew}
+          onRefreshWorkOrders={refreshWorkOrders}
+          onUnassignCrew={unassignSelectedCrew}
           selectedOrder={selectedOrder}
           hasSelectedWorkOrder={hasSelectedWorkOrder}
           workOrders={workOrders}

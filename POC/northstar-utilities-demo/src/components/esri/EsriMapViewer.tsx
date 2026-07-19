@@ -73,17 +73,18 @@ function createMarkerSymbol(marker: EsriMarkerConfig) {
 }
 
 async function refreshMarkerLayer(markerLayer: GraphicsLayer, markers: EsriMarkerConfig[]) {
-  const [{ default: Graphic }, { default: Point }] = await Promise.all([
+  const [{ default: Graphic }, { default: Point }, { default: WebStyleSymbol }] = await Promise.all([
     import("@arcgis/core/Graphic"),
-    import("@arcgis/core/geometry/Point")
+    import("@arcgis/core/geometry/Point"),
+    import("@arcgis/core/symbols/WebStyleSymbol")
   ]);
 
   markerLayer.removeAll();
   markers.forEach((marker) => {
-    markerLayer.add(
-      new Graphic({
+    function addMarkerGraphic(symbol: ReturnType<typeof createMarkerSymbol> | InstanceType<typeof WebStyleSymbol>) {
+      markerLayer.add(new Graphic({
         geometry: new Point({ longitude: marker.longitude, latitude: marker.latitude }),
-        symbol: createMarkerSymbol(marker),
+        symbol,
         attributes: {
           id: marker.id,
           label: marker.label,
@@ -93,8 +94,30 @@ async function refreshMarkerLayer(markerLayer: GraphicsLayer, markers: EsriMarke
           title: marker.label,
           content: marker.popupContent ?? `NorthStar demo marker: ${marker.label}`
         }
-      })
-    );
+      }));
+    }
+
+    if (marker.icon) {
+      addMarkerGraphic({
+        type: "simple-marker" as const,
+        color: marker.color,
+        size: marker.size ?? 22,
+        style: "circle" as const,
+        outline: {
+          color: marker.outlineColor ?? "#ffffff",
+          width: 3
+        }
+      });
+      const carSymbol = new WebStyleSymbol({
+        name: "car",
+        styleName: "Esri2DPointSymbolsStyle"
+      });
+      (carSymbol as unknown as { color?: string }).color = marker.color;
+      addMarkerGraphic(carSymbol);
+      return;
+    }
+
+    addMarkerGraphic(createMarkerSymbol(marker));
   });
 }
 
@@ -107,7 +130,7 @@ export function EsriMapViewer({
   height = 460,
   layers = [],
   markers = [],
-  controls = { attribution: true, compass: true, zoom: true },
+  controls = { attribution: true, compass: true, legend: true, zoom: true },
   onMarkerClick,
   onReady,
   onViewpointChange
@@ -159,13 +182,19 @@ export function EsriMapViewer({
           { default: MapView },
           { default: GraphicsLayer },
           { default: Point },
-          { default: Compass }
+          { default: Compass },
+          { default: FeatureLayer },
+          { default: Graphic },
+          { default: Legend }
         ] = await Promise.all([
           import("@arcgis/core/Map"),
           import("@arcgis/core/views/MapView"),
           import("@arcgis/core/layers/GraphicsLayer"),
           import("@arcgis/core/geometry/Point"),
-          import("@arcgis/core/widgets/Compass")
+          import("@arcgis/core/widgets/Compass"),
+          import("@arcgis/core/layers/FeatureLayer"),
+          import("@arcgis/core/Graphic"),
+          import("@arcgis/core/widgets/Legend")
         ]);
 
         if (cancelled || !containerRef.current) {
@@ -180,6 +209,103 @@ export function EsriMapViewer({
         await refreshMarkerLayer(markerLayer, markersRef.current);
         map.add(markerLayer);
 
+        const legendLayer = new FeatureLayer({
+          id: `${id}-legend`,
+          title: "Dispatch Map Legend",
+          source: [
+            ["Emergency Work Order", 1],
+            ["Assigned Gas Work Order", 2],
+            ["Assigned Power Work Order", 3],
+            ["Evaluated Work Order", 4],
+            ["Gas Crew", 5],
+            ["Power Crew", 6]
+          ].map(([category, objectId]) => new Graphic({
+            geometry: new Point({ longitude: -179.99, latitude: -84.99 }),
+            attributes: { ObjectID: objectId, category }
+          })),
+          fields: [
+            { name: "ObjectID", type: "oid" },
+            { name: "category", type: "string" }
+          ],
+          objectIdField: "ObjectID",
+          geometryType: "point",
+          spatialReference: { wkid: 4326 },
+          listMode: "hide",
+          renderer: {
+            type: "unique-value",
+            field: "category",
+            uniqueValueInfos: [
+              {
+                value: "Emergency Work Order",
+                label: "Emergency work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#dc2626",
+                  size: 10,
+                  style: "triangle",
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Assigned Gas Work Order",
+                label: "Assigned gas work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#16a34a",
+                  size: 10,
+                  style: "square",
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Assigned Power Work Order",
+                label: "Assigned power work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#2563eb",
+                  size: 10,
+                  style: "square",
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Evaluated Work Order",
+                label: "Evaluated work order",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#2563eb",
+                  size: 10,
+                  style: "diamond",
+                  outline: { color: "#ffffff", width: 2 }
+                }
+              },
+              {
+                value: "Gas Crew",
+                label: "Gas crew",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#facc15",
+                  size: 12,
+                  style: "circle",
+                  outline: { color: "#713f12", width: 2 }
+                }
+              },
+              {
+                value: "Power Crew",
+                label: "Power crew",
+                symbol: {
+                  type: "simple-marker",
+                  color: "#2563eb",
+                  size: 12,
+                  style: "circle",
+                  outline: { color: "#dbeafe", width: 2 }
+                }
+              }
+            ]
+          }
+        });
+        map.add(legendLayer);
+
         const view = new MapView({
           container: containerRef.current,
           map,
@@ -193,6 +319,13 @@ export function EsriMapViewer({
 
         if (controls.compass !== false) {
           view.ui.add(new Compass({ view }), "top-left");
+        }
+
+        if (controls.legend !== false) {
+          view.ui.add(new Legend({
+            view,
+            layerInfos: [{ layer: legendLayer, title: "Legend" }]
+          }), "bottom-left");
         }
 
         async function findMarkerFromHitTest(event: Parameters<typeof view.hitTest>[0]) {
@@ -264,7 +397,7 @@ export function EsriMapViewer({
       markerLayerRef.current = null;
       mapRef.current = null;
     };
-  }, [basemap, controls.compass, controls.zoom, height, id, layerKey, layers]);
+  }, [basemap, controls.compass, controls.legend, controls.zoom, height, id, layerKey, layers]);
 
   useEffect(() => {
     if (!markerLayerRef.current) {
