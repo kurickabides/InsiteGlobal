@@ -341,3 +341,85 @@ Click:
 - [ ] ROI/business impact updates after assignment.
 - [ ] Screenshots are captured.
 - [ ] Live talk track is rehearsed.
+
+# Test
+Core Data Tests
+
+  1. Mock data loads correctly from generated data/public mock sources.
+  2. Work orders normalize crew relationships correctly.
+  3. Every assigned work order points to a real crew.
+  4. Every work order type has at least one eligible crew family.
+  5. Every work order type has an inventory assembly mapping.
+  6. Gas installation work orders return Gas Construction crews.
+
+  Crew Recommendation Tests
+
+  1. getCandidateCrews returns crews matching the required work order family.
+  2. getRankedCandidateCrews sorts by decision score.
+  3. Saved settings change crew ranking weights correctly.
+  4. Assigned crews are still shown as possible crews, with penalty applied.
+  5. Limited equipment crews are still shown, with penalty applied.
+  6. Empty candidate pools do not crash the app.
+
+  SLA / Evaluation Settings Tests
+
+  1. Default SLA settings load when nothing is saved.
+  2. Saved settings load from localStorage.
+  3. Partial saved settings merge with defaults.
+  4. Emergency SLA risk uses emergency threshold.
+  5. Critical SLA risk uses critical threshold.
+  6. High-priority SLA risk uses high-priority threshold.
+  7. Invalid or missing settings do not break evaluation.
+
+  Dispatch Screen Tests
+
+  1. Selecting a work order changes the selected order.
+  2. Dispatch button assigns the selected crew.
+  3. Unassign button clears crew assignment.
+  4. Possible Crews list updates for the selected work order.
+  5. Assigned work orders show their assigned crew.
+  6. Show/Hide Crews button toggles crew markers.
+  7. Show/Hide Legend button toggles Esri legend visibility.
+  8. Clicking a work order zooms close to the selected item.
+
+  Schedule Tests
+
+  1. Unsigned work orders show estimated task durations.
+  2. Assigned work orders calculate schedule from current time.
+  3. Material pickup time is included when assemblies exist.
+  4. Emergency work orders stay on the same day.
+  5. Non-emergency work rolls to next day after daily limit.
+  6. Emergency work moves ahead of lower-priority assigned work.
+  7. Existing assigned work moves down when higher-priority work is inserted.
+
+  Work Orders Screen Tests
+
+  1. Find filters by work order id/type/district/crew.
+  2. Filter button opens filter options.
+  3. Filter chips apply correctly.
+  4. Row Dispatch button routes to Dispatch screen.
+  5. Side-panel Dispatch button routes to Dispatch screen.
+  6. Assigned orders show Unassign instead of Dispatch.
+  7. Unassign updates the row and side panel.
+
+  Workforce Screen Tests
+
+  1. Selecting a crew updates the details panel.
+  2. Assigned Work tab shows that crew’s assignments.
+  3. Assignments are grouped by day.
+  4. Daily total respects the configured hour limit.
+  5. Material list includes next-day job materials.
+
+  Reports Tests
+
+  2. Crew Schedule report reflects current assignments.
+  3. Weekly Installed report rolls up completed/assigned work.
+  4. Inventory report uses assemblies, not trucks/equipment.
+  5. Inventory totals are grouped by SKU/category/unit.
+  Map Symbol Tests
+
+  1. Gas work orders use triangle symbols.
+  4. Assigned electric work orders use blue squares.
+  5. Priority outlines use green/orange/red correctly.
+  6. Crew symbols use custom vehicle paths.
+  7. Gas crews render yellow vehicles.
