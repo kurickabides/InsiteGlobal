@@ -63,7 +63,7 @@ function PresenterMetricCards({ metrics }: { metrics: NonNullable<DemoRoute["met
                 flex: 1,
                 minWidth: 0,
                 borderColor: selected ? "primary.main" : "divider",
-                bgcolor: selected ? "rgba(46, 125, 50, 0.08)" : "background.paper",
+                bgcolor: selected ? "rgba(37, 99, 235, 0.08)" : "background.paper",
                 cursor: "pointer",
                 textAlign: "left"
               }}

@@ -14,13 +14,13 @@ export const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#14532d"
+      main: "#2563eb"
     },
     secondary: {
-      main: "#0f766e"
+      main: "#0f4f9f"
     },
     background: {
-      default: "#f7f8f5",
+      default: "#f7f9fc",
       paper: "#ffffff"
     },
     text: {

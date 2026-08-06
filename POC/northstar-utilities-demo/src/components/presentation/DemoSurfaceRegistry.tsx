@@ -103,7 +103,7 @@ function WelcomeSurface(): ReactElement {
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3.5, background: "linear-gradient(135deg, #14532d, #0f766e)", color: "white" }}>
+      <Paper variant="outlined" sx={{ p: 3.5, background: "linear-gradient(135deg, #1d4ed8, #0ea5e9)", color: "white" }}>
         <Typography variant="h2">AI-enabled labor intelligence for field operations</Typography>
         <Typography sx={{ mt: 1.5, maxWidth: 760, fontSize: "1.02rem" }}>
           NorthStar Utilities combines work orders, crew qualifications, labor rates, service territories, travel, and performance history to make dispatch decisions faster and more defensible.
@@ -171,13 +171,13 @@ function BusinessProblemSurface(): ReactElement {
 
       <Stack spacing={1.25}>
         {rankedCrews.map((crew, index) => (
-          <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
+          <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "primary.main" : "divider" }}>
             <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
               <div>
                 <Typography fontWeight={900}>{index + 1}. {crew.name}</Typography>
                 <Typography color="text.secondary">{crew.note}</Typography>
               </div>
-              <Chip label={`${crew.hourly} rate · ${crew.effective} effective cost`} color={index === 0 ? "success" : "default"} />
+              <Chip label={`${crew.hourly} rate · ${crew.effective} effective cost`} color={index === 0 ? "primary" : "default"} />
             </Stack>
           </Paper>
         ))}
@@ -214,7 +214,7 @@ function UtilityChallengesSurface(): ReactElement {
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(30, 64, 175, 0.12), rgba(20, 83, 45, 0.12))" }}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(14, 165, 233, 0.10))" }}>
         <Typography variant="h2">Why utility labor decisions are hard</Typography>
         <Typography color="text.secondary" sx={{ mt: 1.25, maxWidth: 760 }}>
           NorthStar planners are not simply picking the closest or lowest-rate crew. They are resolving a live operations puzzle where public safety, reliability, crew eligibility, customer commitments, and effective labor cost all interact.
@@ -275,7 +275,7 @@ function OverviewSurface(): ReactElement {
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(30, 64, 175, 0.10), rgba(20, 83, 45, 0.12))" }}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(37, 99, 235, 0.10), rgba(14, 165, 233, 0.10))" }}>
         <Typography variant="h2">By the end of this demo</Typography>
         <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 820 }}>
           The audience should understand how NorthStar turns a complex utility dispatch choice into a transparent, repeatable recommendation that planners can explain and leaders can measure.
@@ -319,7 +319,7 @@ function DashboardSurface(): ReactElement {
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(20, 83, 45, 0.12))" }}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(2, 132, 199, 0.12), rgba(37, 99, 235, 0.10))" }}>
         <Typography variant="h2">Operational snapshot before dispatch</Typography>
         <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 760 }}>
           The planner starts with a mixed gas and electric queue, constrained field capacity, and a visible savings opportunity if the next emergency is assigned to the right qualified crew.
@@ -555,7 +555,7 @@ function WorkOrdersSurface(): ReactElement {
             <Typography fontWeight={900} sx={{ mb: 1.5 }}>Gas decision gates</Typography>
             <Stack direction="row" flexWrap="wrap" gap={1}>
               {gasOrder.required.map((requirement) => <Chip key={requirement} label={requirement} color="primary" variant="outlined" />)}
-              <Chip label="Productivity factor 1.18" color="success" variant="outlined" />
+              <Chip label="Productivity factor 1.18" color="primary" variant="outlined" />
               <Chip label="Historical baseline: 4.2 hr" variant="outlined" />
             </Stack>
             <Typography color="text.secondary" sx={{ mt: 2 }}>
@@ -658,22 +658,22 @@ function CrewRecommendationSurface(): ReactElement {
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3, borderColor: "success.main", background: "rgba(22, 163, 74, 0.08)" }}>
+      <Paper variant="outlined" sx={{ p: 3, borderColor: "primary.main", background: "rgba(37, 99, 235, 0.08)" }}>
         <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
           <div>
-            <Typography color="success.main" fontWeight={900} variant="overline">Recommended assignment</Typography>
+            <Typography color="primary.main" fontWeight={900} variant="overline">Recommended assignment</Typography>
             <Typography variant="h2">{selectedCrew.name} for WO-1842</Typography>
             <Typography color="text.secondary" sx={{ mt: 1 }}>
               Best qualified crew at the lowest effective cost after travel, equipment, productivity, and overtime risk are considered.
             </Typography>
           </div>
-          <Chip color="success" label={`${selectedCrew.fit}% fit · ${selectedCrew.cost} cost delta`} />
+          <Chip color="primary" label={`${selectedCrew.fit}% fit · ${selectedCrew.cost} cost delta`} />
         </Stack>
       </Paper>
 
       <Stack spacing={1.5}>
         {crews.map((crew, index) => (
-          <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "success.main" : "divider" }}>
+          <Paper key={crew.name} variant="outlined" sx={{ p: 2, borderColor: index === 0 ? "primary.main" : "divider" }}>
             <Stack spacing={1.25}>
               <Stack direction="row" justifyContent="space-between" gap={2} flexWrap="wrap">
                 <div>
@@ -682,7 +682,7 @@ function CrewRecommendationSurface(): ReactElement {
                 </div>
                 <Typography fontWeight={800}>{crew.hourly} · {crew.effectiveCost} effective · {crew.travel}</Typography>
               </Stack>
-              <LinearProgress color={index === 0 ? "success" : "primary"} variant="determinate" value={crew.fit} />
+              <LinearProgress color="primary" variant="determinate" value={crew.fit} />
               <Stack direction="row" flexWrap="wrap" gap={1}>
                 {crew.strengths.map((strength) => <Chip key={strength} label={strength} size="small" variant="outlined" />)}
               </Stack>
@@ -704,7 +704,7 @@ function ExplainabilitySurface(): ReactElement {
 
   return (
     <Stack spacing={2.5}>
-      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(22, 163, 74, 0.12), rgba(15, 118, 110, 0.12))" }}>
+      <Paper variant="outlined" sx={{ p: 3, background: "linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(14, 165, 233, 0.10))" }}>
         <Typography variant="h2">Why Crew B wins</Typography>
         <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 780 }}>
           NorthStar separates hard qualification gates from cost optimization so the planner can defend the recommendation without treating the AI as a black box.
@@ -717,7 +717,7 @@ function ExplainabilitySurface(): ReactElement {
             <Paper variant="outlined" sx={{ p: 2.5, height: "100%" }}>
               <Stack direction="row" justifyContent="space-between" gap={1} sx={{ mb: 1 }}>
                 <Typography fontWeight={900}>{check.label}</Typography>
-                <Chip color={check.result === "Pass" ? "success" : "primary"} label={check.result} size="small" />
+                <Chip color="primary" label={check.result} size="small" />
               </Stack>
               <Typography color="text.secondary">{check.detail}</Typography>
             </Paper>
@@ -725,7 +725,7 @@ function ExplainabilitySurface(): ReactElement {
         ))}
       </Grid>
 
-      <Paper variant="outlined" sx={{ p: 2.5, borderColor: "success.main" }}>
+      <Paper variant="outlined" sx={{ p: 2.5, borderColor: "primary.main" }}>
         <Typography fontWeight={900}>Planner explanation</Typography>
         <Typography color="text.secondary" sx={{ mt: 1 }}>
           Recommend Crew B because it is fully qualified for gas emergency response, already carries the required equipment, reaches the site inside the SLA window, and produces the lowest effective cost despite not having the lowest hourly rate.

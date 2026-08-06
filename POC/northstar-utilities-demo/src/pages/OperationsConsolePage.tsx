@@ -52,7 +52,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import WorkIcon from "@mui/icons-material/Work";
-import { MouseEvent, ReactElement, useEffect, useMemo, useState } from "react";
+import { DragEvent, MouseEvent, ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { EsriMapViewer } from "../components/esri/EsriMapViewer";
 import { EsriLayerConfig, EsriMarkerConfig } from "../components/esri/types";
@@ -123,8 +123,81 @@ interface OperationsSettings {
 type WorkOrderFilterKey = "emergency" | "critical" | "slaRisk" | "gas" | "electric" | "assigned" | "needsAssignment";
 type WorkforceFilterKey = "available" | "assigned" | "gas" | "power" | "highFit" | "overtimeRisk";
 
+const workOrderFilterOptions: { key: WorkOrderFilterKey; label: string }[] = [
+  { key: "emergency", label: "Emergency priority" },
+  { key: "critical", label: "Critical or high" },
+  { key: "slaRisk", label: "SLA risk" },
+  { key: "gas", label: "Gas work" },
+  { key: "electric", label: "Power work" },
+  { key: "assigned", label: "Assigned" },
+  { key: "needsAssignment", label: "Needs assignment" }
+];
+
+const weeklyOnCallCrews: CrewOption[] = [
+  {
+    name: "Gas On Call Alpha",
+    fit: 94,
+    eta: "18 min",
+    district: "North",
+    status: "On Call",
+    crewType: "Gas Emergency",
+    vehicleIcon: "truck",
+    currentAssignment: "Weekly on-call coverage",
+    certifications: ["Gas emergency", "Atmospheric testing", "Incident command"],
+    equipment: "Ready",
+    overtime: "Moderate",
+    hourly: "$132/hr",
+    effectiveCost: "$168/hr",
+    longitude: -122.6814,
+    latitude: 45.5528,
+    strengths: ["Emergency response", "Leak isolation", "After-hours coverage"],
+    penalties: ["On-call callback premium"]
+  },
+  {
+    name: "Power On Call Bravo",
+    fit: 92,
+    eta: "22 min",
+    district: "Central",
+    status: "On Call",
+    crewType: "Electric Trouble",
+    vehicleIcon: "bucket",
+    currentAssignment: "Weekly on-call coverage",
+    certifications: ["Switching", "Transformer replacement", "Storm response"],
+    equipment: "Ready",
+    overtime: "Moderate",
+    hourly: "$148/hr",
+    effectiveCost: "$186/hr",
+    longitude: -122.6572,
+    latitude: 45.5236,
+    strengths: ["Trouble calls", "Outage restoration", "Switching support"],
+    penalties: ["On-call callback premium"]
+  },
+  {
+    name: "Utility On Call Charlie",
+    fit: 90,
+    eta: "26 min",
+    district: "South",
+    status: "On Call",
+    crewType: "Line Patrol",
+    vehicleIcon: "patrol",
+    currentAssignment: "Weekly on-call coverage",
+    certifications: ["Damage assessment", "Line patrol", "Traffic control"],
+    equipment: "Ready",
+    overtime: "Low",
+    hourly: "$118/hr",
+    effectiveCost: "$151/hr",
+    longitude: -122.6428,
+    latitude: 45.5014,
+    strengths: ["First response", "Patrol", "Field assessment"],
+    penalties: ["On-call callback premium"]
+  }
+];
+
 const generatedConsoleWorkOrders = generatedWorkOrders.map((order) => ({ ...order })) as unknown as WorkOrder[];
-const generatedConsoleCrews = generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[];
+const generatedConsoleCrews = [
+  ...(generatedCrews.map((crew) => ({ ...crew })) as unknown as CrewOption[]),
+  ...weeklyOnCallCrews
+];
 const july20DemoWorkOrders = createJuly20DemoWorkOrders(generatedConsoleCrews);
 const july20DemoCrewNames = new Set(july20DemoWorkOrders.map((order) => order.crew));
 const initialCrews = generatedConsoleCrews.map((crew) => (
@@ -213,6 +286,15 @@ function mergeJuly20DemoWorkOrders(workOrders: WorkOrder[]): WorkOrder[] {
   ];
 }
 
+function mergeWeeklyOnCallCrews(crews: CrewOption[]): CrewOption[] {
+  const existingNames = new Set(crews.map((crew) => crew.name));
+
+  return [
+    ...crews,
+    ...weeklyOnCallCrews.filter((crew) => !existingNames.has(crew.name))
+  ];
+}
+
 function mergeJuly20DemoCrewAssignments(crews: CrewOption[]): CrewOption[] {
   return crews.map((crew) => (
     july20DemoCrewNames.has(crew.name)
@@ -259,7 +341,7 @@ function normalizePersistedWorkflowState(state: PersistedWorkflowState): Persist
   return {
     ...state,
     workOrders: normalizeWorkOrderCrewRelationships(mergeJuly20DemoWorkOrders(state.workOrders)),
-    crews: mergeJuly20DemoCrewAssignments(state.crews)
+    crews: mergeJuly20DemoCrewAssignments(mergeWeeklyOnCallCrews(state.crews))
   };
 }
 
@@ -668,6 +750,13 @@ function getCandidateCrews(order: WorkOrder, crewPool: CrewOption[] = initialCre
 
       return b.fit - a.fit;
     });
+}
+
+function canCrewWorkOrder(crew: CrewOption, order: WorkOrder): boolean {
+  const requiredFamilies = getRequiredCrewFamilies(order);
+
+  return isCrewStatusEligibleForOrder(crew, order)
+    && requiredFamilies.some((family) => crew.crewType.includes(family) || crew.name.includes(family));
 }
 
 function parseMinutes(value: string): number {
@@ -1087,11 +1176,12 @@ function getCrewScheduleAssignments(crew: CrewOption, workOrders: WorkOrder[], s
       return new Date(a.assignedAt ?? 0).getTime() - new Date(b.assignedAt ?? 0).getTime();
     });
 
-  let dayStart = new Date(now);
+  const firstAssignedAt = assignedOrders[0]?.assignedAt ? new Date(assignedOrders[0].assignedAt) : now;
+  let dayStart = new Date(firstAssignedAt);
   dayStart.setHours(7, 0, 0, 0);
 
-  if (now > dayStart) {
-    dayStart = new Date(now);
+  if (firstAssignedAt > dayStart) {
+    dayStart = new Date(firstAssignedAt);
   }
 
   let cursor = new Date(dayStart);
@@ -1362,21 +1452,56 @@ function WorkOrderTable({
   );
 }
 
-function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }: { selectedOrder: WorkOrder; markers: EsriMarkerConfig[]; crews: CrewOption[]; workOrders: WorkOrder[]; settings: OperationsSettings }) {
-  const today = new Date();
-  const scheduleStartHour = 7;
-  const scheduleEndHour = 17;
+function DashboardScreen({
+  selectedOrder,
+  markers,
+  crews,
+  onMoveScheduleBlock,
+  onSelectScheduleDate,
+  selectedScheduleDate,
+  workOrders,
+  settings
+}: {
+  selectedOrder: WorkOrder;
+  markers: EsriMarkerConfig[];
+  crews: CrewOption[];
+  onMoveScheduleBlock: (orderId: string, crewName: string, assignedAt: string) => void;
+  onSelectScheduleDate: (date: Date) => void;
+  selectedScheduleDate: Date;
+  workOrders: WorkOrder[];
+  settings: OperationsSettings;
+}) {
+  const [crewScheduleFilter, setCrewScheduleFilter] = useState<"all" | "gas" | "power">("all");
+  const [scheduleFilterAnchor, setScheduleFilterAnchor] = useState<HTMLElement | null>(null);
+  const scheduleScrollRef = useRef<HTMLDivElement | null>(null);
+  const weekStart = new Date(selectedScheduleDate);
+  weekStart.setDate(selectedScheduleDate.getDate() - selectedScheduleDate.getDay());
+  weekStart.setHours(12, 0, 0, 0);
+  const weekDays = Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + index);
+
+    return date;
+  });
+  const currentTime = new Date();
+  const scheduleStartHour = 0;
+  const scheduleEndHour = 24;
   const scheduleMinutes = (scheduleEndHour - scheduleStartHour) * 60;
-  const timelineHours = Array.from({ length: scheduleEndHour - scheduleStartHour + 1 }, (_, index) => scheduleStartHour + index);
-  const visibleCrews = crews.filter((crew) => crew.status !== "Off").slice(0, 10);
-  const todayAssignments = visibleCrews.flatMap((crew) => (
+  const timelineHours = Array.from({ length: scheduleEndHour - scheduleStartHour }, (_, index) => scheduleStartHour + index);
+  const visibleCrews = crews.filter((crew) => (
+    crew.status !== "Off"
+    && (crewScheduleFilter === "all" || getCrewMapDomain(crew) === crewScheduleFilter)
+  ));
+  const scheduleFilterCount = crewScheduleFilter === "all" ? 0 : 1;
+  const scheduleFilterMenuOpen = Boolean(scheduleFilterAnchor);
+  const scheduleAssignments = visibleCrews.flatMap((crew) => (
     getCrewScheduleAssignments(crew, workOrders, settings)
-      .filter((assignment) => assignment.pickupStart.toDateString() === today.toDateString())
+      .filter((assignment) => assignment.pickupStart.toDateString() === selectedScheduleDate.toDateString())
       .map((assignment) => ({ crew, assignment }))
   ));
-  const scheduledOrderIds = new Set(todayAssignments.map(({ assignment }) => assignment.order.id));
+  const scheduledOrderIds = new Set(scheduleAssignments.map(({ assignment }) => assignment.order.id));
   const unallocatedOrders = workOrders
-    .filter((order) => order.assignmentState !== "assigned" || !scheduledOrderIds.has(order.id))
+    .filter((order) => order.assignmentState !== "assigned" || (order.assignedAt && new Date(order.assignedAt).toDateString() === selectedScheduleDate.toDateString() && !scheduledOrderIds.has(order.id)))
     .sort((a, b) => parseSlaMinutes(a.sla) - parseSlaMinutes(b.sla))
     .slice(0, 12);
   const emergencyOrCriticalCount = workOrders.filter((order) => order.priority === "Emergency" || order.priority === "Critical").length;
@@ -1385,11 +1510,41 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
   const assignedCrewCount = crews.filter((crew) => crew.status === "Assigned").length;
   const slaRiskCount = workOrders.filter((order) => getWorkOrderHealth(order, settings) !== "onTrack").length;
 
-  const getTimelinePosition = (date: Date) => {
+  const isCurrentScheduleDate = selectedScheduleDate.toDateString() === currentTime.toDateString();
+  const currentTimePosition = isCurrentScheduleDate ? getTimelinePosition(currentTime) : 0;
+  const currentWindowMinutes = 120;
+  const currentWindowWidth = (currentWindowMinutes / scheduleMinutes) * 100;
+  const currentWindowLeft = Math.min(100 - currentWindowWidth, Math.max(0, currentTimePosition - (currentWindowWidth / 2)));
+
+  useEffect(() => {
+    if (!isCurrentScheduleDate || !scheduleScrollRef.current) {
+      return;
+    }
+
+    const scrollContainer = scheduleScrollRef.current;
+    window.requestAnimationFrame(() => {
+      const targetScrollLeft = ((currentTimePosition / 100) * scrollContainer.scrollWidth) - (scrollContainer.clientWidth / 2);
+      scrollContainer.scrollLeft = Math.max(0, targetScrollLeft);
+    });
+  }, [currentTimePosition, isCurrentScheduleDate, selectedScheduleDate]);
+
+  function formatTimelineHour(hour: number) {
+    if (hour === 0) {
+      return "12 AM";
+    }
+
+    if (hour === 12) {
+      return "12 PM";
+    }
+
+    return hour > 12 ? `${hour - 12} PM` : `${hour} AM`;
+  }
+
+  function getTimelinePosition(date: Date) {
     const minutes = ((date.getHours() - scheduleStartHour) * 60) + date.getMinutes();
 
     return Math.min(100, Math.max(0, (minutes / scheduleMinutes) * 100));
-  };
+  }
 
   const getPriorityFill = (priority: WorkOrder["priority"]) => {
     if (priority === "Emergency") {
@@ -1407,13 +1562,38 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
     return "#16a34a";
   };
 
+  function getDropAssignedAt(event: DragEvent<HTMLElement>) {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const relativeX = Math.min(bounds.width, Math.max(0, event.clientX - bounds.left));
+    const rawMinutes = (relativeX / bounds.width) * scheduleMinutes;
+    const snappedMinutes = Math.round(rawMinutes / 15) * 15;
+    const assignedAt = new Date(selectedScheduleDate);
+
+    assignedAt.setHours(scheduleStartHour, 0, 0, 0);
+    assignedAt.setMinutes(assignedAt.getMinutes() + snappedMinutes);
+
+    return assignedAt;
+  }
+
+  function dropScheduleBlock(event: DragEvent<HTMLElement>, crew: CrewOption) {
+    event.preventDefault();
+    const orderId = event.dataTransfer.getData("text/plain");
+    const order = workOrders.find((candidate) => candidate.id === orderId);
+
+    if (!order || !canCrewWorkOrder(crew, order)) {
+      return;
+    }
+
+    onMoveScheduleBlock(order.id, crew.name, getDropAssignedAt(event).toISOString());
+  }
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} flexWrap="wrap">
           <Box>
             <Typography variant="h2">Dashboard</Typography>
-            <Typography color="text.secondary">Daily schedule for today with crews, assigned work, SLA risk, and unallocated jobs.</Typography>
+            <Typography color="text.secondary">Daily schedule with crews, assigned work, SLA risk, and unallocated jobs.</Typography>
           </Box>
           <Stack direction="row" gap={1} flexWrap="wrap">
             <Chip icon={<WarningAmberIcon />} color="error" label={`${slaRiskCount} SLA risk`} />
@@ -1423,37 +1603,90 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
         </Stack>
       </Grid>
 
-      <Grid item md={3} xs={12}><MetricTile label="Active Work Orders" value={`${workOrders.length}`} detail={`${emergencyOrCriticalCount} emergency or critical`} tone="primary" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Scheduled Today" value={`${todayAssignments.length}`} detail="Crew schedule blocks in view" tone="success" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Crew Coverage" value={`${assignedCrewCount} assigned`} detail={`${availableCrewCount} available, ${onCallCrewCount} on call`} tone="warning" /></Grid>
-      <Grid item md={3} xs={12}><MetricTile label="Map Signals" value={`${markers.length}`} detail="Work order and crew markers" tone="primary" /></Grid>
+      <Grid item md={4} xs={12}><MetricTile label="Active Work Orders" value={`${workOrders.length}`} detail={`${emergencyOrCriticalCount} emergency or critical`} tone="primary" /></Grid>
+      <Grid item md={4} xs={12}><MetricTile label="Scheduled Work" value={`${scheduleAssignments.length}`} detail={selectedScheduleDate.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })} tone="success" /></Grid>
+      <Grid item md={4} xs={12}><MetricTile label="Crew Coverage" value={`${assignedCrewCount} assigned`} detail={`${availableCrewCount} available, ${onCallCrewCount} on call`} tone="warning" /></Grid>
+
+      <Grid item xs={12}>
+        <Paper variant="outlined" sx={{ p: 1, bgcolor: "white" }}>
+          <Stack direction="row" gap={1} flexWrap="wrap">
+            {weekDays.map((date) => {
+              const isSelected = date.toDateString() === selectedScheduleDate.toDateString();
+              const assignedCount = workOrders.filter((order) => order.assignedAt && new Date(order.assignedAt).toDateString() === date.toDateString()).length;
+
+              return (
+                <Button
+                  key={date.toISOString()}
+                  onClick={() => onSelectScheduleDate(date)}
+                  size="small"
+                  variant={isSelected ? "contained" : "outlined"}
+                  sx={{ flex: "1 1 118px", justifyContent: "space-between", minWidth: 118 }}
+                >
+                  <Box component="span" sx={{ textAlign: "left" }}>
+                    <Typography component="span" display="block" fontWeight={900} variant="caption">{date.toLocaleDateString(undefined, { weekday: "short" })}</Typography>
+                    <Typography component="span" display="block" variant="caption">{date.toLocaleDateString(undefined, { month: "short", day: "numeric" })}</Typography>
+                  </Box>
+                  <Chip label={assignedCount} size="small" sx={{ ml: 1, height: 20 }} />
+                </Button>
+              );
+            })}
+          </Stack>
+        </Paper>
+      </Grid>
 
       <Grid item xs={12}>
         <Paper variant="outlined" sx={{ overflow: "hidden" }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
               <AssessmentIcon color="primary" />
-              <Typography fontWeight={900}>Today Schedule Matrix</Typography>
+              <Typography fontWeight={900}>Schedule Matrix</Typography>
             </Stack>
-            <Chip label={today.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })} size="small" />
+            <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
+              <Button color={scheduleFilterCount ? "primary" : "inherit"} onClick={(event) => setScheduleFilterAnchor(event.currentTarget)} startIcon={<FilterListIcon />} size="small" variant="outlined">
+                Filters{scheduleFilterCount ? ` (${scheduleFilterCount})` : ""}
+              </Button>
+              <Menu anchorEl={scheduleFilterAnchor} onClose={() => setScheduleFilterAnchor(null)} open={scheduleFilterMenuOpen}>
+                {(["all", "gas", "power"] as const).map((filter) => (
+                  <MenuItem key={filter} onClick={() => setCrewScheduleFilter(filter)}>
+                    <Checkbox checked={crewScheduleFilter === filter} size="small" />
+                    {filter === "all" ? "All crews" : filter === "gas" ? "Gas crews" : "Power crews"}
+                  </MenuItem>
+                ))}
+                <Divider />
+                <MenuItem disabled={!scheduleFilterCount} onClick={() => {
+                  setCrewScheduleFilter("all");
+                  setScheduleFilterAnchor(null);
+                }}>
+                  Clear all
+                </MenuItem>
+              </Menu>
+              {isCurrentScheduleDate && <Chip color="error" label={`Now ${formatClockTime(currentTime)}`} size="small" />}
+              <Chip label={selectedScheduleDate.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })} size="small" />
+            </Stack>
           </Stack>
-          <Box sx={{ overflowX: "auto" }}>
-            <Box sx={{ minWidth: 980 }}>
+          <Box ref={scheduleScrollRef} sx={{ overflowX: "auto" }}>
+            <Box sx={{ minWidth: 2360 }}>
               <Box sx={{ display: "grid", gridTemplateColumns: "220px 1fr", borderBottom: "1px solid", borderColor: "divider" }}>
                 <Box sx={{ px: 1.5, py: 1, bgcolor: "grey.100", borderRight: "1px solid", borderColor: "divider" }}>
                   <Typography color="text.secondary" fontWeight={900} variant="body2">Resource</Typography>
                 </Box>
-                <Box sx={{ display: "grid", gridTemplateColumns: `repeat(${timelineHours.length}, 1fr)`, bgcolor: "grey.100" }}>
+                <Box sx={{ position: "relative", display: "grid", gridTemplateColumns: `repeat(${timelineHours.length}, minmax(84px, 1fr))`, bgcolor: "grey.100" }}>
+                  {isCurrentScheduleDate && (
+                    <>
+                      <Box sx={{ position: "absolute", top: 0, bottom: 0, left: `${currentWindowLeft}%`, width: `${currentWindowWidth}%`, bgcolor: "rgba(239, 68, 68, 0.10)", borderLeft: "1px solid rgba(239, 68, 68, 0.28)", borderRight: "1px solid rgba(239, 68, 68, 0.28)", pointerEvents: "none", zIndex: 1 }} />
+                      <Box sx={{ position: "absolute", top: 0, bottom: 0, left: `${currentTimePosition}%`, borderLeft: "2px solid #dc2626", pointerEvents: "none", zIndex: 2 }} />
+                    </>
+                  )}
                   {timelineHours.map((hour) => (
-                    <Box key={hour} sx={{ px: 0.75, py: 1, borderLeft: "1px solid", borderColor: "divider" }}>
-                      <Typography color="text.secondary" fontWeight={800} variant="caption">{hour > 12 ? hour - 12 : hour}:00</Typography>
+                    <Box key={hour} sx={{ px: 0.75, py: 1, borderLeft: "1px solid", borderColor: "divider", minWidth: 84, position: "relative", zIndex: 3 }}>
+                      <Typography color="text.secondary" fontWeight={800} variant="caption">{formatTimelineHour(hour)}</Typography>
                     </Box>
                   ))}
                 </Box>
               </Box>
 
               {visibleCrews.map((crew) => {
-                const crewAssignments = todayAssignments
+                const crewAssignments = scheduleAssignments
                   .filter(({ crew: assignmentCrew }) => assignmentCrew.name === crew.name)
                   .map(({ assignment }) => assignment)
                   .sort((a, b) => a.pickupStart.getTime() - b.pickupStart.getTime());
@@ -1467,7 +1700,17 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
                         <Chip label={crew.crewType} size="small" />
                       </Stack>
                     </Box>
-                    <Box sx={{ position: "relative", minHeight: 70, backgroundImage: "linear-gradient(to right, rgba(148, 163, 184, 0.32) 1px, transparent 1px)", backgroundSize: `${100 / (timelineHours.length - 1)}% 100%` }}>
+                    <Box
+                      onDragOver={(event) => event.preventDefault()}
+                      onDrop={(event) => dropScheduleBlock(event, crew)}
+                      sx={{ position: "relative", minHeight: 70, backgroundImage: "linear-gradient(to right, rgba(148, 163, 184, 0.32) 1px, transparent 1px)", backgroundSize: `${100 / timelineHours.length}% 100%` }}
+                    >
+                      {isCurrentScheduleDate && (
+                        <>
+                          <Box sx={{ position: "absolute", top: 0, bottom: 0, left: `${currentWindowLeft}%`, width: `${currentWindowWidth}%`, bgcolor: "rgba(239, 68, 68, 0.08)", borderLeft: "1px solid rgba(239, 68, 68, 0.22)", borderRight: "1px solid rgba(239, 68, 68, 0.22)", pointerEvents: "none", zIndex: 1 }} />
+                          <Box sx={{ position: "absolute", top: 0, bottom: 0, left: `${currentTimePosition}%`, borderLeft: "2px solid #dc2626", pointerEvents: "none", zIndex: 2 }} />
+                        </>
+                      )}
                       {crewAssignments.map((assignment) => {
                         const left = getTimelinePosition(assignment.pickupStart);
                         const right = getTimelinePosition(assignment.jobEnd);
@@ -1475,7 +1718,12 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
 
                         return (
                           <Box
+                            draggable
                             key={assignment.order.id}
+                            onDragStart={(event) => {
+                              event.dataTransfer.effectAllowed = "move";
+                              event.dataTransfer.setData("text/plain", assignment.order.id);
+                            }}
                             sx={{
                               position: "absolute",
                               left: `${left}%`,
@@ -1491,7 +1739,9 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
                               borderRadius: 0.75,
                               boxShadow: "0 1px 4px rgba(15, 23, 42, 0.18)",
                               color: "white",
-                              overflow: "hidden"
+                              cursor: "grab",
+                              overflow: "hidden",
+                              zIndex: 4
                             }}
                           >
                             <Typography fontWeight={900} noWrap variant="caption">{assignment.order.id}</Typography>
@@ -1500,7 +1750,7 @@ function DashboardScreen({ selectedOrder, markers, crews, workOrders, settings }
                         );
                       })}
                       {!crewAssignments.length && (
-                        <Typography color="text.secondary" sx={{ position: "absolute", top: 24, left: 12 }} variant="body2">Open capacity</Typography>
+                        <Typography color="text.secondary" sx={{ position: "absolute", top: 24, left: 12, zIndex: 3 }} variant="body2">Open capacity</Typography>
                       )}
                     </Box>
                   </Box>
@@ -1580,6 +1830,16 @@ function PerformanceScreen({ selectedOrder, markers, crews, workOrders, settings
     ...counts,
     [order.status]: (counts[order.status] ?? 0) + 1
   }), {});
+  const assignmentCoverage = (["assigned", "evaluated", "unevaluated"] as const).map((state) => {
+    const count = workOrders.filter((order) => order.assignmentState === state).length;
+
+    return {
+      state,
+      label: assignmentLabel(state),
+      count,
+      percent: workOrders.length ? Math.round((count / workOrders.length) * 100) : 0
+    };
+  });
   const statusBreakdown = Object.entries(statusCounts);
   const maxStatusCount = Math.max(1, ...statusBreakdown.map(([, count]) => count));
   const emergencyOrCriticalCount = workOrders.filter((order) => order.priority === "Emergency" || order.priority === "Critical").length;
@@ -1629,22 +1889,22 @@ function PerformanceScreen({ selectedOrder, markers, crews, workOrders, settings
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1, bgcolor: "grey.50", borderBottom: "1px solid", borderColor: "divider" }}>
             <Stack direction="row" alignItems="center" gap={1}>
               <AssessmentIcon color="primary" />
-              <Typography fontWeight={900}>Completion Status and Efficiency</Typography>
+              <Typography fontWeight={900}>Assignment Coverage and Efficiency</Typography>
             </Stack>
             <Chip label="Healthy target: 80%+" size="small" />
           </Stack>
           <Grid container spacing={0} sx={{ p: 2 }}>
             <Grid item md={7} xs={12}>
-              <Typography color="text.secondary" fontWeight={800} variant="body2">Work order completion status</Typography>
+              <Typography color="text.secondary" fontWeight={800} variant="body2">Assignment coverage</Typography>
               <Stack spacing={1.25} sx={{ mt: 1.5 }}>
-                {Object.entries(statusCounts).map(([status, count]) => (
-                  <Stack key={status} spacing={0.5}>
+                {assignmentCoverage.map((item) => (
+                  <Stack key={item.state} spacing={0.5}>
                     <Stack direction="row" justifyContent="space-between" gap={1}>
-                      <Typography fontWeight={800}>{status}</Typography>
-                      <Typography color="text.secondary" variant="body2">{count} orders</Typography>
+                      <Typography fontWeight={800}>{item.label}</Typography>
+                      <Typography color="text.secondary" variant="body2">{item.count} orders · {item.percent}%</Typography>
                     </Stack>
                     <Box sx={{ height: 18, bgcolor: "grey.100", borderRadius: 1, overflow: "hidden" }}>
-                      <Box sx={{ width: `${(count / maxStatusCount) * 100}%`, height: "100%", bgcolor: status === "Assigned" || status === "Scheduled" ? "success.main" : status === "Needs assignment" ? "error.main" : "warning.main" }} />
+                      <Box sx={{ width: `${item.percent}%`, height: "100%", bgcolor: item.state === "assigned" ? "primary.main" : item.state === "evaluated" ? "warning.main" : "error.main" }} />
                     </Box>
                   </Stack>
                 ))}
@@ -1737,15 +1997,6 @@ function WorkOrdersScreen({
   const [activeFilters, setActiveFilters] = useState<WorkOrderFilterKey[]>([]);
   const [filterAnchor, setFilterAnchor] = useState<HTMLElement | null>(null);
   const normalizedSearchQuery = searchQuery.trim().toLowerCase();
-  const workOrderFilters: { key: WorkOrderFilterKey; label: string }[] = [
-    { key: "emergency", label: "Emergency priority" },
-    { key: "critical", label: "Critical or high" },
-    { key: "slaRisk", label: "SLA risk" },
-    { key: "gas", label: "Gas work" },
-    { key: "electric", label: "Power work" },
-    { key: "assigned", label: "Assigned" },
-    { key: "needsAssignment", label: "Needs assignment" }
-  ];
   const filteredWorkOrders = workOrders.filter((order) => {
     const matchesSearch = !normalizedSearchQuery || workOrderSearchText(order).includes(normalizedSearchQuery);
     const matchesFilters = activeFilters.every((filter) => matchesWorkOrderFilter(order, filter, settings));
@@ -1776,7 +2027,7 @@ function WorkOrdersScreen({
               Filters{activeFilters.length ? ` (${activeFilters.length})` : ""}
             </Button>
             <Menu anchorEl={filterAnchor} onClose={() => setFilterAnchor(null)} open={filterMenuOpen}>
-              {workOrderFilters.map((filter) => (
+              {workOrderFilterOptions.map((filter) => (
                 <MenuItem key={filter.key} onClick={() => toggleFilter(filter.key)}>
                   <Checkbox checked={activeFilters.includes(filter.key)} size="small" />
                   {filter.label}
@@ -1809,7 +2060,7 @@ function WorkOrdersScreen({
           <Stack direction="row" alignItems="center" gap={0.75} flexWrap="wrap" sx={{ mt: 1.5 }}>
             {searchQuery && <Chip label={`Find: ${searchQuery}`} onDelete={() => setSearchQuery("")} size="small" />}
             {activeFilters.map((filterKey) => (
-              <Chip key={filterKey} label={workOrderFilters.find((filter) => filter.key === filterKey)?.label ?? filterKey} onDelete={() => toggleFilter(filterKey)} size="small" />
+              <Chip key={filterKey} label={workOrderFilterOptions.find((filter) => filter.key === filterKey)?.label ?? filterKey} onDelete={() => toggleFilter(filterKey)} size="small" />
             ))}
           </Stack>
         )}
@@ -1821,7 +2072,7 @@ function WorkOrdersScreen({
             <Typography fontWeight={900}>Planner Queue</Typography>
             <Chip label={`${filteredWorkOrders.length} of ${workOrders.length} records`} size="small" />
           </Stack>
-          <Box sx={{ maxHeight: 394, overflow: "auto" }}>
+          <Box sx={{ maxHeight: 591, overflow: "auto" }}>
             <WorkOrderTable selectedId={selectedOrder.id} onDispatch={onDispatchOrder} onSelect={onSelectOrder} onUnassign={onUnassignOrder} workOrders={filteredWorkOrders} />
           </Box>
         </Paper>
@@ -2036,7 +2287,7 @@ function WorkforceScreen({
               {filteredCrews.length > 0 && <Chip label={`Avg $${averageVisibleRate}/hr`} size="small" variant="outlined" />}
             </Stack>
           </Stack>
-          <Box sx={{ maxHeight: 394, overflow: "auto" }}>
+          <Box sx={{ maxHeight: 591, overflow: "auto" }}>
             <CrewTable selectedName={selectedCrew.name} onSelect={onSelectCrew} crews={filteredCrews} />
           </Box>
         </Paper>
@@ -2167,7 +2418,7 @@ function DispatchScreen({
   settings: OperationsSettings;
 }) {
   const [showCrewMarkers, setShowCrewMarkers] = useState(true);
-  const [showMapLegend, setShowMapLegend] = useState(true);
+  const [showMapLegend, setShowMapLegend] = useState(false);
   const [selectedDispatchCrewName, setSelectedDispatchCrewName] = useState<string | null>(null);
   const dispatchMarkers = getTaskMapMarkers(activeTask, selectedOrder, showCrewMarkers, workOrders, crews);
   const mappedCrewCount = crews.filter((crew) => Number.isFinite(crew.longitude) && Number.isFinite(crew.latitude)).length;
@@ -2228,7 +2479,7 @@ function DispatchScreen({
           <Box sx={{ position: "relative" }}>
             <Stack direction="row" spacing={1} sx={{ position: "absolute", right: 12, top: 12, zIndex: 30 }}>
               <Button
-                color="success"
+                color="primary"
                 onClick={() => setShowCrewMarkers((current) => !current)}
                 size="small"
                 sx={{ bgcolor: "white", boxShadow: 3, fontWeight: 900, "&:hover": { bgcolor: "grey.50" } }}
@@ -2237,7 +2488,7 @@ function DispatchScreen({
                 {showCrewMarkers ? "Hide Crews" : "Show Crews"}
               </Button>
               <Button
-                color="success"
+                color="primary"
                 onClick={() => setShowMapLegend((current) => !current)}
                 size="small"
                 sx={{ bgcolor: "white", boxShadow: 3, fontWeight: 900, "&:hover": { bgcolor: "grey.50" } }}
@@ -2732,6 +2983,7 @@ export function OperationsConsolePage() {
   const [crews, setCrews] = useState<CrewOption[]>(persistedWorkflowState.crews);
   const [selectedOrderId, setSelectedOrderId] = useState(defaultWorkOrderId);
   const [selectedCrewName, setSelectedCrewName] = useState(defaultCrewName);
+  const [dashboardScheduleDate, setDashboardScheduleDate] = useState(() => new Date("2026-07-20T12:00:00"));
   const [settings, setSettings] = useState<OperationsSettings>(persistedOperationsSettings);
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const [isTaskPanelOpen, setIsTaskPanelOpen] = useState(true);
@@ -2818,6 +3070,7 @@ export function OperationsConsolePage() {
 
   function assignRecommendedCrew(crew: RankedCrewOption) {
     const previouslyAssignedCrewName = selectedOrder.assignmentState === "assigned" ? selectedOrder.crew : null;
+    const assignedAt = new Date();
 
     setWorkOrders((currentWorkOrders) => currentWorkOrders.map((order) => (
       order.id === selectedOrder.id
@@ -2826,7 +3079,7 @@ export function OperationsConsolePage() {
           assignmentState: "assigned",
           status: "Assigned",
           crew: crew.name,
-          assignedAt: new Date().toISOString()
+          assignedAt: assignedAt.toISOString()
         }
         : order
     )));
@@ -2844,9 +3097,43 @@ export function OperationsConsolePage() {
           }
         : candidate
     )));
+    setDashboardScheduleDate(assignedAt);
     setSelectedCrewName(crew.name);
     setActiveTask("assignment");
     setEvaluated(false);
+  }
+
+  function moveScheduleBlock(orderId: string, crewName: string, assignedAt: string) {
+    const orderToMove = workOrders.find((order) => order.id === orderId);
+    const targetCrew = crews.find((crew) => crew.name === crewName);
+
+    if (!orderToMove || !targetCrew || !canCrewWorkOrder(targetCrew, orderToMove)) {
+      return;
+    }
+
+    setWorkOrders((currentWorkOrders) => currentWorkOrders.map((order) => (
+      order.id === orderId
+        ? {
+          ...order,
+          crew: crewName,
+          assignedAt,
+          assignmentState: "assigned",
+          status: "Assigned"
+        }
+        : order
+    )));
+    setCrews((currentCrews) => currentCrews.map((crew) => (
+      crew.name === crewName
+        ? {
+          ...crew,
+          status: "Assigned",
+          currentAssignment: `Assigned to ${orderId}`
+        }
+        : crew
+    )));
+    setDashboardScheduleDate(new Date(assignedAt));
+    setSelectedCrewName(crewName);
+    setSelectedOrderId(orderId);
   }
 
   function unassignWorkOrder(orderId: string) {
@@ -2928,7 +3215,7 @@ export function OperationsConsolePage() {
       return <SettingsScreen settings={settings} onSave={saveSettings} />;
     }
 
-    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} workOrders={workOrders} settings={settings} />;
+    return <DashboardScreen selectedOrder={selectedOrder} markers={markers} crews={crews} onMoveScheduleBlock={moveScheduleBlock} onSelectScheduleDate={setDashboardScheduleDate} selectedScheduleDate={dashboardScheduleDate} workOrders={workOrders} settings={settings} />;
   }
 
   return (
